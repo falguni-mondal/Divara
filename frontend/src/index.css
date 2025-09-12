@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: "brand";
+    src: url(./assets/fonts/brand.woff);
+}
+
+html, body{
+    width: 100%;
+    height: 100%;
+    font-family: "Lato", sans-serif;
+}
+
+.brand-txt{
+    font-family: "brand";
+}
+
+.animate-updown{
+    animation: updown 3.5s infinite;
+    animation-timing-function: cubic-bezier(0.335, 0.965, 0.630, 0.040);
+}
+
+@keyframes updown {
+    0%{
+        bottom: -100%;
+    }
+    100%{
+        bottom: 100%;
+    }
+}
