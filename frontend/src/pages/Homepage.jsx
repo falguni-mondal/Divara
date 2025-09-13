@@ -7,7 +7,7 @@ import LuxurySection from '../components/home/luxury/LuxurySection'
 
 const Homepage = () => {
   return (
-    <div className='w-full pb-[20vw]' id='homepage'>
+    <div className='w-full' id='homepage'>
       <Hero />
       <ShopSection />
       <CollectionSection />

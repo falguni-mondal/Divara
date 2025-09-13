@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PageRouter from '../routers/PageRouter'
 import Navbar from './navbar/Navbar'
 import Navmenu from './navbar/Navmenu'
+import Footer from './footer/Footer'
 
 const App = () => {
   const [showNav, setShowNav] = useState(false);
@@ -15,6 +16,7 @@ const App = () => {
       <main>
         <PageRouter />
       </main>
+      <Footer />
     </div>
   )
 }
