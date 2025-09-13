@@ -6,7 +6,7 @@ const ShopItem = ({ item }) => {
         <li className='w-[48%] mb-[6vw]'>
             <Link to={`/shop/${item._id}`}>
                 <img className='w-full' src={item.img} alt="" />
-                <p className='text-[3.5vw] mt-[1vw]'>{item.title}</p>
+                <p className='text-[3.3vw] mt-[1vw]'>{item.title}</p>
             </Link>
         </li>
     )

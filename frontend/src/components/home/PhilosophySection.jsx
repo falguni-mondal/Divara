@@ -1,19 +1,24 @@
 import React from 'react'
-import cloth_mob from "../../assets/images/craft_cloth.webp"
+import modelsVideo from "../../assets/videos/models.mp4"
+import SectionHeading from '../utils/SectionHeading'
 const PhilosophySection = () => {
   return (
-    <section className='mt-[18vw] px-[3vw]' id="philosophy-section">
-        <div className="philosophy-heading">
-            <h2 className='text-[9vw] font-[300] tracking-tight leading-none text-center'>
-                Where Timeless Elegance Meets Modern Minimalism
-            </h2>
-        </div>
-        <div className="cloth-closeup-img-container h-[35vh] relative top-[-3vw] z-[-1]">
-            <img src={cloth_mob} alt="" className="cloth-closeup-img h-full object-cover" />
-        </div>
-        <p className="philosophy-paragraph">
-            
+    <section className='px-[3vw] mt-[18vw]' id="philosophy-section">
+      <div className="section-divider w-full text-center mb-[12vw] uppercase text-[3.5vw] font-semibold">
+        featuring
+      </div>
+      <div className="video-container w-full h-[70vh] mb-[8vw]">
+        <video src={modelsVideo} className='h-full w-full object-cover' autoPlay muted loop />
+      </div>
+      <div className="philosophy-content w-full">
+        <SectionHeading text="Luxury in every details" />
+        <p className="philosophy-paragraph text-[4.2vw] font-[300] text-center mt-[3vw]">
+          Every creation is more than a product—it is a statement of artistry, detail, and timeless design. Reflects passion, craftsmanship, and elegance, turning simple ideas into luxury.
         </p>
+      </div>
+      <div className="section-divider w-full text-center mt-[12vw] uppercase text-[3vw] font-semibold">
+        keep discovering
+      </div>
     </section>
   )
 }

@@ -28,3 +28,7 @@ html, body{
         bottom: 100%;
     }
 }
+
+.inner-shadow{
+    box-shadow: rgba(255, 255, 255, 0.164) 0px 2px 4px 0px inset;
+}

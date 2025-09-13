@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const Navbar = ({showNav, navMenuController}) => {
     return (
         <>
-            <header className='lg:hidden fixed bottom-3 left-1/2 -translate-x-1/2 flex gap-[6vw] p-1 bg-[#00000011] backdrop-blur-lg rounded-full z-[999] border border-zinc-100' id='navbar-mobile'>
+            <header className='lg:hidden fixed bottom-3 left-1/2 -translate-x-1/2 flex gap-[6vw] p-1 bg-[#00000011] backdrop-blur-lg rounded-full z-[999] inner-shadow' id='navbar-mobile'>
                 <Link to="/" className="logo rounded-full w-[12vw] h-[12vw] flex justify-center items-center bg-[#111]">
                     <span className="logo-container w-[5.5vw]">
                         <Logo />
