@@ -11,7 +11,7 @@ const PhilosophySection = () => {
         <video src={modelsVideo} className='h-full w-full object-cover' autoPlay muted loop />
       </div>
       <div className="philosophy-content w-full">
-        <SectionHeading text="Luxury in every details" />
+        <SectionHeading text="The Divara Craftmanship" />
         <p className="philosophy-paragraph text-[4.2vw] font-[300] text-center mt-[3vw]">
           Every creation is more than a product—it is a statement of artistry, detail, and timeless design. Reflects passion, craftsmanship, and elegance, turning simple ideas into luxury.
         </p>

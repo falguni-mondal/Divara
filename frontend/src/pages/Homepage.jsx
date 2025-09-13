@@ -1,9 +1,9 @@
 import React from 'react'
-import LogoW from '../components/utils/logo/BrandW'
 import Hero from '../components/home/Hero'
 import ShopSection from '../components/home/shop/ShopSection'
 import CollectionSection from '../components/home/CollectionSection'
 import PhilosophySection from '../components/home/PhilosophySection'
+import LuxurySection from '../components/home/luxury/LuxurySection'
 
 const Homepage = () => {
   return (
@@ -12,6 +12,7 @@ const Homepage = () => {
       <ShopSection />
       <CollectionSection />
       <PhilosophySection />
+      <LuxurySection />
     </div>
   )
 }

@@ -28,18 +28,12 @@ const ShopSection = () => {
                         <ShopItem item={item} />
                         <ShopItem item={item} />
                         <ShopItem item={item} />
-                        <ShopItem item={item} />
-                        <ShopItem item={item} />
-                        <ShopItem item={item} />
-                        <ShopItem item={item} />
-                        <ShopItem item={item} />
-                        <ShopItem item={item} />
                     </ul>
                 </div>
                 <div className="see-more-btn-container w-full py-[2vw] bg-[#ffffff]">
-                    <span className="see-more-btn block w-fit mx-auto uppercase bg-[#853e03] text-zinc-100 text-[3.3vw] px-[4vw] py-[2.5vw] rounded">
-                    See More
-                </span>
+                    <span className="see-more-btn block w-fit mx-auto uppercase bg-[#853e03] text-zinc-100 text-[3.3vw] px-[4vw] py-[2.5vw] rounded-[2px]">
+                        See More
+                    </span>
                 </div>
             </div>
         </section>
