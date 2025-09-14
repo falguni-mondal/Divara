@@ -3,7 +3,7 @@ import modelsVideo from "../../assets/videos/models.mp4"
 import SectionHeading from '../utils/SectionHeading'
 const PhilosophySection = () => {
   return (
-    <section className='px-[3vw] mt-[18vw]' id="philosophy-section">
+    <section className='px-[3vw]' id="philosophy-section">
       <div className="section-divider w-full text-center mb-[12vw] uppercase text-[3.5vw] font-semibold">
         featuring
       </div>
