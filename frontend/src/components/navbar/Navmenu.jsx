@@ -38,9 +38,9 @@ const Navmenu = ({ showNav, navMenuController }) => {
       <nav className='account-nav w-full flex justify-between'>
         {
           accountNavItems.map(({title, icon : Icon, path}) => (
-            <Link className='flex flex-col items-center text-[5vw] uppercase' onClick={navMenuController} to={path}>
+            <Link key={`${title}-mobile-nav-key`} className='flex flex-col items-center text-[5vw]' onClick={navMenuController} to={path}>
               <Icon className='text-[6vw]' />
-              <span className='underline font-semibold'>{title}</span>
+              <span className='underline'>{title}</span>
             </Link>
           ))
         }

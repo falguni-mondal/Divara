@@ -12,8 +12,8 @@ const BrandB = () => {
                 <path d="M1956.82 314V311H2147.62V314H1956.82ZM2066.32 0L2224.96 456H2267.62V459H2093.62V456H2159.15L2039.46 82.5L1908.46 456H1979.62V459H1847.62V456H1904.46L2065.12 0H2066.32Z" fill="#111111" />
             </g>
             <defs>
-                <filter id="filter0_n_108_11" x="0" y="0" width="2267.62" height="468" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                <filter id="filter0_n_108_11" x="0" y="0" width="2267.62" height="468" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
                     <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
                     <feTurbulence type="fractalNoise" baseFrequency="2 2" stitchTiles="stitch" numOctaves="3" result="noise" seed="2665" />
                     <feColorMatrix in="noise" type="luminanceToAlpha" result="alphaNoise" />
@@ -21,7 +21,7 @@ const BrandB = () => {
                         <feFuncA type="discrete" tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 " />
                     </feComponentTransfer>
                     <feComposite operator="in" in2="shape" in="coloredNoise1" result="noise1Clipped" />
-                    <feFlood flood-color="rgba(255, 255, 255, 0.05)" result="color1Flood" />
+                    <feFlood floodColor="rgba(255, 255, 255, 0.05)" result="color1Flood" />
                     <feComposite operator="in" in2="noise1Clipped" in="color1Flood" result="color1" />
                     <feMerge result="effect1_noise_108_11">
                         <feMergeNode in="shape" />

@@ -1,8 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
+import axios from "axios"
+
 import AccountRouter from '../routers/AccountRouter'
 import { FcGoogle } from "react-icons/fc";
+import { backendBaseApi } from '../configs/keys';
+import { useNavigate } from 'react-router-dom';
 
 const Account = () => {
+  const navigate = useNavigate();
+  const [userMail, setUserMail] = useState("");
+  const [processing, setProcessing] = useState("");
+
+  const emailChecker = async (email) => {
+    try{
+      const hasEmail = await axios.post(`${backendBaseApi}/user/check/email`, {email});
+      setUserMail(email);
+      if(hasEmail.data){
+        navigate("/account/signin");
+      }
+      else{
+        navigate("/account/signup");
+      }
+      
+    }catch(err){
+      console.log(err);
+    }
+  }
+
   return (
     <div className='w-full py-[15vw] px-[10vw]' id='account-page'>
       <div className='w-full' id="account-page-main-container">
@@ -22,7 +46,7 @@ const Account = () => {
           Sign in with your email and password or create a profile if you are new.
         </p>
       </div>
-        <AccountRouter />
+        <AccountRouter emailChecker={emailChecker} userMail={userMail} />
       </div>
     </div>
   )
