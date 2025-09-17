@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import BrandW from '../utils/logo/BrandW'
+import BrandW from '../../utils/logo/BrandW'
 
 const Footer = () => {
   

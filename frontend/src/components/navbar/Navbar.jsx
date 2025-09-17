@@ -1,5 +1,5 @@
 import React from 'react'
-import Logo from '../utils/logo/Logo'
+import Logo from '../../utils/logo/Logo'
 import { Link } from 'react-router-dom'
 
 const Navbar = ({showNav, navMenuController}) => {

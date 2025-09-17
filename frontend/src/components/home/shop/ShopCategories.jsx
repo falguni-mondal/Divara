@@ -1,5 +1,5 @@
 import React from 'react'
-import SectionHeading from '../../utils/SectionHeading'
+import SectionHeading from '../../../utils/SectionHeading'
 import ShopCategory from './ShopCategory'
 
 import saree from "../../../assets/images/saree_poster.webp"

@@ -4,12 +4,12 @@ import Signin from '../components/auth/Signin'
 import Signup from '../components/auth/Signup'
 import BaseAuth from '../components/auth/BaseAuth'
 
-const AccountRouter = ({emailChecker, userMail}) => {
+const AccountRouter = () => {
   return (
     <Routes>
-        <Route path='/' element={<BaseAuth emailChecker={emailChecker}/>}/>
-        <Route path='/signin' element={<Signin userMail={userMail} />}/>
-        <Route path='/signup' element={<Signup userMail={userMail} />}/>
+        <Route path='/' element={<BaseAuth/>}/>
+        <Route path='/signin' element={<Signin />}/>
+        <Route path='/signup' element={<Signup />}/>
     </Routes>
   )
 }

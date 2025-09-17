@@ -1,6 +1,6 @@
 import React from 'react'
 import heroImg from "../../assets/bg/hero_mobile_2.webp";
-import BrandW from '../utils/logo/BrandW';
+import BrandW from '../../utils/logo/BrandW';
 import { Link } from 'react-router-dom';
 import { IoIosArrowDown } from "react-icons/io";
 

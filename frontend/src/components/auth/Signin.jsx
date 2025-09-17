@@ -1,6 +1,9 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 
-const Signin = ({userMail}) => {
+const Signin = () => {
+  const {userMail} = useSelector((state) => state.auth.checkEmail);
+  
   return (
     <section className='w-full py-[3vh]' id='signin-form-section'>
       <form className='w-full flex flex-col gap-[3vh]'>

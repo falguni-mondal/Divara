@@ -1,6 +1,6 @@
 import React from 'react'
 import contactBg from "../../assets/bg/contact_bg.webp"
-import SectionHeading from '../utils/SectionHeading'
+import SectionHeading from '../../utils/SectionHeading'
 import { Link } from 'react-router-dom'
 const ContactSection = () => {
   return (

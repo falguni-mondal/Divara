@@ -11,7 +11,7 @@ const emailChecker = async (req, res) => {
         res.status(200).json(false);
     }
   } catch (err) {
-    res.status(400).json(err);
+    res.status(400).json(`Error while checking Email: ${err}`);
   }
 };
 

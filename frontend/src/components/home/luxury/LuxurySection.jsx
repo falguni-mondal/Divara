@@ -1,5 +1,5 @@
 import React from 'react'
-import SectionHeading from '../../utils/SectionHeading';
+import SectionHeading from '../../../utils/SectionHeading';
 import brandCloth from "../../../assets/images/branding_cloth.webp";
 import custom from "../../../assets/videos/customizations.mp4";
 import brandBag from "../../../assets/images/divara_bag.webp";

@@ -1,6 +1,6 @@
 import React from 'react'
 import modelsVideo from "../../assets/videos/models.mp4"
-import SectionHeading from '../utils/SectionHeading'
+import SectionHeading from '../../utils/SectionHeading'
 const PhilosophySection = () => {
   return (
     <section className='px-[3vw] mb-[30vw]' id="philosophy-section">
