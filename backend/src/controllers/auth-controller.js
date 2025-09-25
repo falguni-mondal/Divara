@@ -17,14 +17,14 @@ const emailChecker = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  const { email, password, name, contact } = req.body;
+  const { email, password, name } = req.body;
   const userExist = await userModel.findOne({ email });
-  const contactExist = await userModel.findOne({"contact.dial_code" : contact.dial_code, "contact.number" : contact.number});
+  // const contactExist = await userModel.findOne({"contact.dial_code" : contact.dial_code, "contact.number" : contact.number});
 
-  if (userExist || contactExist) {
+  if (userExist) {
     return res.status(409).json({
-      userExist: userExist && true,
-      contactExist: contactExist && true,
+      userExist: true,
+      // contactExist: contactExist && true,
       message: "User exists",
     });
   }
@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
       email,
       password: await bcrypt.hash(password, 10),
       name,
-      contact,
+      // contact,
     });
 
     const accessToken = tokenizer.createAccessToken(user._id);
@@ -56,6 +56,7 @@ const registerUser = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       })
       .json({
+        user,
         message: "User registered successfully!",
       });
   } catch (err) {
@@ -104,6 +105,7 @@ const loginUser = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       })
       .json({
+        user,
         message: "User login successfully!",
       });
   } catch (err) {

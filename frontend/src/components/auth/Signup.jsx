@@ -1,17 +1,18 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RxEyeOpen } from "react-icons/rx";
-import { MdKeyboardArrowDown } from "react-icons/md";
+// import { MdKeyboardArrowDown } from "react-icons/md";
 import { BsPencil } from "react-icons/bs";
 
-import ReactCountryFlag from "react-country-flag";
+// import ReactCountryFlag from "react-country-flag";
 
-import { resetEmailStatus } from '../../store/features/user/authSlice';
+import { registerUser, resetEmailStatus } from '../../store/features/user/authSlice';
 import FormSubmitBtn from '../../utils/buttons/FormSubmitBtn';
 
 const Signup = () => {
     const dispatch = useDispatch();
     const { userMail } = useSelector((state) => state.auth.checkEmail);
+    const { status } = useSelector((state) => state.auth.register);
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [validPassword, setValidPassword] = useState({
@@ -19,12 +20,20 @@ const Signup = () => {
         number: false,
         specialChar: false
     })
-    const [country, setCountry] = useState({
-        name: "India",
-        code: "IN",
-        dial_code: "+91"
-    });
-    const [dropdownReveal, setDropdownReveal] = useState(false);
+    // const [country, setCountry] = useState({
+    //     name: "India",
+    //     code: "IN",
+    //     dial_code: "+91"
+    // });
+    // const [dropdownReveal, setDropdownReveal] = useState(false);
+    const nameRef = useRef(null);
+    // const contactRef = useRef(null);
+    const [formErr, setFormErr] = useState({
+        email: false,
+        password: false,
+        name: false,
+        contact: false
+    })
 
     // COUNTRY CODES FOR CONTACT
     const countryCodes = [
@@ -1506,6 +1515,8 @@ const Signup = () => {
         }
     ]
 
+
+    
     // PASSWORD CHECKER FUNCTION
     const passwordChecker = (e) => {
         setPassword(e.target.value);
@@ -1534,26 +1545,63 @@ const Signup = () => {
         }
     }
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (!e.target.closest("#selected-country-code")) {
-                setDropdownReveal(false);
-            }
-        };
+    const submitHandler = (e) => {
+        e.preventDefault();
+        if (!userMail) {
+            setFormErr(prev => ({ ...prev, email: true }));
+        } else {
+            setFormErr(prev => ({ ...prev, email: false }));
+        }
 
-        document.addEventListener("click", handleClickOutside);
+        if(password === "" || Object.values(validPassword).includes(false)){
+            setFormErr(prev => ({ ...prev, password: true }));
+        } else {
+            setFormErr(prev => ({ ...prev, password: false }));
+        }
 
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, [])
+        if (nameRef.current.value.length < 3) {
+            setFormErr(prev => ({ ...prev, name: true }));
+        } else {
+            setFormErr(prev => ({ ...prev, name: false }));
+        }
+
+        // if (nameRef.current.value === "") {
+        //     setFormErr(prev => ({ ...prev, contact: true }));
+        // } else {
+        //     setFormErr(prev => ({ ...prev, contact: false }));
+        // }
+
+        if(Object.values(formErr).includes(true)) return;
+
+        const data = {
+            email: userMail,
+            password,
+            name: nameRef.current.value
+        }
+
+        dispatch(registerUser(data));
+    }
+
+    // useEffect(() => {
+    //     const handleClickOutside = (e) => {
+    //         if (!e.target.closest("#selected-country-code")) {
+    //             setDropdownReveal(false);
+    //         }
+    //     };
+
+    //     document.addEventListener("click", handleClickOutside);
+
+    //     return () => {
+    //         document.removeEventListener("click", handleClickOutside);
+    //     };
+    // }, [])
 
 
     return (
         <section className='w-full py-[3vh]' id='signup-form-section'>
-            <form className='w-full flex flex-col gap-[2vh]'>
+            <form onSubmit={submitHandler} className='w-full flex flex-col gap-[2vh]'>
                 {/* EMAIL INPUT */}
-                <div className="auth-form-input-container w-full h-[6vh] flex flex-col justify-center border border-zinc-600 px-2 py-1 rounded-[3px] text-zinc-600 relative">
+                <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.email ? "border-red-600" : "border-zinc-600"} px-2 py-1 rounded-[3px] text-zinc-600 relative`}>
                     <label className='text-[2.8vw] relative text-zinc-500'>Email*</label>
                     <input className='w-full outline-0 border-0 text-[4.5vw]' value={userMail} disabled type="email" />
                     <span onClick={() => dispatch(resetEmailStatus())} className="pencil-icon absolute w-full h-full pr-4 flex items-center justify-end">
@@ -1563,7 +1611,7 @@ const Signup = () => {
 
                 {/* PASSWORD INPUT */}
                 <div className="signup-password-wrapper w-full mt-[1vh]">
-                    <div className="auth-form-input-container w-full h-[6vh] flex flex-col justify-center border border-zinc-400 pl-2 py-1 rounded-[3px] relative">
+                    <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.password ? "border-red-600" : "border-zinc-400"} pl-2 py-1 rounded-[3px] relative`}>
                         <label className='text-[2.8vw] text-zinc-500 relative'>Create Password*</label>
                         <input onChange={passwordChecker} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} />
                         <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>
@@ -1585,24 +1633,24 @@ const Signup = () => {
                 </div>
 
                 {/* NAME INPUT */}
-                <div className="auth-form-input-container w-full h-[6vh] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px]">
+                <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.name ? "border-red-600" : "border-zinc-400"} px-2 py-1 rounded-[3px]`}>
                     <label className='text-[2.8vw] text-zinc-500 relative'>Your Name*</label>
-                    <input className='w-full outline-0 border-0 text-[4.5vw]' type="text" />
+                    <input ref={nameRef} className='w-full outline-0 border-0 text-[4.5vw]' type="text" />
                 </div>
 
                 {/* CONTACT INPUT */}
-                <div className="auth-form-input-container w-full h-[6vh] flex flex-col justify-center border border-zinc-400 py-1 rounded-[3px]">
+                {/* <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.contact ? "border-red-600" : "border-zinc-400"} py-1 rounded-[3px]`}>
                     <label className='text-[2.8vw] text-zinc-500 px-2'>Contact Number*</label>
                     <div className="input-wrapper relative flex gap-6 items-center px-2">
-                        {/* Country Code Display */}
+                        Country Code Display
                         <div onClick={() => setDropdownReveal(prev => !prev)} className="flex items-center leading-none text-[4.5vw] text-zinc-600" id='selected-country-code'>
                             <ReactCountryFlag countryCode={country.code} svg />
                             <span className="country-dial-code font-medium">{country.dial_code}</span>
                             <MdKeyboardArrowDown className='shrink-0' />
                         </div>
-                        {/* Country code Input */}
-                        <input className='w-full outline-0 border-0 text-[4.5vw]' type="number" />
-                        {/* Country Code Dropdown */}
+                        Country code Input
+                        <input ref={contactRef} className='w-full outline-0 border-0 text-[4.5vw]' type="text" />
+                        Country Code Dropdown
                         <ul className={`country-code-dropdown ${dropdownReveal ? "" : "hidden"} absolute top-[120%] max-h-[20vh] overflow-scroll bg-[#f0f0f0da] backdrop-blur-lg px-2 rounded-[2px]`}>
                             {
                                 countryCodes.map(({ name, code, dial_code }) => (
@@ -1615,10 +1663,10 @@ const Signup = () => {
                             }
                         </ul>
                     </div>
-                </div>
+                </div> */}
 
                 {/* SUBMIT BUTTON */}
-                {/* <FormSubmitBtn status={}/> */}
+                <FormSubmitBtn status={status} />
             </form>
         </section>
     )
