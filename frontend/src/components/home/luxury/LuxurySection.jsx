@@ -37,7 +37,7 @@ const LuxurySection = () => {
         <ul className="luxury-showcase w-full overflow-x-scroll flex gap-[10vw] py-[8vw]">
             {
                 luxuryItems.map(item => (
-                    <LuxuryItem item={item} />
+                    <LuxuryItem key={`${item.heading}-key`} item={item} />
                 ))
             }
         </ul>

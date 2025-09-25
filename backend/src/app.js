@@ -1,13 +1,12 @@
 import express from "express";
 import parser from "cookie-parser";
 import cors from "cors";
-import connectToDB from "./configs/mongoose-config.js";
-import dotenv from "dotenv";
+import "dotenv/config";
+import connectToDB from "./configs/db/mongoose-config.js";
 
 // ROUTE IMPORTS.......................................................
-import userRouter from "./routes/user-routes.js"
+import authRouter from "./routes/auth-routes.js"
 
-dotenv.config();
 
 const app = express();
 
@@ -25,7 +24,7 @@ connectToDB();
 
 
 // ROUTE INITIALIZATIONS.............................................
-app.use("/api/user", userRouter);
+app.use("/api/auth", authRouter);
 
 
 export default app;

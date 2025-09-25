@@ -6,9 +6,7 @@ export const checkMail = createAsyncThunk(
   "auth/checkMail",
   async (email, { rejectWithValue }) => {
     try {
-      const hasUser = await axios.post(`${backendBaseApi}/user/check/email`, {
-        email,
-      });
+      const hasUser = await axios.post(`${backendBaseApi}/auth/check/email`, {email});
       return hasUser?.data;
     } catch (err) {
       return rejectWithValue(err?.response?.data);
@@ -41,6 +39,13 @@ const authSlice = createSlice({
     },
   },
 
+  reducers: {
+    resetEmailStatus : (state) => {
+      state.checkEmail.status = "idle";
+      state.checkEmail.error = null;
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(checkMail.pending, (state) => {
@@ -58,4 +63,5 @@ const authSlice = createSlice({
   },
 });
 
+export const {resetEmailStatus} = authSlice.actions;
 export default authSlice.reducer;

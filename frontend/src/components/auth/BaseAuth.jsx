@@ -1,10 +1,10 @@
 import React,{ useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { checkMail } from '../../store/features/user/authSlice';
-import MiniLoading from '../../utils/loading/MiniLoading';
+import FormSubmitBtn from '../../utils/buttons/FormSubmitBtn';
 
 const BaseAuth = () => {
-  const emailRef = useRef(null)
+  const emailRef = useRef(null);
   const dispatch = useDispatch();
   const {status} = useSelector((state) => state.auth.checkEmail);
 
@@ -14,6 +14,7 @@ const BaseAuth = () => {
       dispatch(checkMail(emailRef.current.value));
     }
   }
+  
 
   return (
     <section className='w-full py-[3vh]' id='auth-base-form-section'>
@@ -22,9 +23,7 @@ const BaseAuth = () => {
           <label className='text-[2.8vw] text-zinc-500 relative'>Email*</label>
           <input ref={emailRef} className='w-full outline-0 border-0 text-[4.5vw]' type="email" />
         </div>
-        <button type='submit' disabled={status === "loading"} className='w-full h-[6vh] bg-black rounded-[3px] text-zinc-100 text-[3.3vw] uppercase mt-[3vh] relative'>continue
-          <span className={`loading-overlay w-full h-full absolute top-0 left-0 flex justify-center items-center bg-[#000000d8] ${status !== "loading" && "hidden"}`}>{<MiniLoading />}</span>
-        </button>
+        <FormSubmitBtn status={status}/>
       </form>
     </section>
   )

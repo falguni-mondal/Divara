@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import axios from "axios"
+import { useEffect } from 'react'
 
 import AccountRouter from '../routers/AccountRouter'
 import { FcGoogle } from "react-icons/fc";
-import { backendBaseApi } from '../configs/keys';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -19,6 +17,9 @@ const Account = () => {
       else {
         navigate("/account/signup");
       }
+    }
+    else if (status === "idle" || status === "failed") {
+      navigate("/account");
     }
   }, [hasUser, status])
 

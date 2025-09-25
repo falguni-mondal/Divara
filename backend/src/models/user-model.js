@@ -1,10 +1,6 @@
 import mongoose from "mongoose";
 
-const userSchema = mongoose.Schema({
-  title: {
-    type: String,
-    require: true,
-  },
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     require: true,
@@ -12,26 +8,17 @@ const userSchema = mongoose.Schema({
   email: {
     type: String,
     require: true,
+    unique: true,
   },
   password: {
     type: String,
-    require: true,
   },
   contact: {
     type: {
-      prefix: {
-        type: String,
-        default: "+91"
-      },
-      number: {type: Number}
-    },
-    require: true,
-  },
-  dob: {
-    type: {
-      day: {type: Number},
-      month: {type: Number},
-      year: {type: Number}
+      country: {type: String},
+      country_code: {type: String},
+      dial_code: {type: String},
+      number: {type: String}
     },
     require: true,
   },
