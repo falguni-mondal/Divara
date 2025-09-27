@@ -15,11 +15,12 @@ html, body{
     font-family: "brand";
 }
 
+/* ANIMATIONS */
+
 .animate-updown{
     animation: updown 3.5s infinite;
     animation-timing-function: cubic-bezier(0.335, 0.965, 0.630, 0.040);
 }
-
 @keyframes updown {
     0%{
         bottom: -100%;
@@ -28,6 +29,7 @@ html, body{
         bottom: 100%;
     }
 }
+
 
 .inner-shadow{
     box-shadow: rgba(255, 255, 255, 0.164) 0px 1px 1px 0px inset;

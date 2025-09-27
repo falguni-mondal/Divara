@@ -1,10 +1,14 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import LoadingScreen from '../../utils/loading/LoadingScreen';
 
 const Signin = () => {
   const {userMail} = useSelector((state) => state.auth.checkEmail);
   
   return (
+    !userMail?
+    <LoadingScreen/>
+    :
     <section className='w-full py-[3vh]' id='signin-form-section'>
       <form className='w-full flex flex-col gap-[3vh]'>
         <div className="auth-form-input-container w-full h-[6vh] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px]">

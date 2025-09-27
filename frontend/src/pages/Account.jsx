@@ -7,21 +7,23 @@ import { useSelector } from 'react-redux';
 
 const Account = () => {
   const navigate = useNavigate();
-  const { hasUser, status } = useSelector((state) => state.auth.checkEmail);
+  const { hasUser } = useSelector((state) => state.auth.checkEmail);
+  const mailStatus = useSelector((state) => state.auth.checkEmail.status);
+  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
-    if (status === "success") {
+    if (mailStatus === "success") {
       if (hasUser) {
-        navigate("/account/signin");
+        navigate("/account/signin", {replace: true});
       }
       else {
-        navigate("/account/signup");
+        navigate("/account/signup", {replace: true});
       }
     }
-    else if (status === "idle" || status === "failed") {
-      navigate("/account");
+    else if (mailStatus === "idle" || mailStatus === "failed") {
+      navigate("/account", {replace: true});
     }
-  }, [hasUser, status])
+  }, [hasUser, mailStatus])
 
   return (
     <div className='w-full py-[15vw] px-[10vw]' id='account-page'>

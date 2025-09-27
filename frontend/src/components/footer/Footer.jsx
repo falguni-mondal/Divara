@@ -5,7 +5,7 @@ import BrandW from '../../utils/logo/BrandW'
 const Footer = () => {
   
   return (
-    <section className='text-zinc-100 bg-black py-[20vw] px-[3vw]' id='footer-section'>
+    <section className='text-zinc-100 bg-[#070707] py-[20vw] px-[3vw] mt-[10vh]' id='footer-section'>
       <footer className='mb-[20vw] px-[2vw]'>
         <div className="footer-link-sections flex flex-col gap-12">
           <div className="menu-section">
