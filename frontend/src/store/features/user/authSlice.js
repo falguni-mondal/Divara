@@ -6,7 +6,9 @@ export const checkMail = createAsyncThunk(
   "auth/checkMail",
   async (email, { rejectWithValue }) => {
     try {
-      const hasUser = await axios.post(`${backendBaseApi}/auth/check/email`, {email});
+      const hasUser = await axios.post(`${backendBaseApi}/auth/check/email`, {
+        email,
+      });
       return hasUser?.data;
     } catch (err) {
       return rejectWithValue(err?.response?.data);
@@ -16,11 +18,11 @@ export const checkMail = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
-  async (data, {rejectWithValue}) => {
-    try{
-      const user = await axios.post(`${backendBaseApi}/auth/register`, data, {withCredentials: true});
-      return user?.data
-    }catch(err){
+  async (data, { rejectWithValue }) => {
+    try {
+      const user = await axios.post(`${backendBaseApi}/auth/register`, data);
+      return user?.data;
+    } catch (err) {
       return rejectWithValue(err?.response?.data);
     }
   }
@@ -28,11 +30,23 @@ export const registerUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async (data, {rejectWithValue}) => {
-    try{
-      const user = await axios.post(`${backendBaseApi}/auth/login`, data, {withCredentials: true});
-      return user?.data
-    }catch(err){
+  async (data, { rejectWithValue }) => {
+    try {
+      const user = await axios.post(`${backendBaseApi}/auth/login`, data);
+      return user?.data;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
+export const verificationLinkSender = createAsyncThunk(
+  "auth/verificationLinkSender",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${backendBaseApi}/auth/verify/send`, {withCredentials: true});
+      return res?.data;
+    } catch (err) {
       return rejectWithValue(err?.response?.data);
     }
   }
@@ -46,6 +60,11 @@ const authSlice = createSlice({
     checkEmail: {
       userMail: "",
       hasUser: null,
+      status: "idle",
+      error: null,
+    },
+    verifyLink: {
+      message: "",
       status: "idle",
       error: null,
     },
@@ -64,7 +83,7 @@ const authSlice = createSlice({
   },
 
   reducers: {
-    resetEmailStatus : (state) => {
+    resetEmailStatus: (state) => {
       state.checkEmail.status = "idle";
       state.checkEmail.error = null;
     },
@@ -106,8 +125,19 @@ const authSlice = createSlice({
         state.login.status = "failed";
         state.login.error = action.payload;
       })
+      .addCase(verificationLinkSender.pending, (state) => {
+        state.verifyLink.status = "loading";
+      })
+      .addCase(verificationLinkSender.fulfilled, (state, action) => {
+        state.verifyLink.status = "success";
+        state.verifyLink.message = action.payload;
+      })
+      .addCase(verificationLinkSender.rejected, (state, action) => {
+        state.verifyLink.status = "failed";
+        state.verifyLink.error = action.payload;
+      })
   },
 });
 
-export const {resetEmailStatus} = authSlice.actions;
+export const { resetEmailStatus } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,4 +1,5 @@
 import tokenizer from "../configs/tokenizer.js";
+import userDataTrimmer from "../configs/user-trimmer.js";
 import userModel from "../models/user-model.js";
 import bcrypt from "bcryptjs";
 
@@ -19,12 +20,10 @@ const emailChecker = async (req, res) => {
 const registerUser = async (req, res) => {
   const { email, password, name } = req.body;
   const userExist = await userModel.findOne({ email });
-  // const contactExist = await userModel.findOne({"contact.dial_code" : contact.dial_code, "contact.number" : contact.number});
 
   if (userExist) {
     return res.status(409).json({
       userExist: true,
-      // contactExist: contactExist && true,
       message: "User exists",
     });
   }
@@ -35,11 +34,10 @@ const registerUser = async (req, res) => {
       email,
       password: await bcrypt.hash(password, 10),
       name,
-      // contact,
     });
 
     const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = tokenizer.createRefreshToken(user.email);
+    const refreshToken = tokenizer.createRefreshToken(user._id, req);
 
     res
       .status(201)
@@ -56,7 +54,7 @@ const registerUser = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       })
       .json({
-        user,
+        user: userDataTrimmer(user),
         message: "User registered successfully!",
       });
   } catch (err) {
@@ -88,7 +86,7 @@ const loginUser = async (req, res) => {
     }
 
     const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = tokenizer.createRefreshToken(user.email);
+    const refreshToken = tokenizer.createRefreshToken(user._id, req);
 
     res
       .status(200)
@@ -105,13 +103,13 @@ const loginUser = async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       })
       .json({
-        user,
-        message: "User login successfully!",
+        user: userDataTrimmer(user),
+        message: "Login successfully!",
       });
   } catch (err) {
-    res.status(401).json({
+    res.status(400).json({
       message: "User login failed!",
-      error: err,
+      error: err.message,
     });
   }
 };
@@ -141,4 +139,8 @@ const logoutUser = (req, res) => {
   }
 };
 
-export { emailChecker, registerUser, loginUser, logoutUser };
+const verificationLinkSender = (req, res) => {
+  res.status(200).json("link send!");
+}
+
+export { emailChecker, registerUser, loginUser, logoutUser, verificationLinkSender, };

@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { verificationLinkSender } from '../../../store/features/user/authSlice';
 
 const EmailVerification = () => {
+    const dispatch = useDispatch();
+    const {message, error} = useSelector((state) => state.auth.verifyLink);
+
     const accountReseter = () => {
 
     }
 
     const linkResender = () => {
-
+        dispatch(verificationLinkSender());
     }
+
+    useEffect(() => {
+        dispatch(verificationLinkSender());
+        message && console.log(message);
+        error && console.log(error);
+    }, [])
 
   return (
     <div className='py-[10vh] font-[300] text-center px-[3vw]' id='email-verification-page'>
