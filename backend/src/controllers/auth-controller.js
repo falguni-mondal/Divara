@@ -1,7 +1,9 @@
 import tokenizer from "../configs/tokenizer.js";
 import userDataTrimmer from "../configs/user-trimmer.js";
+import sessionModel from "../models/session-model.js";
 import userModel from "../models/user-model.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const emailChecker = async (req, res) => {
   try {
@@ -28,7 +30,6 @@ const registerUser = async (req, res) => {
     });
   }
 
-
   try {
     const user = await userModel.create({
       email,
@@ -37,21 +38,27 @@ const registerUser = async (req, res) => {
     });
 
     const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = tokenizer.createRefreshToken(user._id, req);
+    const refreshToken = await tokenizer.createRefreshToken(user._id, req, res);
 
     res
       .status(201)
       .cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
       })
-      .cookie("refreshToken", refreshToken, {
+      .cookie("refreshToken", refreshToken?.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+      })
+      .cookie("deviceId", refreshToken?.deviceId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
       })
       .json({
         user: userDataTrimmer(user),
@@ -86,21 +93,27 @@ const loginUser = async (req, res) => {
     }
 
     const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = tokenizer.createRefreshToken(user._id, req);
+    const refreshToken = await tokenizer.createRefreshToken(user._id, req, res);
 
     res
       .status(200)
       .cookie("accessToken", accessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
       })
-      .cookie("refreshToken", refreshToken, {
+      .cookie("refreshToken", refreshToken?.token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+      })
+      .cookie("deviceId", refreshToken?.deviceId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
       })
       .json({
         user: userDataTrimmer(user),
@@ -114,25 +127,40 @@ const loginUser = async (req, res) => {
   }
 };
 
-const logoutUser = (req, res) => {
+const logoutUser = async (req, res) => {
   try {
-    res
+    const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
+    const { refreshToken } = req.cookies;
+
+    try {
+      const data = jwt.verify(refreshToken, refreshSecret);
+      const session = await sessionModel.findById(`${data.jti}`);
+      session.revoked = true;
+      session.expiry_at = new Date(Date.now());
+      await session.save();
+    } catch (err) {
+      return res.status(400).json({
+        message: "Logout failed!",
+        error: err.message,
+      });
+    }
+    return res
       .clearCookie("accessToken", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
       })
       .clearCookie("refreshToken", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
       })
       .status(200)
       .json({
         message: "Logout successfully!",
       });
   } catch (err) {
-    res.status(400).json({
+    return res.status(400).json({
       message: "Logout failed!",
       error: err,
     });
@@ -141,6 +169,12 @@ const logoutUser = (req, res) => {
 
 const verificationLinkSender = (req, res) => {
   res.status(200).json("link send!");
-}
+};
 
-export { emailChecker, registerUser, loginUser, logoutUser, verificationLinkSender, };
+export {
+  emailChecker,
+  registerUser,
+  loginUser,
+  logoutUser,
+  verificationLinkSender,
+};

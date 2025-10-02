@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const sessionSchema = new mongoose.Schema(
   {
-    jti: {
-      type: String,
-      required: true,
-      unique: true
-    },
     revoked: {
       type: Boolean,
       required: true,

@@ -120,8 +120,8 @@ const Signup = () => {
                 <form onSubmit={submitHandler} className='w-full flex flex-col gap-[2vh]'>
                     {/* EMAIL INPUT */}
                     <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.email ? "border-red-600" : "border-zinc-600"} px-2 py-1 rounded-[3px] text-zinc-600 relative`}>
-                        <label className='text-[2.8vw] relative text-zinc-500'>Email*</label>
-                        <input className='w-full outline-0 border-0 text-[4.5vw]' value={userMail} disabled type="email" />
+                        <label className='text-[2.8vw] relative text-zinc-500' htmlFor='register-email'>Email*</label>
+                        <input className='w-full outline-0 border-0 text-[4.5vw]' value={userMail} disabled type="email" id='register-email'/>
                         <span onClick={() => dispatch(resetEmailStatus())} className="pencil-icon absolute w-full h-full pr-4 flex items-center justify-end">
                             <BsPencil />
                         </span>
@@ -130,8 +130,8 @@ const Signup = () => {
                     {/* PASSWORD INPUT */}
                     <div className="signup-password-wrapper w-full mt-[1vh]">
                         <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.password ? "border-red-600" : "border-zinc-400"} pl-2 py-1 rounded-[3px] relative`}>
-                            <label className='text-[2.8vw] text-zinc-500 relative'>Create Password*</label>
-                            <input onChange={passwordChecker} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} />
+                            <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='register-password'>Create Password*</label>
+                            <input onChange={passwordChecker} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='register-password'/>
                             <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>
                         </div>
                         {/* password instructions */}
@@ -152,8 +152,8 @@ const Signup = () => {
 
                     {/* NAME INPUT */}
                     <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.name ? "border-red-600" : "border-zinc-400"} px-2 py-1 rounded-[3px]`}>
-                        <label className='text-[2.8vw] text-zinc-500 relative'>Your Name*</label>
-                        <input ref={nameRef} className='w-full outline-0 border-0 text-[4.5vw]' type="text" />
+                        <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='register-name'>Your Name*</label>
+                        <input ref={nameRef} className='w-full outline-0 border-0 text-[4.5vw]' type="text" id='register-name'/>
                     </div>
 
                     {/* CONTACT INPUT */}

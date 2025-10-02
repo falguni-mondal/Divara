@@ -10,20 +10,20 @@ const tokenizer = {
     return jwt.sign({ sub: id }, accessSecret, { expiresIn: "15m" });
   },
   createRefreshToken: async (id, req) => {
+    const expMs = 7 * 24 * 60 * 60 * 1000;
+    const expiryAt = new Date(Date.now() + expMs);
+    const deviceId = req.cookies.deviceId || randomUUID();
     try {
-      const refreshToken = await sessionModel.create({
-        jti: randomUUID(),
+      const session = await sessionModel.create({
         user: id,
-        expiry_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-        device_id: randomUUID(),
+        expiry_at: expiryAt,
+        device_id: deviceId,
         ip_address: req.ip,
         user_agent: req.headers["user-agent"],
       });
-      return jwt.sign({ sub: id, jti: refreshToken?.jti }, refreshSecret, {
-        expiresIn: "7d",
-      });
+      const token = jwt.sign({ sub: id, jti: session._id.toString() }, refreshSecret, {expiresIn: expMs / 1000});
+      return {token, deviceId};
     } catch (err) {
-      console.error("Error while making Refresh Token: " + err.message);
       throw err;
     }
   },
