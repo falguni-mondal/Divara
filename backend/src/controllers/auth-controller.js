@@ -38,7 +38,7 @@ const registerUser = async (req, res) => {
     });
 
     const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = await tokenizer.createRefreshToken(user._id, req, res);
+    const refreshToken = await tokenizer.createRefreshToken(user._id, req);
 
     res
       .status(201)
@@ -93,7 +93,7 @@ const loginUser = async (req, res) => {
     }
 
     const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = await tokenizer.createRefreshToken(user._id, req, res);
+    const refreshToken = await tokenizer.createRefreshToken(user._id, req);
 
     res
       .status(200)
