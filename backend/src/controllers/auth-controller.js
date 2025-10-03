@@ -87,6 +87,10 @@ const loginUser = async (req, res) => {
       });
     }
 
+    await sessionModel.updateMany(
+      { user: user._id },
+      { revoked: true, expiry_at: new Date() }
+    );
     const accessToken = tokenizer.createAccessToken(user._id);
     const refreshToken = await tokenizer.createRefreshToken(user._id, req);
 
