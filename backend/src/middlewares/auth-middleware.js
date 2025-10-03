@@ -13,9 +13,11 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
     });
   }
   try {
+    //finding REFRESH TOKEN in DB
     const refreshTokenData = jwt.verify(refreshToken, refreshSecret);
     const refreshSession = await sessionModel.findById(refreshTokenData.jti);
 
+    // checking for Invalid SESSION in DB
     if (
       !refreshSession ||
       refreshSession?.revoked ||
@@ -26,6 +28,7 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
       });
     }
 
+    //matching DEVICE ID
     const reqDeviceId = req.cookies.device_id;
 
     if (!reqDeviceId || reqDeviceId !== refreshSession.device_id) {
@@ -57,6 +60,8 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
       });
     }
 
+
+    //matching DEVICE IP ADDRESS
     if (req.ip !== refreshSession.ip_address) {
       console.warn({
         event: "suspicious_token_use",
@@ -86,11 +91,11 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
       });
     }
 
+    //Setting REVOKED = TRUE in DB for the SESSION
     refreshSession.revoked = true;
     await refreshSession.save();
 
-    console.log(refreshSession);
-
+    //ROTATING New Refresh Session in DB
     const newSession = await sessionModel.create({
       user: refreshSession.user,
       expiry_at: refreshSession.expiry_at,
@@ -111,6 +116,7 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
 
     const newAccessToken = tokenizer.createAccessToken(newSession.user);
 
+    // Setting up fresh Cookies
     res
       .cookie("accessToken", newAccessToken, {
         ...cookieOptions,
@@ -125,10 +131,8 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
         maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
       });
 
-    req.user = {
-      user: newSession.user.toString(),
-      jti: newSession._id.toString(),
-    };
+      // Setting up user for further usage
+    req.user = newSession?.user.toString();
     return next();
   } catch (refreshTokenErr) {
     console.error(refreshTokenErr.message);
