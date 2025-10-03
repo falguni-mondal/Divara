@@ -1,3 +1,4 @@
+import { cookieOptions } from "../configs/reusable.js";
 import tokenizer from "../configs/tokenizer.js";
 import userDataTrimmer from "../configs/user-trimmer.js";
 import sessionModel from "../models/session-model.js";
@@ -43,21 +44,15 @@ const registerUser = async (req, res) => {
     res
       .status(201)
       .cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        ...cookieOptions,
         maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
       })
       .cookie("refreshToken", refreshToken?.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        ...cookieOptions,
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       })
-      .cookie("deviceId", refreshToken?.deviceId, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+      .cookie("device_id", refreshToken?.device_id, {
+        ...cookieOptions,
         maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
       })
       .json({
@@ -98,21 +93,15 @@ const loginUser = async (req, res) => {
     res
       .status(200)
       .cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        ...cookieOptions,
         maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
       })
       .cookie("refreshToken", refreshToken?.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        ...cookieOptions,
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
       })
-      .cookie("deviceId", refreshToken?.deviceId, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+      .cookie("device_id", refreshToken?.device_id, {
+        ...cookieOptions,
         maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
       })
       .json({
@@ -134,41 +123,37 @@ const logoutUser = async (req, res) => {
 
     try {
       const data = jwt.verify(refreshToken, refreshSecret);
-      const session = await sessionModel.findById(`${data.jti}`);
-      session.revoked = true;
-      session.expiry_at = new Date(Date.now());
-      await session.save();
+      await sessionModel.updateMany(
+        { user: data.sub },
+        { revoked: true, expiry_at: new Date() }
+      );
     } catch (err) {
+      console.error(err.message);
       return res.status(400).json({
         message: "Logout failed!",
-        error: err.message,
       });
     }
     return res
       .clearCookie("accessToken", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        ...cookieOptions,
       })
       .clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        ...cookieOptions,
       })
       .status(200)
       .json({
         message: "Logout successfully!",
       });
   } catch (err) {
+    console.error(err.message);
     return res.status(400).json({
       message: "Logout failed!",
-      error: err,
     });
   }
 };
 
 const verificationLinkSender = (req, res) => {
-  res.status(200).json("link send!");
+  res.status(200).json(req.user);
 };
 
 export {

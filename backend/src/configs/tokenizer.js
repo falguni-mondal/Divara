@@ -12,17 +12,17 @@ const tokenizer = {
   createRefreshToken: async (id, req) => {
     const expMs = 7 * 24 * 60 * 60 * 1000;
     const expiryAt = new Date(Date.now() + expMs);
-    const deviceId = req.cookies.deviceId || randomUUID();
+    const device_id = req.cookies.device_id || randomUUID();
     try {
       const session = await sessionModel.create({
         user: id,
         expiry_at: expiryAt,
-        device_id: deviceId,
+        device_id: device_id,
         ip_address: req.ip,
         user_agent: req.headers["user-agent"],
       });
       const token = jwt.sign({ sub: id, jti: session._id.toString() }, refreshSecret, {expiresIn: expMs / 1000});
-      return {token, deviceId};
+      return {token, device_id};
     } catch (err) {
       throw err;
     }
