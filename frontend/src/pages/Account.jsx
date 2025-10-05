@@ -9,7 +9,6 @@ const Account = () => {
   const navigate = useNavigate();
   const { hasUser } = useSelector((state) => state.auth.checkEmail);
   const mailStatus = useSelector((state) => state.auth.checkEmail.status);
-  const user = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (mailStatus === "success") {

@@ -6,6 +6,17 @@ import userModel from "../models/user-model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+const authChecker = async (req, res) => {
+  const id = req.user;
+  const user = await userModel.findById(id);
+  if(!user){
+    return res.status(400).json({
+      message: "Invalid User!"
+    })
+  }
+  return res.status(200).json(userDataTrimmer(user));
+}
+
 const emailChecker = async (req, res) => {
   try {
     const { email } = req.body;
@@ -55,14 +66,11 @@ const registerUser = async (req, res) => {
         ...cookieOptions,
         maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
       })
-      .json({
-        user: userDataTrimmer(user),
-        message: "User registered successfully!",
-      });
+      .json(userDataTrimmer(user));
   } catch (err) {
+    console.error(err.message);
     res.status(400).json({
       message: "Failed registering user!",
-      error: err.message,
     });
   }
 };
@@ -108,14 +116,11 @@ const loginUser = async (req, res) => {
         ...cookieOptions,
         maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
       })
-      .json({
-        user: userDataTrimmer(user),
-        message: "Login successfully!",
-      });
+      .json(userDataTrimmer(user));
   } catch (err) {
+    console.error(err.message);
     res.status(400).json({
       message: "User login failed!",
-      error: err.message,
     });
   }
 };
@@ -161,6 +166,7 @@ const verificationLinkSender = (req, res) => {
 };
 
 export {
+  authChecker,
   emailChecker,
   registerUser,
   loginUser,

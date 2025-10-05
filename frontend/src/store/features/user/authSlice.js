@@ -2,6 +2,20 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { backendBaseApi } from "../../../configs/keys";
 
+export const checkAuth = createAsyncThunk(
+  "auth/checkAuth",
+  async (_, { rejectWithValue }) => {
+    try {
+      const hasUser = await axios.get(`${backendBaseApi}/auth/check`, {
+        withCredentials: true,
+      });
+      return hasUser?.data;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
 export const checkMail = createAsyncThunk(
   "auth/checkMail",
   async (email, { rejectWithValue }) => {
@@ -44,7 +58,9 @@ export const verificationLinkSender = createAsyncThunk(
   "auth/verificationLinkSender",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${backendBaseApi}/auth/verify/send`, {withCredentials: true});
+      const res = await axios.get(`${backendBaseApi}/auth/verify/send`, {
+        withCredentials: true,
+      });
       return res?.data;
     } catch (err) {
       return rejectWithValue(err?.response?.data);
@@ -55,8 +71,9 @@ export const verificationLinkSender = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState: {
-    isAuthenticated: null,
     user: null,
+    status: "idle",
+    error: null,
     checkEmail: {
       userMail: "",
       hasUser: null,
@@ -84,6 +101,8 @@ const authSlice = createSlice({
 
   reducers: {
     resetEmailStatus: (state) => {
+      state.checkEmail.hasUser = null;
+      state.checkEmail.userMail = "";
       state.checkEmail.status = "idle";
       state.checkEmail.error = null;
     },
@@ -91,6 +110,17 @@ const authSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
+      .addCase(checkAuth.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(checkAuth.fulfilled, (state, action) => {
+        state.status = "success";
+        state.user = action.payload;
+      })
+      .addCase(checkAuth.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
       .addCase(checkMail.pending, (state) => {
         state.checkEmail.status = "loading";
       })
@@ -135,7 +165,7 @@ const authSlice = createSlice({
       .addCase(verificationLinkSender.rejected, (state, action) => {
         state.verifyLink.status = "failed";
         state.verifyLink.error = action.payload;
-      })
+      });
   },
 });
 

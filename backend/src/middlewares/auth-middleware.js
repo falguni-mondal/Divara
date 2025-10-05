@@ -9,7 +9,7 @@ const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
 const refreshTokenSetup = async (req, res, next, refreshToken) => {
   if (!refreshToken) {
     return res.status(401).json({
-      message: "Unauthorized User!",
+      message: "Session Expired!",
     });
   }
   try {
@@ -24,7 +24,7 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
       refreshSession?.expiry_at <= new Date()
     ) {
       return res.status(401).json({
-        message: "Unauthorized User!",
+        message: "Session Expired!",
       });
     }
 
@@ -56,7 +56,7 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
         .clearCookie("device_id");
 
       return res.status(401).json({
-        message: "Unauthorized User!",
+        message: "Session Expired!",
       });
     }
 
@@ -87,7 +87,7 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
         .clearCookie("device_id");
 
       return res.status(401).json({
-        message: "Unauthorized User!",
+        message: "Session Expired!",
       });
     }
 
@@ -137,7 +137,7 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
   } catch (refreshTokenErr) {
     console.error(refreshTokenErr.message);
     return res.status(401).json({
-      message: "Unauthorized User!",
+      message: "Session Expired!",
     });
   }
 };
