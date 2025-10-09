@@ -5,9 +5,12 @@ import { Link } from 'react-router-dom'
 import { FiUser } from "react-icons/fi";
 import { BsBoxSeam } from "react-icons/bs";
 import { BsHandbag } from "react-icons/bs";
+import { useSelector } from 'react-redux';
 
 
 const Navmenu = ({ showNav, navMenuController }) => {
+
+  const user = useSelector(state => state.auth.user);
 
   const accountNavItems = [
     {
@@ -21,9 +24,9 @@ const Navmenu = ({ showNav, navMenuController }) => {
       path: "/bag"
     },
     {
-      title: "Sign In",
+      title: user? "Profile" : "Sign In",
       icon : FiUser,
-      path: "/account"
+      path: user? "/profile" : "/account"
     },
   ]
 

@@ -1,17 +1,24 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { Navigate, Outlet } from 'react-router-dom';
+import LoadingScreen from '../utils/loading/LoadingScreen';
 
-const AuthGuard = ({
-    children,
-    publicOnly= false,
-    requireAuth= false,
-    requireVerified= false
-}) => {
+const AuthGuard = () => {
+    const { user, status } = useSelector(state => state.auth);
 
-    const {user} = useSelector(state => state.auth);
-  return (
-    <div>AuthGuard</div>
-  )
+    if (status === "loading" || status === "idle") {
+        return <LoadingScreen />
+    }
+
+    if (status === "failed" || (!user && status === "success")) {
+        return <Navigate to="/account" replace />
+    }
+
+    if (user && !user?.isVerified) {
+        return <Navigate to="/account/verify" replace />
+    }
+
+    return <Outlet />
 }
 
 export default AuthGuard

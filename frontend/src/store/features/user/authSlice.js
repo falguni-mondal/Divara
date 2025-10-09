@@ -34,7 +34,7 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (data, { rejectWithValue }) => {
     try {
-      const user = await axios.post(`${backendBaseApi}/auth/register`, data);
+      const user = await axios.post(`${backendBaseApi}/auth/register`, data, {withCredentials: true});
       return user?.data;
     } catch (err) {
       return rejectWithValue(err?.response?.data);
@@ -46,7 +46,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (data, { rejectWithValue }) => {
     try {
-      const user = await axios.post(`${backendBaseApi}/auth/login`, data);
+      const user = await axios.post(`${backendBaseApi}/auth/login`, data, {withCredentials: true});
       return user?.data;
     } catch (err) {
       return rejectWithValue(err?.response?.data);
@@ -67,6 +67,17 @@ export const verificationLinkSender = createAsyncThunk(
     }
   }
 );
+
+export const logoutUser = createAsyncThunk("auth/logoutUser",
+  async (_, {rejectWithValue}) => {
+    try{
+      const res = await axios.get(`${backendBaseApi}/auth/logout`, {withCredentials: true});
+      return res?.data;
+    }catch(err){
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+)
 
 const authSlice = createSlice({
   name: "auth",
@@ -165,7 +176,18 @@ const authSlice = createSlice({
       .addCase(verificationLinkSender.rejected, (state, action) => {
         state.verifyLink.status = "failed";
         state.verifyLink.error = action.payload;
-      });
+      })
+      .addCase(logoutUser.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.status = "success";
+        state.user = null;
+      })
+      .addCase(logoutUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload;
+      })
   },
 });
 

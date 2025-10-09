@@ -7,9 +7,9 @@ import BaseAuth from '../components/auth/BaseAuth';
 const AccountRouter = () => {
   return (
     <Routes>
-        <Route path='/' element={<BaseAuth/>}/>
-        <Route path='/signin' element={<Signin />}/>
-        <Route path='/signup' element={<Signup />}/>
+        <Route path='/' element={<BaseAuth />} />
+        <Route path='/signin' element={<Signin />} />
+        <Route path='/signup' element={<Signup />} />
     </Routes>
   )
 }

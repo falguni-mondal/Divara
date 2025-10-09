@@ -7,13 +7,15 @@ import { useLocation } from 'react-router-dom'
 import { Bounce, ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux'
 import { checkAuth } from '../store/features/user/authSlice'
+import LoadingScreen from '../utils/loading/LoadingScreen'
 
 
 const App = () => {
+  const [load, setLoad] = useState(false);
   const [showNav, setShowNav] = useState(false);
   const pathLocation = useLocation();
   const dispatch = useDispatch();
-  const {user} = useSelector(state => state.auth);
+  const {user, status} = useSelector(state => state.auth);
 
   const navMenuController = () => {
     setShowNav(prev => !prev);
@@ -30,10 +32,21 @@ const App = () => {
 
   useEffect(() => {
     dispatch(checkAuth());
-    console.log(user && user);
   }, [])
 
+  useEffect(() => {
+    window.addEventListener("load", ()=>{
+      setLoad(true);
+    })
+  },[])
+
   return (
+    !load?
+    <LoadingScreen />
+    :
+    status === "loading" ?
+    <LoadingScreen />
+    :
     <div className='container w-full'>
       <Navbar showNav={showNav} navMenuController={navMenuController} />
       <Navmenu showNav={showNav} navMenuController={navMenuController} />
