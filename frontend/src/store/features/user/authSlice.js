@@ -56,9 +56,9 @@ export const loginUser = createAsyncThunk(
 
 export const verificationLinkSender = createAsyncThunk(
   "auth/verificationLinkSender",
-  async (_, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${backendBaseApi}/auth/verify/send`, {
+      const res = await axios.post(`${backendBaseApi}/auth/verify/send`, data, {
         withCredentials: true,
       });
       return res?.data;

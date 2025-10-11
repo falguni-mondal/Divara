@@ -1,21 +1,23 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { verificationLinkSender } from '../../store/features/user/authSlice';
+import { frontendBaseUrl } from '../../configs/keys';
 
 const EmailVerification = () => {
     const dispatch = useDispatch();
     const {message, error} = useSelector((state) => state.auth.verifyLink);
+    const user = useSelector(state => state.auth.user);
 
     const accountReseter = () => {
 
     }
 
     const linkResender = () => {
-        dispatch(verificationLinkSender());
+        dispatch(verificationLinkSender({userEmail: user?.email, frontendBaseUrl}));
     }
 
     useEffect(() => {
-        dispatch(verificationLinkSender());
+        dispatch(verificationLinkSender({userEmail: user?.email, frontendBaseUrl}));
         message && console.log(message);
         error && console.log(error);
     }, [])

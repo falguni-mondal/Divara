@@ -9,6 +9,6 @@ router.post("/check/email", emailChecker);
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/logout", logoutUser);
-router.get("/verify/send", isValidUser, verificationLinkSender);
+router.post("/verify/send", isValidUser, verificationLinkSender);
 
 export default router;

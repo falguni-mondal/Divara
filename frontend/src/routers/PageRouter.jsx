@@ -1,11 +1,12 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom'
-import Homepage from '../pages/Homepage'
-import AuthGuard from '../guards/AuthGuard'
-import PublicOnly from '../guards/PublicOnly'
-import Account from '../pages/Account'
-import EmailVerification from '../pages/email_verification/EmailVerification'
-import Profile from '../pages/Profile'
+import { Route, Routes } from 'react-router-dom';
+import Homepage from '../pages/Homepage';
+import AuthGuard from '../guards/AuthGuard';
+import PublicOnly from '../guards/PublicOnly';
+import Account from '../pages/Account';
+import EmailVerification from '../pages/email_verification/EmailVerification';
+import EmailVerifier from '../pages/email_verification/EmailVerifier';
+import Profile from '../pages/Profile';
 
 const PageRouter = () => {
   return (
@@ -26,6 +27,7 @@ const PageRouter = () => {
 
         {/* Verification Page */}
         <Route path='/account/verify' element={<EmailVerification />}/>
+        <Route path='/account/verify/:token' element={<EmailVerifier />}/>
         
     </Routes>
   )
