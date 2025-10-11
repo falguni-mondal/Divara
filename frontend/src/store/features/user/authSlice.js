@@ -68,6 +68,15 @@ export const verificationLinkSender = createAsyncThunk(
   }
 );
 
+export const emailVerifier = createAsyncThunk("auth/emailVerifier", async (token, {rejectWithValue}) => {
+  try{
+    const res = await axios.get(`${backendBaseApi}/auth/verify/${token}`, {withCredentials: true})
+    return res?.data;
+  }catch(err){
+    return rejectWithValue(err?.response?.data);
+  }
+})
+
 export const logoutUser = createAsyncThunk("auth/logoutUser",
   async (_, {rejectWithValue}) => {
     try{
@@ -92,11 +101,12 @@ const authSlice = createSlice({
       error: null,
     },
     verifyLink: {
-      message: "",
+      message: null,
       status: "idle",
       error: null,
     },
-    verifyEmail: {
+    emailVerify: {
+      message: null,
       status: "idle",
       error: null,
     },
@@ -176,6 +186,17 @@ const authSlice = createSlice({
       .addCase(verificationLinkSender.rejected, (state, action) => {
         state.verifyLink.status = "failed";
         state.verifyLink.error = action.payload;
+      })
+      .addCase(emailVerifier.pending, (state) => {
+        state.emailVerify.status = "loading";
+      })
+      .addCase(emailVerifier.fulfilled, (state, action) => {
+        state.emailVerify.status = "success";
+        state.emailVerify.message = action.payload;
+      })
+      .addCase(emailVerifier.rejected, (state, action) => {
+        state.emailVerify.status = "failed";
+        state.emailVerify.error = action.payload;
       })
       .addCase(logoutUser.pending, (state) => {
         state.status = "loading";

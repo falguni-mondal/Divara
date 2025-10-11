@@ -18,16 +18,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
     },
-    // contact: {
-    //   type: {
-    //     country: { type: String },
-    //     country_code: { type: String },
-    //     dial_code: { type: String },
-    //     number: { type: String },
-    //     isVerified: { type: Boolean, default: false },
-    //   },
-    //   require: true,
-    // },
     cart: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "cart",

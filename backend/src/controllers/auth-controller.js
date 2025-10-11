@@ -165,9 +165,10 @@ const logoutUser = async (req, res) => {
 
 const verificationLinkSender = async (req, res) => {
   try {
-    const {userEmail, frontendBaseUrl} = req.body;
-    const token = tokenizer.createAccessToken(req.user);
-    const verificationLink = `${frontendBaseUrl}/account/verify/token=?${token}`
+    const { userEmail, frontendBaseUrl } = req.body;
+    const token = tokenizer.createVerifyToken(req.user);
+    const verificationLink = `${frontendBaseUrl}/account/verify/token?token=${token}`;
+
     const {
       GOOGLE_CLIENT_ID,
       GOOGLE_CLIENT_SECRET,
@@ -213,11 +214,51 @@ const verificationLinkSender = async (req, res) => {
 
     const result = await transporter.sendMail(mailOptions);
     console.log(result.response);
-    res.status(200).json({message: "Verification link sent!"});
-
+    res.status(200).json({ message: "Verification link sent!" });
   } catch (err) {
     console.log(err.message);
-    res.status(400).json({message: "Failed sending verification link!"});
+    res.status(400).json({ message: "Failed sending verification link!" });
+  }
+};
+
+const emailVerifier = async (req, res) => {
+  try {
+    const userId = req.user;
+    const { token } = req.params;
+    const tokenSecret = process.env.VERIFY_TOKEN_SECRET;
+
+    if (!token)
+      return res.status(400).json({ message: "Invalid verify token!" });
+
+    const data = jwt.verify(token, tokenSecret);
+
+    if (data.sub !== userId) {
+      return res.status(400).json({ message: "Invalid verify token!" });
+    } else {
+      const user = await userModel.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found!" });
+      }
+
+      if (user.isVerified) {
+        return res.status(200).json({ message: "Email already verified!" });
+      }
+
+      user.isVerified = true;
+      await user.save();
+      return res
+        .status(200)
+        .json({ message: "Email verification successfull!" });
+    }
+  } catch (err) {
+    console.error("Verification Error:", err.message);
+
+    if (err.name === "TokenExpiredError") {
+      return res.status(400).json({ message: "Verification link expired!" });
+    }
+
+    res.status(400).json({ message: "Invalid or expired verification token!" });
   }
 };
 
@@ -226,6 +267,7 @@ export {
   emailChecker,
   registerUser,
   loginUser,
-  logoutUser,
   verificationLinkSender,
+  emailVerifier,
+  logoutUser,
 };

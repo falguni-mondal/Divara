@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 
 const accessSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
+const verifySecret = process.env.VERIFY_TOKEN_SECRET;
 
 const tokenizer = {
   createAccessToken: (id) => {
@@ -26,6 +27,9 @@ const tokenizer = {
     } catch (err) {
       throw err;
     }
+  },
+  createVerifyToken: (id) => {
+    return jwt.sign({ sub: id }, verifySecret, { expiresIn: "15m" });
   },
 };
 
