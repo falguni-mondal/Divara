@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    lastVerifyLink:{
+      type: Date,
+      default: null
+    },
     password: {
       type: String,
     },

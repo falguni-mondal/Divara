@@ -1,5 +1,5 @@
 import express from "express";
-import { authChecker, emailChecker, registerUser, loginUser, logoutUser, verificationLinkSender, emailVerifier, } from "../controllers/auth-controller.js";
+import { authChecker, emailChecker, registerUser, loginUser, logoutUser, verificationLinkSender, emailVerifier, accountReseter} from "../controllers/auth-controller.js";
 import isValidUser from "../middlewares/auth-middleware.js";
 
 const router = express.Router()
@@ -11,5 +11,6 @@ router.post("/login", loginUser);
 router.post("/verify/send", isValidUser, verificationLinkSender);
 router.get("/verify/:token", isValidUser, emailVerifier);
 router.get("/logout", logoutUser);
+router.get("/account/reset", isValidUser, accountReseter)
 
 export default router;

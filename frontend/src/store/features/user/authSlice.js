@@ -34,7 +34,9 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (data, { rejectWithValue }) => {
     try {
-      const user = await axios.post(`${backendBaseApi}/auth/register`, data, {withCredentials: true});
+      const user = await axios.post(`${backendBaseApi}/auth/register`, data, {
+        withCredentials: true,
+      });
       return user?.data;
     } catch (err) {
       return rejectWithValue(err?.response?.data);
@@ -46,7 +48,9 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (data, { rejectWithValue }) => {
     try {
-      const user = await axios.post(`${backendBaseApi}/auth/login`, data, {withCredentials: true});
+      const user = await axios.post(`${backendBaseApi}/auth/login`, data, {
+        withCredentials: true,
+      });
       return user?.data;
     } catch (err) {
       return rejectWithValue(err?.response?.data);
@@ -68,25 +72,33 @@ export const verificationLinkSender = createAsyncThunk(
   }
 );
 
-export const emailVerifier = createAsyncThunk("auth/emailVerifier", async (token, {rejectWithValue}) => {
-  try{
-    const res = await axios.get(`${backendBaseApi}/auth/verify/${token}`, {withCredentials: true})
-    return res?.data;
-  }catch(err){
-    return rejectWithValue(err?.response?.data);
-  }
-})
-
-export const logoutUser = createAsyncThunk("auth/logoutUser",
-  async (_, {rejectWithValue}) => {
-    try{
-      const res = await axios.get(`${backendBaseApi}/auth/logout`, {withCredentials: true});
+export const emailVerifier = createAsyncThunk(
+  "auth/emailVerifier",
+  async (token, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${backendBaseApi}/auth/verify/${token}`, {
+        withCredentials: true,
+      });
       return res?.data;
-    }catch(err){
+    } catch (err) {
       return rejectWithValue(err?.response?.data);
     }
   }
-)
+);
+
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${backendBaseApi}/auth/logout`, {
+        withCredentials: true,
+      });
+      return res?.data;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -208,7 +220,7 @@ const authSlice = createSlice({
       .addCase(logoutUser.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload;
-      })
+      });
   },
 });
 

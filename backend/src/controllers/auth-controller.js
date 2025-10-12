@@ -166,6 +166,19 @@ const logoutUser = async (req, res) => {
 const verificationLinkSender = async (req, res) => {
   try {
     const { userEmail, frontendBaseUrl } = req.body;
+
+    const user = await userModel.findById(req.user);
+    if (user.lastVerifyLink) {
+      const lastSent = new Date(user.lastVerifyLink).getTime();
+      const current = Date.now();
+      const limit = 5 * 60 * 1000;
+      if (current - lastSent < limit) {
+        const remaining = Math.ceil((limit - (current - lastSent)) / 60000);
+        return res.status(429).json({
+          message: `Please wait ${remaining} more minute(s) to send a new link.`,
+        });
+      }
+    }
     const token = tokenizer.createVerifyToken(req.user);
     const verificationLink = `${frontendBaseUrl}/account/verify/token?token=${token}`;
 
@@ -213,10 +226,15 @@ const verificationLinkSender = async (req, res) => {
     };
 
     const result = await transporter.sendMail(mailOptions);
-    console.log(result.response);
+
+    if (result.response) {
+      user.lastVerifyLink = new Date();
+      await user.save();
+    }
+
     res.status(200).json({ message: "Verification link sent!" });
   } catch (err) {
-    console.log(err.message);
+    console.log("Error while sending verification link: " + err.message);
     res.status(400).json({ message: "Failed sending verification link!" });
   }
 };
@@ -262,6 +280,37 @@ const emailVerifier = async (req, res) => {
   }
 };
 
+const accountReseter = async (req, res) => {
+  try{
+    const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
+    const {refreshToken} = req.cookies;
+    if (!refreshToken) {
+      return res.status(400).json({ message: "No refresh token found!" });
+    }
+    const data = jwt.verify(refreshToken, refreshSecret);
+
+    await sessionModel.deleteMany({ user: data.sub });
+    await userModel.findOneAndDelete({_id: req.user});
+
+    return res
+      .clearCookie("accessToken", {
+        ...cookieOptions,
+      })
+      .clearCookie("refreshToken", {
+        ...cookieOptions,
+      })
+      .status(200)
+      .json({
+        message: "Account reseting successfull!",
+      });
+  }catch(err){
+    console.error("Account Reseting Error: " + err.message);
+    res.status(400).json({
+      message: "Failed resetting account!"
+    })
+  }
+}
+
 export {
   authChecker,
   emailChecker,
@@ -270,4 +319,5 @@ export {
   verificationLinkSender,
   emailVerifier,
   logoutUser,
+  accountReseter,
 };

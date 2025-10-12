@@ -16,7 +16,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(parser());
 
 app.use(cors({
-    origin: ["http://localhost:5173", "http://localhost:5174"],
+    origin: process.env.NODE_ENV === "development" ? true : ["http://localhost:5173", "http://localhost:5174"],
     credentials: true
 }))
 
