@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import PageRouter from '../routers/PageRouter'
-import Navbar from './navbar/Navbar'
-import Navmenu from './navbar/Navmenu'
-import Footer from './footer/Footer'
-import { useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import PageRouter from '../routers/PageRouter';
+import Navbar from './navbar/Navbar';
+import Navmenu from './navbar/Navmenu';
+import Footer from './footer/Footer';
+import { useLocation } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux'
-import { checkAuth } from '../store/features/user/authSlice'
-import LoadingScreen from '../utils/loading/LoadingScreen'
+import { useDispatch, useSelector } from 'react-redux';
+import { checkAuth } from '../store/features/user/authSlice';
+import LoadingScreen from '../utils/loading/LoadingScreen';
 
 
 const App = () => {
@@ -15,7 +15,7 @@ const App = () => {
   const [showNav, setShowNav] = useState(false);
   const pathLocation = useLocation();
   const dispatch = useDispatch();
-  const {user, status} = useSelector(state => state.auth);
+  const {status} = useSelector(state => state.auth);
 
   const navMenuController = () => {
     setShowNav(prev => !prev);
@@ -41,9 +41,7 @@ const App = () => {
   },[])
 
   return (
-    !load?
-    <LoadingScreen />
-    :
+    !load &&
     status === "loading" ?
     <LoadingScreen />
     :

@@ -14,9 +14,7 @@ const Signin = () => {
   const passwordRef = useRef(null);
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.auth.login);
-  const { user } = useSelector((state) => state.auth);
 
 
   const submitHandler = (e) => {
@@ -29,12 +27,8 @@ const Signin = () => {
       toast.error(`${error.message}`, toastOptions);
       return;
     }
-
-    if(!user?.isVerified){
-      navigate("/account/verify");
-    }
-    else{
-      navigate(-1);
+    if(status === "success"){
+      dispatch(resetEmailStatus());
     }
   }
 

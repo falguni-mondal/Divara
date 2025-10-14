@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom';
 import LoadingScreen from '../utils/loading/LoadingScreen';
@@ -10,7 +9,7 @@ const AuthGuard = () => {
         return <LoadingScreen />
     }
 
-    if (status === "failed" || (!user && status === "success")) {
+    if (status === "failed" || !user) {
         return <Navigate to="/account" replace />
     }
 

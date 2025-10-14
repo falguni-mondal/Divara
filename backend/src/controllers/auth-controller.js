@@ -264,6 +264,7 @@ const emailVerifier = async (req, res) => {
       }
 
       user.isVerified = true;
+      delete user.lastVerifyLink;
       await user.save();
       return res
         .status(200)

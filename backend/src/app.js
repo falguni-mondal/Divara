@@ -1,7 +1,7 @@
 import express from "express";
 import parser from "cookie-parser";
-import cors from "cors";
 import "dotenv/config";
+import cors from "cors";
 import connectToDB from "./configs/db/mongoose-config.js";
 
 // ROUTE IMPORTS.......................................................

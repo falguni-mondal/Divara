@@ -2,14 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RxEyeOpen } from "react-icons/rx";
-// import { MdKeyboardArrowDown } from "react-icons/md";
 import { BsPencil } from "react-icons/bs";
-
-// import ReactCountryFlag from "react-country-flag";
-
 import { registerUser, resetEmailStatus } from '../../store/features/user/authSlice';
 import FormSubmitBtn from '../../utils/buttons/FormSubmitBtn';
-import LoadingScreen from '../../utils/loading/LoadingScreen';
 
 const Signup = () => {
     const dispatch = useDispatch();
@@ -103,6 +98,9 @@ const Signup = () => {
         }
 
         dispatch(registerUser(data));
+        if (status === "success") {
+            dispatch(resetEmailStatus());
+        }
     }
 
     useEffect(() => {

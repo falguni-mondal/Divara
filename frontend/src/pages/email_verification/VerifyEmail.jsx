@@ -38,8 +38,8 @@ const VerifyEmail = () => {
     }, [3000])
     return (
       <div className='w-[100vw] h-[100dvh] flex flex-col justify-center items-center px-[3vw] gap-5'>
-        <video src={successVideo} className='w-[30vw] h-[30vw]' />
-        <p className='text-[3.5vw] font-semibold w-full'>{message.message}</p>
+        <video src={successVideo} muted autoPlay className='w-[30vw] h-[30vw]'> </video>
+        <p className='text-[5vw] font-semibold max-w-full'>{message.message}</p>
       </div>
     )
   }
