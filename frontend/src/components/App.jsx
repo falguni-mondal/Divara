@@ -41,8 +41,7 @@ const App = () => {
   },[])
 
   return (
-    !load &&
-    status === "loading" ?
+    !load ?
     <LoadingScreen />
     :
     <div className='container w-full'>

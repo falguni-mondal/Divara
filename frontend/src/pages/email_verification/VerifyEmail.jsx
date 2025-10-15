@@ -16,43 +16,34 @@ const VerifyEmail = () => {
   const userStatus = useSelector(state => state.auth.status);
 
   if (userStatus === "loading" || userStatus === "idle") {
-        return <LoadingScreen />
-    }
-    if (!user) {
-        return <Navigate to="/account" replace />
-    }
-    if (user && user?.isVerified) {
-        return <Navigate to="/profile" replace />
-    }
-
-  useEffect(() => {
+    return <LoadingScreen />
+  }
+  if (!user) {
+    return <Navigate to="/account" replace />
+  }
+  if (user && user?.isVerified) {
+    return <Navigate to="/profile" replace />
+  }else{
     dispatch(emailVerifier(token));
-  }, [])
+  }
 
   if (status === "loading" || status === "idle") {
     return <LoadingScreen />
   }
+
   if (status === "success") {
     setTimeout(() => {
       window.location.reload();
     }, [3000])
     return (
       <div className='w-[100vw] h-[100dvh] flex flex-col justify-center items-center px-[3vw] gap-5'>
-        <video src={successVideo} muted autoPlay className='w-[30vw] h-[30vw]'> </video>
-        <p className='text-[5vw] font-semibold max-w-full'>{message.message}</p>
+        <video src={successVideo} muted autoPlay className='w-[30vw] h-[30vw]' />
+        <p className='text-[5vw] font-semibold max-w-full'>{message?.message}</p>
       </div>
     )
   }
   if (status === "failed") {
-    setTimeout(() => {
-      window.location.reload();
-    }, [3000])
-    return (
-      <div className='w-[100vw] h-[100dvh] flex flex-col justify-center items-center px-[3vw] gap-5'>
-        <video src={errorVideo} className='w-[30vw] h-[30vw]' />
-        <p className='text-[3.5vw] font-semibold w-full'>{error.message}</p>
-      </div>
-    )
+    return <Navigate to="/account/verify" replace />
   }
 }
 

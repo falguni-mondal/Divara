@@ -1,3 +1,4 @@
+import transporter from "../configs/nodemailer.js";
 import { cookieOptions } from "../configs/reusable.js";
 import tokenizer from "../configs/tokenizer.js";
 import userDataTrimmer from "../configs/user-trimmer.js";
@@ -5,8 +6,6 @@ import sessionModel from "../models/session-model.js";
 import userModel from "../models/user-model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
-import { google } from "googleapis";
 
 const authChecker = async (req, res) => {
   const id = req.user;
@@ -22,6 +21,10 @@ const authChecker = async (req, res) => {
 const emailChecker = async (req, res) => {
   try {
     const { email } = req.body;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    if(!email || email.length === 0 || !emailRegex.test(email)){
+      return res.status(422).json({message: "Invalid email format!"})
+    }
     const user = await userModel.findOne({ email });
     if (user) {
       res.status(200).json(true);
@@ -29,22 +32,15 @@ const emailChecker = async (req, res) => {
       res.status(200).json(false);
     }
   } catch (err) {
-    res.status(400).json(`Error while checking Email: ${err}`);
+    console.error(err.message);
+    res.status(400).json({message: "Internal server error!"});
   }
 };
 
 const registerUser = async (req, res) => {
-  const { email, password, name } = req.body;
-  const userExist = await userModel.findOne({ email });
-
-  if (userExist) {
-    return res.status(409).json({
-      userExist: true,
-      message: "User exists",
-    });
-  }
-
   try {
+    const { email, password, name } = req.body;
+
     const user = await userModel.create({
       email,
       password: await bcrypt.hash(password, 10),
@@ -182,37 +178,8 @@ const verificationLinkSender = async (req, res) => {
     const token = tokenizer.createVerifyToken(req.user);
     const verificationLink = `${frontendBaseUrl}/account/verify/token?token=${token}`;
 
-    const {
-      GOOGLE_CLIENT_ID,
-      GOOGLE_CLIENT_SECRET,
-      GOOGLE_REFRESH_TOKEN,
-      GOOGLE_REDIRECT_URI,
-      SENDER_MAIL,
-    } = process.env;
-
-    const oAuth2Client = new google.auth.OAuth2(
-      GOOGLE_CLIENT_ID,
-      GOOGLE_CLIENT_SECRET,
-      GOOGLE_REDIRECT_URI
-    );
-
-    oAuth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
-
-    const accessToken = await oAuth2Client.getAccessToken();
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        type: "OAuth2",
-        user: SENDER_MAIL,
-        clientId: GOOGLE_CLIENT_ID,
-        clientSecret: GOOGLE_CLIENT_SECRET,
-        refreshToken: GOOGLE_REFRESH_TOKEN,
-        accessToken: accessToken.token,
-      },
-    });
-
     const mailOptions = {
-      from: `"Divara" <${SENDER_MAIL}>`,
+      from: `"Divara" <${process.env.SENDER_MAIL}>`,
       to: userEmail,
       subject: "Verify your email address",
       html: `
@@ -282,16 +249,16 @@ const emailVerifier = async (req, res) => {
 };
 
 const accountReseter = async (req, res) => {
-  try{
+  try {
     const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
-    const {refreshToken} = req.cookies;
+    const { refreshToken } = req.cookies;
     if (!refreshToken) {
       return res.status(400).json({ message: "No refresh token found!" });
     }
     const data = jwt.verify(refreshToken, refreshSecret);
 
     await sessionModel.deleteMany({ user: data.sub });
-    await userModel.findOneAndDelete({_id: req.user});
+    await userModel.findOneAndDelete({ _id: req.user });
 
     return res
       .clearCookie("accessToken", {
@@ -304,13 +271,13 @@ const accountReseter = async (req, res) => {
       .json({
         message: "Account reseting successfull!",
       });
-  }catch(err){
+  } catch (err) {
     console.error("Account Reseting Error: " + err.message);
     res.status(400).json({
-      message: "Failed resetting account!"
-    })
+      message: "Failed resetting account!",
+    });
   }
-}
+};
 
 export {
   authChecker,
