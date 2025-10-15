@@ -4,14 +4,15 @@ import AccountRouter from '../routers/AccountRouter'
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import toastOptions from '../configs/toast-options';
 
 const Account = () => {
   const navigate = useNavigate();
-  const { hasUser } = useSelector((state) => state.auth.checkEmail);
-  const mailStatus = useSelector((state) => state.auth.checkEmail.status);
+  const { hasUser, status, error } = useSelector((state) => state.auth.checkEmail);
 
   useEffect(() => {
-    if (mailStatus === "success") {
+    if (status === "success") {
       if (hasUser) {
         navigate("/account/signin", {replace: true});
       }
@@ -19,10 +20,13 @@ const Account = () => {
         navigate("/account/signup", {replace: true});
       }
     }
-    else if (mailStatus === "idle" || mailStatus === "failed") {
+    else if (status === "idle" || status === "failed") {
       navigate("/account", {replace: true});
+      if(error){
+        toast.error(error.message, toastOptions);
+      }
     }
-  }, [hasUser, mailStatus])
+  }, [hasUser, status])
 
   return (
     <div className='w-full py-[15vw] px-[10vw]' id='account-page'>

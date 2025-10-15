@@ -1,7 +1,7 @@
 import express from "express";
 import { authChecker, emailChecker, registerUser, loginUser, logoutUser, verificationLinkSender, emailVerifier, accountReseter} from "../controllers/auth-controller.js";
 import isValidUser from "../middlewares/auth-middleware.js";
-import isValidRegisterCreds from "../middlewares/isValidRegisterCreds.js";
+import isValidRegisterCreds from "../middlewares/registration-creds-validator.js";
 
 const router = express.Router()
 

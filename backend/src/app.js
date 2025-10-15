@@ -4,6 +4,9 @@ import "dotenv/config";
 import cors from "cors";
 import connectToDB from "./configs/db/mongoose-config.js";
 
+// CUSTOM MIDDLEWARES
+import globalLimiter from "./middlewares/global/global-limiter.js";
+
 // ROUTE IMPORTS.......................................................
 import authRouter from "./routes/auth-routes.js"
 
@@ -16,9 +19,12 @@ app.use(express.urlencoded({extended: true}));
 app.use(parser());
 
 app.use(cors({
-    origin: process.env.NODE_ENV === "development" ? true : ["http://localhost:5173", "http://localhost:5174"],
+    origin: process.env.NODE_ENV === "development" ? true : ["https://myfrontendLink.com"],
     credentials: true
 }))
+
+// CUSTOM MIDDLEWARES
+app.use(globalLimiter);
 
 // DB CONNECTING.............................................
 connectToDB();

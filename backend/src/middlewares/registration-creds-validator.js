@@ -1,6 +1,6 @@
-import userModel from "../models/user-model";
+import userModel from "../models/user-model.js";
 
-const isValidCreds = async (req, res, next) => {
+const isValidRegisterCreds = async (req, res, next) => {
   try {
     const passwordRegex = /^(?=.*[0-9])(?=.*[!+,\-./:;<=>?@]).{8,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
@@ -36,4 +36,4 @@ const isValidCreds = async (req, res, next) => {
   }
 };
 
-export default isValidCreds;
+export default isValidRegisterCreds;
