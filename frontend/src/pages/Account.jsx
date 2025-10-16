@@ -6,10 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import toastOptions from '../configs/toast-options';
+import { backendBaseApi } from '../configs/keys';
 
 const Account = () => {
   const navigate = useNavigate();
   const { hasUser, status, error } = useSelector((state) => state.auth.checkEmail);
+
+  const googleLoginHandler = () => {
+    window.location.href= `${backendBaseApi}/auth/google`;
+  }
 
   useEffect(() => {
     if (status === "success") {
@@ -35,7 +40,7 @@ const Account = () => {
           My Divara Account
         </h1>
         <section className="third-party-signin-section mt-[5vh]">
-          <button className='google-signin-btn flex items-center justify-center gap-2 text-[3vw] uppercase font-semibold w-full h-[6vh] border-[1.5px] rounded-[3px]'>
+          <button onClick={googleLoginHandler} className='google-signin-btn flex items-center justify-center gap-2 text-[3vw] uppercase font-semibold w-full h-[6vh] border-[1.5px] rounded-[3px]'>
             <FcGoogle className='text-[4.5vw]' />
             Continue with google
           </button>

@@ -123,6 +123,40 @@ const loginUser = async (req, res) => {
   }
 };
 
+const googleCallback = async (req, res) => {
+  try {
+    const user = req.user;
+
+    await sessionModel.updateMany(
+      { user: user._id },
+      { revoked: true, expiry_at: new Date() }
+    );
+
+    const accessToken = tokenizer.createAccessToken(user._id);
+    const refreshToken = await tokenizer.createRefreshToken(user._id, req);
+
+    res
+      .status(200)
+      .cookie("accessToken", accessToken, {
+        ...cookieOptions,
+        maxAge: 15 * 60 * 1000, // 15 minutes in milliseconds
+      })
+      .cookie("refreshToken", refreshToken?.token, {
+        ...cookieOptions,
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+      })
+      .cookie("device_id", refreshToken?.device_id, {
+        ...cookieOptions,
+        maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
+      })
+      .redirect(`${process.env.FRONTEND_URL}/profile`);
+
+  } catch (err) {
+    console.error(err.message);
+    res.redirect(`${process.env.FRONTEND_URL}/account?error=google_failed`);
+  }
+};
+
 const logoutUser = async (req, res) => {
   try {
     const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
@@ -224,11 +258,9 @@ const emailVerifier = async (req, res) => {
 
       if (!user) {
         return res.status(404).json({ message: "User not found!" });
-      } 
-      else if (user.isVerified) {
+      } else if (user.isVerified) {
         return res.status(200).json({ message: "Email already verified!" });
-      } 
-      else {
+      } else {
         user.isVerified = true;
         delete user.lastVerifyLink;
         await user.save();
@@ -352,4 +384,5 @@ export {
   emailVerifier,
   logoutUser,
   accountReseter,
+  googleCallback,
 };

@@ -27,7 +27,7 @@ const App = () => {
     //   left: 0,
     //   behavior: "smooth"
     // });
-  }, [location.pathname])
+  }, [location])
 
   useEffect(() => {
     dispatch(checkAuth());

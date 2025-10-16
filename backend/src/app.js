@@ -7,6 +7,8 @@ import connectToDB from "./configs/db/mongoose-config.js";
 // CUSTOM MIDDLEWARES
 import globalLimiter from "./middlewares/global/global-limiter.js";
 
+import passport from "./configs/passport.js";
+
 // ROUTE IMPORTS.......................................................
 import authRouter from "./routes/auth-routes.js"
 
@@ -29,6 +31,8 @@ app.use(globalLimiter);
 // DB CONNECTING.............................................
 connectToDB();
 
+// PASSPORT INITIALIZING
+app.use(passport.initialize());
 
 // ROUTE INITIALIZATIONS.............................................
 app.use("/api/auth", authRouter);
