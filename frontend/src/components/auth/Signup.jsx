@@ -4,11 +4,13 @@ import { RxEyeOpen } from "react-icons/rx";
 import { BsPencil } from "react-icons/bs";
 import { registerUser, resetEmailStatus } from '../../store/features/user/authSlice';
 import FormSubmitBtn from '../../utils/buttons/FormSubmitBtn';
+import { toast } from 'react-toastify';
+import toastOptions from '../../configs/toast-options';
 
 const Signup = () => {
     const dispatch = useDispatch();
     const { userMail } = useSelector((state) => state.auth.checkEmail);
-    const { status } = useSelector((state) => state.auth.register);
+    const { status, error } = useSelector((state) => state.auth.register);
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [validPassword, setValidPassword] = useState({
@@ -96,6 +98,11 @@ const Signup = () => {
         }
 
         dispatch(registerUser(data));
+
+        if(status === "failed"){
+            toast.error(error.message, toastOptions);
+        }
+        
         if (status === "success") {
             dispatch(resetEmailStatus());
         }

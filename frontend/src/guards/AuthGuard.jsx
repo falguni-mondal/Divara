@@ -13,7 +13,7 @@ const AuthGuard = () => {
         return <Navigate to="/account" replace />
     }
 
-    if (user && !user?.isVerified) {
+    if (user && !user.isVerified) {
         return <Navigate to="/account/verify" replace />
     }
 

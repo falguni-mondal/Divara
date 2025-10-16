@@ -5,7 +5,7 @@ import Navmenu from './navbar/Navmenu';
 import Footer from './footer/Footer';
 import { useLocation } from 'react-router-dom';
 import { Bounce, ToastContainer } from 'react-toastify';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { checkAuth } from '../store/features/user/authSlice';
 import LoadingScreen from '../utils/loading/LoadingScreen';
 
@@ -13,9 +13,8 @@ import LoadingScreen from '../utils/loading/LoadingScreen';
 const App = () => {
   const [load, setLoad] = useState(false);
   const [showNav, setShowNav] = useState(false);
-  const pathLocation = useLocation();
+  const location = useLocation();
   const dispatch = useDispatch();
-  const {status} = useSelector(state => state.auth);
 
   const navMenuController = () => {
     setShowNav(prev => !prev);
@@ -28,11 +27,11 @@ const App = () => {
     //   left: 0,
     //   behavior: "smooth"
     // });
-  }, [pathLocation])
+  }, [location.pathname])
 
   useEffect(() => {
     dispatch(checkAuth());
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     window.addEventListener("load", ()=>{

@@ -19,30 +19,11 @@ const EmailVerification = () => {
     const user = useSelector(state => state.auth.user);
     const userStatus = useSelector(state => state.auth.status);
 
-    if (userStatus === "loading" || userStatus === "idle") {
-        return <LoadingScreen />
-    }
-    if (!user) {
-        return <Navigate to="/account" replace />
-    }
-    if (user && user?.isVerified) {
-        return <Navigate to="/profile" replace />
-    }
+
     const linkSender = () => {
         dispatch(verificationLinkSender({ userEmail: user?.email, frontendBaseUrl }));
     }
-
-    const accountReseter = async () => {
-        try {
-            await axios.get(`${backendBaseApi}/auth/account/reset`, {
-                withCredentials: true,
-            });
-            window.location.reload();
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
+    
     useEffect(() => {
         linkSender();
     }, [])
@@ -55,6 +36,30 @@ const EmailVerification = () => {
             toast.error(`${error.message}`, toastOptions);
         }
     }, [message, error])
+
+
+    if (userStatus === "loading" || userStatus === "idle") {
+        return <LoadingScreen />
+    }
+    if (!user) {
+        return <Navigate to="/account" replace />
+    }
+    if (user && user?.isVerified) {
+        return <Navigate to="/profile" replace />
+    }
+
+    
+    const accountReseter = async () => {
+        try {
+            await axios.get(`${backendBaseApi}/auth/account/reset`, {
+                withCredentials: true,
+            });
+            window.location.reload();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
 
     return (
         <div className='py-[10vh] font-[300] text-center px-[3vw]' id='email-verification-page'>

@@ -5,6 +5,16 @@
     src: url(./assets/fonts/brand.woff);
 }
 
+:root{
+    --deep-maroon: #5d100a;
+    --obsidian: #161616;
+    --off-white: #efefef;
+    --white: #edebdd;
+    --cherry-red: #810100;
+    --maroon: #630000;
+    --noir-black: #1b1717;
+}
+
 html, body{
     width: 100%;
     height: 100%;
@@ -13,6 +23,19 @@ html, body{
 
 .brand-txt{
     font-family: "brand";
+}
+
+.maroon{
+    background-color: var(--deep-maroon);
+    color: var(--white);
+}
+.white{
+    background-color: var(--white);
+    color: var(--noir-black);
+}
+.noir-black{
+    background-color: var(--noir-black);
+    color: var(--white);
 }
 
 /* ANIMATIONS */

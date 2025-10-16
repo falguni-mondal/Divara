@@ -1,11 +1,9 @@
-import React, { useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import LoadingScreen from '../../utils/loading/LoadingScreen';
+import { useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import FormSubmitBtn from '../../utils/buttons/FormSubmitBtn';
 import { loginUser, resetEmailStatus } from '../../store/features/user/authSlice';
 import { RxEyeOpen } from "react-icons/rx";
 import { BsPencil } from "react-icons/bs";
-import { replace, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import toastOptions from '../../configs/toast-options';
 
@@ -24,7 +22,7 @@ const Signin = () => {
     dispatch(loginUser({ email, password }));
 
     if (status === "failed") {
-      toast.error(`${error.message}`, toastOptions);
+      toast.error(error.message, toastOptions);
       return;
     }
     if(status === "success"){
