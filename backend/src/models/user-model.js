@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      required: ()=> !this.googleId,
+    },
+    role: {
+      type: String,
+      default: "user",
     },
     cart: {
       type: mongoose.Schema.Types.ObjectId,

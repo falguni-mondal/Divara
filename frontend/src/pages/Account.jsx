@@ -13,7 +13,7 @@ const Account = () => {
   const { hasUser, status, error } = useSelector((state) => state.auth.checkEmail);
 
   const googleLoginHandler = () => {
-    window.location.href= `${backendBaseApi}/auth/google`;
+    window.open(`${backendBaseApi}/auth/google`, "_self");
   }
 
   useEffect(() => {

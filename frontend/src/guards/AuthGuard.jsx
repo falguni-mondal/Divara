@@ -5,6 +5,7 @@ import LoadingScreen from '../utils/loading/LoadingScreen';
 const AuthGuard = () => {
     const { user, status } = useSelector(state => state.auth);
 
+
     if (status === "loading" || status === "idle") {
         return <LoadingScreen />
     }

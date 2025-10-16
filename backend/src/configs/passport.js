@@ -22,9 +22,8 @@ passport.use(
           });
         }
 
-        
-
         return done(null, user);
+        
       } catch (err) {
         return done(err, null);
       }
