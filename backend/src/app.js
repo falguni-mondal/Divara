@@ -6,6 +6,7 @@ import connectToDB from "./configs/db/mongoose-config.js";
 
 // CUSTOM MIDDLEWARES
 import globalLimiter from "./middlewares/global/global-limiter.js";
+import setNoCache from "./middlewares/global/set-no-cache.js";
 
 import passport from "./configs/passport.js";
 
@@ -27,6 +28,7 @@ app.use(cors({
 
 // CUSTOM MIDDLEWARES
 app.use(globalLimiter);
+app.use(setNoCache);
 
 // DB CONNECTING.............................................
 connectToDB();

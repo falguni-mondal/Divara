@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import FormSubmitBtn from '../../utils/buttons/FormSubmitBtn';
 import { loginUser, resetEmailStatus } from '../../store/features/user/authSlice';
@@ -14,20 +14,18 @@ const Signin = () => {
   const dispatch = useDispatch();
   const { status, error } = useSelector((state) => state.auth.login);
 
+  useEffect(() => {
+    if (status === "failed") {
+      toast.error(error.message, toastOptions);
+      return;
+    }
+  }, [status])
 
   const submitHandler = (e) => {
     e.preventDefault();
     const email = userMail && userMail;
     const password = passwordRef.current.value;
     dispatch(loginUser({ email, password }));
-
-    if (status === "failed") {
-      toast.error(error.message, toastOptions);
-      return;
-    }
-    if(status === "success"){
-      dispatch(resetEmailStatus());
-    }
   }
 
   return (
@@ -46,7 +44,7 @@ const Signin = () => {
         {/* PASSWORD INPUT */}
         <div className="auth-form-input-container w-full h-[6vh] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px] relative">
           <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='login-password'>Password*</label>
-          <input ref={passwordRef} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='login-password' />
+          <input ref={passwordRef} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='login-password' autoFocus />
           <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>
         </div>
 

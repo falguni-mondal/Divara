@@ -1,12 +1,21 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { logoutUser } from '../store/features/user/authSlice';
+import { useDispatch } from 'react-redux'
+import { logoutUser, resetEmailStatus } from '../store/features/user/authSlice';
+import { useEffect } from 'react';
 
 const Profile = () => {
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(resetEmailStatus());
+  }, [])
+  
+  const logoutHandler = () => {
+    dispatch(logoutUser());
+    // window.location.href= "/account";
+  }
   return (
     <div className='p-10'>
-        <button onClick={() => dispatch(logoutUser())} className='px-5 py-2 rounded-[2px] bg-[#0f0f0f] text-[#efefef]'>Sign Out</button>
+      <button onClick={logoutHandler} className='px-5 py-2 rounded-[2px] bg-[#0f0f0f] text-[#efefef]'>Sign Out</button>
     </div>
   )
 }

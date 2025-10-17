@@ -32,6 +32,7 @@ const App = () => {
   useEffect(() => {
     dispatch(checkAuth());
   }, [dispatch])
+  
 
   useEffect(() => {
     window.addEventListener("load", ()=>{

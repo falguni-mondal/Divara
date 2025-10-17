@@ -10,12 +10,12 @@ const AuthGuard = () => {
         return <LoadingScreen />
     }
 
-    if (status === "failed" || !user) {
+    if (!user) {
         return <Navigate to="/account" replace />
     }
 
-    if (user && !user.isVerified) {
-        return <Navigate to="/account/verify" replace />
+    if (status === "success" && user && !user.isVerified) {
+        return <Navigate to="/user/verify" replace />
     }
 
     return <Outlet />

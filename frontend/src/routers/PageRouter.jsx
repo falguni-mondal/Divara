@@ -26,8 +26,8 @@ const PageRouter = () => {
       </Route>
 
         {/* Verification Page */}
-        <Route path='/account/verify' element={<EmailVerification />}/>
-        <Route path='/account/verify/token' element={<VerifyEmail />}/>
+        <Route path='/user/verify' element={<EmailVerification />}/>
+        <Route path='/user/verify/token' element={<VerifyEmail />}/>
         
     </Routes>
   )

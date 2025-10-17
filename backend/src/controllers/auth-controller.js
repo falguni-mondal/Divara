@@ -272,7 +272,7 @@ const verificationLinkSender = async (req, res) => {
       }
     }
     const token = tokenizer.createVerifyToken(req.user);
-    const verificationLink = `${frontendBaseUrl}/account/verify/token?token=${token}`;
+    const verificationLink = `${frontendBaseUrl}/user/verify/token?token=${token}`;
 
     const mailOptions = {
       from: `"Divara" <${process.env.SENDER_MAIL}>`,

@@ -26,6 +26,12 @@ const Signup = () => {
     })
 
 
+    useEffect(() => {
+        if (status === "failed") {
+            toast.error(error.message, toastOptions);
+            return;
+        }
+    }, [status])
 
 
     // PASSWORD CHECKER FUNCTION
@@ -98,14 +104,6 @@ const Signup = () => {
         }
 
         dispatch(registerUser(data));
-
-        if(status === "failed"){
-            toast.error(error.message, toastOptions);
-        }
-        
-        if (status === "success") {
-            dispatch(resetEmailStatus());
-        }
     }
 
 
@@ -125,7 +123,7 @@ const Signup = () => {
                 <div className="signup-password-wrapper w-full mt-[1vh]">
                     <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.password ? "border-red-600" : "border-zinc-400"} pl-2 py-1 rounded-[3px] relative`}>
                         <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='register-password'>Create Password*</label>
-                        <input onChange={passwordChecker} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='register-password' />
+                        <input onChange={passwordChecker} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='register-password' autoFocus />
                         <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>
                     </div>
                     {/* password instructions */}
