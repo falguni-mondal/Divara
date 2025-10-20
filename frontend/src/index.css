@@ -65,3 +65,16 @@ html, body{
     scale: 0.95;
     transition: all 0.5s ease-in-out;
 }
+
+.user-dp-container:hover .user-dp-bg{
+    scale: 3;
+    rotate: 45deg;
+    transition: all;
+    transition-duration: 1s;
+    transition-timing-function: cubic-bezier(0.66, 0, 0.34, 1);
+}
+.user-dp-bg{
+    transition: all;
+    transition-duration: 1s;
+    transition-timing-function: cubic-bezier(0.66, 0, 0.34, 1);
+}

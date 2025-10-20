@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { RxEyeOpen } from "react-icons/rx";
 import { BsPencil } from "react-icons/bs";
@@ -27,11 +27,11 @@ const Signup = () => {
 
 
     useEffect(() => {
-        if (status === "failed") {
+        if (error) {
             toast.error(error.message, toastOptions);
             return;
         }
-    }, [status])
+    }, [error])
 
 
     // PASSWORD CHECKER FUNCTION

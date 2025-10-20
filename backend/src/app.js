@@ -21,17 +21,20 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(parser());
 
+// DB CONNECTING.............................................
+connectToDB();
+
+
 app.use(cors({
     origin: process.env.NODE_ENV === "development" ? true : ["https://myfrontendLink.com"],
     credentials: true
 }))
 
+
+
 // CUSTOM MIDDLEWARES
 app.use(globalLimiter);
 app.use(setNoCache);
-
-// DB CONNECTING.............................................
-connectToDB();
 
 // PASSPORT INITIALIZING
 app.use(passport.initialize());

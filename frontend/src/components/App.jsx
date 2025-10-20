@@ -41,9 +41,9 @@ const App = () => {
   },[])
 
   return (
-    !load ?
-    <LoadingScreen />
-    :
+    // !load ?
+    // <LoadingScreen />
+    // :
     <div className='container w-full'>
       <Navbar showNav={showNav} navMenuController={navMenuController} />
       <Navmenu showNav={showNav} navMenuController={navMenuController} />

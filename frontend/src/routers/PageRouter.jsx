@@ -22,7 +22,7 @@ const PageRouter = () => {
       {/* USER ROUTES */}
       <Route element={<AuthGuard />}>
         {/* Profile Page */}
-        <Route path='/profile' element={<Profile />} />
+        <Route path='/profile/*' element={<Profile />} />
       </Route>
 
         {/* Verification Page */}

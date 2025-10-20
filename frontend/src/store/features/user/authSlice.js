@@ -6,7 +6,7 @@ export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
   async (_, { rejectWithValue }) => {
     try {
-      const hasUser = await axios.get(`${backendBaseApi}/auth/check`, {
+      const hasUser = await axios.get(`/api/auth/check`, {
         withCredentials: true,
       });
       return hasUser?.data;
@@ -20,7 +20,7 @@ export const checkMail = createAsyncThunk(
   "auth/checkMail",
   async (email, { rejectWithValue }) => {
     try {
-      const hasUser = await axios.post(`${backendBaseApi}/auth/check/email`, {
+      const hasUser = await axios.post(`/api/auth/check/email`, {
         email,
       });
       return hasUser?.data;
@@ -34,7 +34,7 @@ export const registerUser = createAsyncThunk(
   "auth/registerUser",
   async (data, { rejectWithValue }) => {
     try {
-      const user = await axios.post(`${backendBaseApi}/auth/register`, data, {
+      const user = await axios.post(`/api/auth/register`, data, {
         withCredentials: true,
       });
       return user?.data;
@@ -48,7 +48,7 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (data, { rejectWithValue }) => {
     try {
-      const user = await axios.post(`${backendBaseApi}/auth/login`, data, {
+      const user = await axios.post(`/api/auth/login`, data, {
         withCredentials: true,
       });
       return user?.data;
@@ -62,7 +62,7 @@ export const verificationLinkSender = createAsyncThunk(
   "auth/verificationLinkSender",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`${backendBaseApi}/auth/verify/send`, data, {
+      const res = await axios.post(`/api/auth/verify/send`, data, {
         withCredentials: true,
       });
       return res?.data;
@@ -76,7 +76,7 @@ export const emailVerifier = createAsyncThunk(
   "auth/emailVerifier",
   async (token, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${backendBaseApi}/auth/verify/${token}`, {
+      const res = await axios.get(`/api/auth/verify/${token}`, {
         withCredentials: true,
       });
       return res?.data;
@@ -90,7 +90,7 @@ export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`${backendBaseApi}/auth/logout`, {
+      const res = await axios.get(`/api/auth/logout`, {
         withCredentials: true,
       });
       return res?.data;
@@ -138,6 +138,8 @@ const authSlice = createSlice({
       state.checkEmail.userMail = null;
       state.checkEmail.status = "idle";
       state.checkEmail.error = null;
+      state.login.error = null;
+      state.register.error = null;
     },
   },
 
@@ -175,6 +177,7 @@ const authSlice = createSlice({
         state.register.status = "success";
         state.status = "success";
         state.user = action.payload;
+        state.error= null;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.register.status = "failed";
@@ -187,6 +190,7 @@ const authSlice = createSlice({
         state.login.status = "success";
         state.status = "success";
         state.user = action.payload;
+        state.error= null;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.login.status = "failed";

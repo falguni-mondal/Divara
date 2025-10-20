@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 
-import { FiUser } from "react-icons/fi";
+import { HiOutlineUser } from "react-icons/hi2";
 import { BsBoxSeam } from "react-icons/bs";
 import { BsHandbag } from "react-icons/bs";
 import { useSelector } from 'react-redux';
@@ -25,7 +25,7 @@ const Navmenu = ({ showNav, navMenuController }) => {
     },
     {
       title: user? "Profile" : "Sign In",
-      icon : FiUser,
+      icon : HiOutlineUser,
       path: user? "/profile" : "/account"
     },
   ]
