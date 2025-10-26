@@ -67,9 +67,9 @@ const EmailVerification = () => {
             <p className='text-[3.5vw] my-10'>
                 Please check your email <span onClick={accountReseter} className='inline-flex items-center font-semibold gap-1 underline cursor-pointer'>{user?.email} <span><FaRegEdit /></span></span> and click the <span className="font-semibold">verification link</span> we just sent to complete your account setup. If you don't see the email within a few minutes, check your spam folder or click the <span className='font-semibold'>"Resend"</span> button below. The verification link will expire in <span className="font-semibold">15 minutes</span> for security reasons.
             </p>
-            <div className="buttons text-[3.3vw] flex gap-2 justify-center items-center font-semibold">
-                <button onClick={() => navigate("/")} className='h-[6vh] px-7 py-3 rounded-[2px] uppercase bg-zinc-300 text-[#070707]'>Cancel</button>
-                <button onClick={linkSender} className={`h-[6vh] px-7 py-3 rounded-[2px] uppercase bg-[#070707] text-zinc-100 relative`} disabled={status === "loading"}>
+            <div className="buttons text-[0.8rem] flex gap-2 justify-center items-center font-semibold">
+                <button onClick={() => navigate("/")} className='px-7 py-3 rounded-[2px] uppercase bg-zinc-300 text-[#070707]'>Cancel</button>
+                <button onClick={linkSender} className={`px-7 py-3 rounded-[2px] uppercase bg-[#070707] text-zinc-100 relative`} disabled={status === "loading"}>
                     Resend
                     <span className={`${status === "loading" ? "" : "hidden"} absolute h-full w-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex justify-center items-center bg-[#000000d8]`}><MiniLoading /></span>
                 </button>

@@ -26,11 +26,13 @@ const BaseAuth = () => {
   return (
     <section className='w-full py-[3vh]' id='auth-base-form-section'>
       <form onSubmit={submitHandler} className='w-full'>
-        <div className="auth-form-input-container w-full h-[6vh] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px]">
+        <div className="auth-form-input-container w-full h-[3rem] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px]">
           <label className='text-[2.8vw] text-zinc-500 relative'>Email*</label>
           <input ref={emailRef} className='w-full outline-0 border-0 text-[4.5vw]' type='email' />
         </div>
-        <FormSubmitBtn status={status} />
+        <div className="form-btn-container w-full mt-6">
+          <FormSubmitBtn status={status} />
+        </div>
       </form>
     </section>
   )

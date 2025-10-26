@@ -75,9 +75,9 @@ const Signup = () => {
 
     return (
         <section className='w-full py-[3vh]' id='signup-form-section'>
-            <form onSubmit={submitHandler} className='w-full flex flex-col gap-[3vh]'>
+            <form onSubmit={submitHandler} className='w-full flex flex-col gap-5'>
                 {/* EMAIL INPUT */}
-                <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.email ? "border-red-600" : "border-zinc-600"} px-2 py-1 rounded-[3px] text-zinc-600 relative`}>
+                <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border ${formErr.email ? "border-red-600" : "border-zinc-600"} px-2 py-1 rounded-[3px] text-zinc-600 relative`}>
                     <label className='text-[2.8vw] relative text-zinc-500' htmlFor='register-email'>Email*</label>
                     <input className='w-full outline-0 border-0 text-[4.5vw]' value={userMail} disabled type="email" id='register-email' name='email' />
                     <span onClick={() => dispatch(resetEmailStatus())} className="pencil-icon absolute w-full h-full pr-4 flex items-center justify-end">
@@ -87,7 +87,7 @@ const Signup = () => {
 
                 {/* PASSWORD INPUT */}
                 <div className="signup-password-wrapper w-full">
-                    <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.password ? "border-red-600" : "border-zinc-400"} pl-2 py-1 rounded-[3px] relative`}>
+                    <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border ${formErr.password ? "border-red-600" : "border-zinc-400"} pl-2 py-1 rounded-[3px] relative`}>
                         <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='register-password'>Create Password*</label>
                         <input onChange={passwordChecker} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='register-password' autoFocus name='password' />
                         <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>
@@ -110,7 +110,7 @@ const Signup = () => {
 
                 {/* FIRSTNAME INPUT */}
                 <div className="firstname-input-container">
-                    <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.firstname ? "border-red-600" : "border-zinc-400"} px-2 py-1 rounded-[3px]`}>
+                    <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border ${formErr.firstname ? "border-red-600" : "border-zinc-400"} px-2 py-1 rounded-[3px]`}>
                         <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='register-firstname'>First Name*</label>
                         <input className='w-full outline-0 border-0 text-[4.5vw] capitalize' type="text" id='register-firstname' name='firstname' />
                     </div>
@@ -121,7 +121,7 @@ const Signup = () => {
 
                 {/* LASTNAME INPUT */}
                 <div className="lastname-input-container">
-                    <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border ${formErr.lastname ? "border-red-600" : "border-zinc-400"} px-2 py-1 rounded-[3px]`}>
+                    <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border ${formErr.lastname ? "border-red-600" : "border-zinc-400"} px-2 py-1 rounded-[3px]`}>
                         <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='register-lastname'>Last Name*</label>
                         <input className='w-full outline-0 border-0 text-[4.5vw] capitalize' type="text" id='register-lastname' name='lastname' />
                     </div>
@@ -131,7 +131,9 @@ const Signup = () => {
                 </div>
 
                 {/* SUBMIT BUTTON */}
-                <FormSubmitBtn status={status} />
+                <div className="form-btn-container w-full mt-5">
+                    <FormSubmitBtn status={status} />
+                </div>
             </form>
         </section>
     )

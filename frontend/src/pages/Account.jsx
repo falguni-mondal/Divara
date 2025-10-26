@@ -40,7 +40,7 @@ const Account = () => {
           My Divara Account
         </h1>
         <section className="third-party-signin-section mt-[5vh]">
-          <button onClick={googleLoginHandler} className='google-signin-btn flex items-center justify-center gap-2 text-[3vw] uppercase font-semibold w-full h-[6vh] border-[1.5px] rounded-[3px]'>
+          <button onClick={googleLoginHandler} className='google-signin-btn flex items-center justify-center gap-2 text-[3vw] uppercase font-semibold w-full h-[3rem] border-[1.5px] rounded-[3px]'>
             <FcGoogle className='text-[4.5vw]' />
             Continue with google
           </button>

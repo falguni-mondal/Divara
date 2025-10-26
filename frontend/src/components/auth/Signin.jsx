@@ -30,10 +30,10 @@ const Signin = () => {
 
   return (
     <section className='w-full py-[3vh]' id='signin-form-section'>
-      <form onSubmit={submitHandler} className='w-full flex flex-col gap-[3vh]'>
+      <form onSubmit={submitHandler} className='w-full flex flex-col gap-5'>
 
         {/* EMAIL INPUT */}
-        <div className={`auth-form-input-container w-full h-[6vh] flex flex-col justify-center border px-2 py-1 rounded-[3px] text-zinc-600 relative`}>
+        <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border px-2 py-1 rounded-[3px] text-zinc-600 relative`}>
           <label className='text-[2.8vw] relative text-zinc-500' htmlFor='login-email'>Email*</label>
           <input className='w-full outline-0 border-0 text-[4.5vw]' value={userMail} disabled type="email" id='login-email' />
           <span onClick={() => dispatch(resetEmailStatus())} className="pencil-icon absolute w-full h-full pr-4 flex items-center justify-end">
@@ -42,14 +42,16 @@ const Signin = () => {
         </div>
 
         {/* PASSWORD INPUT */}
-        <div className="auth-form-input-container w-full h-[6vh] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px] relative">
+        <div className="auth-form-input-container w-full h-[3rem] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px] relative">
           <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='login-password'>Password*</label>
           <input ref={passwordRef} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='login-password' autoFocus />
           <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>
         </div>
 
         {/* SUBMIT BUTTON */}
-        <FormSubmitBtn status={status} />
+        <div className="form-btn-container w-full mt-5">
+          <FormSubmitBtn status={status}/>
+        </div>
       </form>
     </section>
   )

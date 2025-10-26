@@ -1,5 +1,6 @@
 const userDataTrimmer = (user) => {
-    return {id: user._id, email: user.email, name: user.name, isVerified: user.isVerified, firstname: user.firstname, lastname: user.lastname}
+    const {_id, email, name, firstname, lastname, isVerified, } = user;
+    return { id: _id, email, name, isVerified, firstname, lastname, }
 }
 
 export default userDataTrimmer;
