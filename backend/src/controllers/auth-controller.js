@@ -39,11 +39,15 @@ const emailChecker = async (req, res) => {
 
 const registerUser = async (req, res) => {
   try {
-    const { email, password, name } = req.body;
+    const { email, password, firstname, lastname } = req.body;
+
+    const name = (firstname.charAt(0).toUpperCase() + firstname.slice(1)) + " " + (lastname.charAt(0).toUpperCase() + lastname.slice(1));
 
     const user = await userModel.create({
       email,
       password: await bcrypt.hash(password, 10),
+      firstname,
+      lastname,
       name,
     });
 

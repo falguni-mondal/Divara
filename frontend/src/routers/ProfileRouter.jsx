@@ -6,7 +6,7 @@ const ProfileRouter = () => {
     return (
         <Routes>
             <Route path='/' element={<BaseProfile />}/>
-            <Route path='/edit' element={<EditProfile />}/>
+            <Route path='/update' element={<EditProfile />}/>
         </Routes>
     )
 }

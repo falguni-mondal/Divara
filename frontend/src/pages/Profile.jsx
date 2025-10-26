@@ -3,7 +3,9 @@ import ProfileRouter from '../routers/ProfileRouter'
 
 const Profile = () => {
   return (
-    <ProfileRouter />
+    <div className='w-full px-[5vw] py-8' id="profile-page-container">
+      <ProfileRouter />
+    </div>
   )
 }
 
