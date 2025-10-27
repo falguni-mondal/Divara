@@ -13,13 +13,16 @@ const isValidRegisterCreds = async (req, res, next) => {
     if(!emailRegex.test(email)){
         return res.status(422).json({message: "Invalid email format!"});
     }
-    else if(!passwordRegex.test(password)){
-        return res.status(422).json({message: "Password must be at least 8 characters, include a number & special character!"});
+
+    if(!passwordRegex.test(password)){
+        return res.status(422).json({message: "Password must be at least of 8 characters, include a number & special character!"});
     }
-    else if(firstname.length < 3){
+    
+    if(firstname.length < 3){
         return res.status(422).json({message: "Firstname must be at least 3 characters long!"});
     }
-    else if(lastname.length < 3){
+
+    if(lastname.length < 3){
         return res.status(422).json({message: "Lastname must be at least 3 characters long!"});
     }
 
@@ -35,7 +38,7 @@ const isValidRegisterCreds = async (req, res, next) => {
     next();
   } catch (err) {
     console.error(err.message);
-    return res.status(500).json({message: "Internal server error!"});
+    return res.status(500).json({message: "Server error during regisration!"});
   }
 };
 

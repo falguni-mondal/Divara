@@ -13,6 +13,7 @@ import { BiPencil } from "react-icons/bi";
 import toastOptions from '../../../configs/toast-options';
 import formErrorFinder from '../../../configs/form-error-finder';
 import passwordValidator from '../../../configs/password-validator';
+import { checkAuth } from '../../../store/features/user/authSlice';
 
 
 const EditProfile = () => {
@@ -83,6 +84,7 @@ const EditProfile = () => {
     useEffectOnUpdate(() => {
         if (message) {
             toast.success(message, toastOptions);
+            dispatch(checkAuth());
         }
         if (error) {
             toast.error(error, toastOptions);

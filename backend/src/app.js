@@ -11,7 +11,8 @@ import setNoCache from "./middlewares/global/set-no-cache.js";
 import passport from "./configs/passport.js";
 
 // ROUTE IMPORTS.......................................................
-import authRouter from "./routes/auth-routes.js"
+import authRouter from "./routes/auth-router.js";
+import profileRouter from "./routes/profile-router.js";
 
 
 const app = express();
@@ -41,6 +42,7 @@ app.use(passport.initialize());
 
 // ROUTE INITIALIZATIONS.............................................
 app.use("/api/auth", authRouter);
+app.use("/api/profile", profileRouter);
 
 
 export default app;

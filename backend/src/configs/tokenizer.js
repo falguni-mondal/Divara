@@ -31,6 +31,10 @@ const tokenizer = {
   createVerifyToken: (id) => {
     return jwt.sign({ sub: id }, verifySecret, { expiresIn: "15m" });
   },
+
+  createEmailUpdateToken: (id, email) => {
+    return jwt.sign({ sub: id, email }, verifySecret, { expiresIn: "15m" });
+  }
 };
 
 export default tokenizer;
