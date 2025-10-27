@@ -94,13 +94,13 @@ const Signup = () => {
                     </div>
                     {/* password instructions */}
                     <ul className="password-instructions text-[2.8vw] mt-[1vh]">
-                        <li className={`flex items-center gap-1 ${password.length > 0 ? validPassword.characters ? "text-green-600" : "text-red-600" : "text-zinc-700"}`}>
+                        <li className={`${password.length > 0 ? validPassword.characters ? "text-green-600" : "text-red-600" : "text-zinc-700"}`}>
                             Please enter 8 characters
                         </li>
-                        <li className={`flex items-center gap-1 ${password.length > 0 ? validPassword.number ? "text-green-600" : "text-red-600" : "text-zinc-700"}`}>
+                        <li className={`${password.length > 0 ? validPassword.number ? "text-green-600" : "text-red-600" : "text-zinc-700"}`}>
                             Please enter one number
                         </li>
-                        <li className={`flex items-center gap-1 ${password.length > 0 ? validPassword.specialChar ? "text-green-600" : "text-red-600" : "text-zinc-700"}`}>
+                        <li className={`${password.length > 0 ? validPassword.specialChar ? "text-green-600" : "text-red-600" : "text-zinc-700"}`}>
                             {
                                 "Please enter one special character (!+,-./:;<=>?@)"
                             }

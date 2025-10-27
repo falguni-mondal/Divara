@@ -1,17 +1,23 @@
 import React, { useState } from 'react'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
+import FormSubmitBtn from '../../../utils/buttons/FormSubmitBtn';
+import { profileUpdater } from '../../../store/features/user/profileSlice';
+import useEffectOnUpdate from '../../../hooks/useEffectOnUpdate';
 import dp_bg from "../../../assets/bg/abstract_bg.webp";
-
 import { MdOutlineCameraswitch } from "react-icons/md";
 import { BiPencil } from "react-icons/bi";
+
+//CONFIGS
+import toastOptions from '../../../configs/toast-options';
 import formErrorFinder from '../../../configs/form-error-finder';
 import passwordValidator from '../../../configs/password-validator';
-import FormSubmitBtn from '../../../utils/buttons/FormSubmitBtn';
 
 
 const EditProfile = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.auth.user);
     const [updateTrigger, setUpdateTrigger] = useState({
         firstname: false,
@@ -28,7 +34,7 @@ const EditProfile = () => {
         lastname: false
     })
 
-    const status = "idle";
+    const { status, message, error } = useSelector(state => state.profile.update);
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -39,6 +45,11 @@ const EditProfile = () => {
             email: formData.get('email'),
             newPassword: formData.get('newPassword'),
             password: formData.get('password')
+        }
+
+        if (data.email === user.email && data.firstname === user.firstname && data.lastname === user.lastname && data.newPassword.length === 0){
+            toast.info("No changes!", toastOptions);
+            return;
         }
 
         let formErrors = formErrorFinder(data);
@@ -66,9 +77,17 @@ const EditProfile = () => {
             return;
         }
 
-
-
+        dispatch(profileUpdater(data))
     };
+
+    useEffectOnUpdate(() => {
+        if (message) {
+            toast.success(message, toastOptions);
+        }
+        if (error) {
+            toast.error(error, toastOptions);
+        }
+    }, [message, error])
 
     return (
         <div className='w-full' id='edit-profile-page'>
@@ -104,7 +123,7 @@ const EditProfile = () => {
                         <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, firstname: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, firstname: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20 capitalize`} type="text" defaultValue={user.firstname} name='firstname' />
                         <BiPencil className={`${updateTrigger.firstname ? "hidden" : "absolute right-2 top-1/2 -translate-y-1/2 z-10"}`} />
                     </div>
-                    <p className={`text-red-700 text-[0.7rem] mt-1 ${!formErr.firstname && "hidden"}`}>Firstname must be atleast of 3 characters.</p>
+                    <p className={`w-full text-red-700 text-[0.7rem] mt-1 ${!formErr.firstname && "hidden"}`}>Firstname must be atleast of 3 characters.</p>
                 </div>
 
                 <div className="user-lastname-update-input-container w-full">
@@ -113,7 +132,7 @@ const EditProfile = () => {
                         <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, lastname: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, lastname: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20 capitalize`} type="text" defaultValue={user.lastname} name='lastname' />
                         <BiPencil className={`${updateTrigger.lastname ? "hidden" : "absolute right-2 top-1/2 -translate-y-1/2 z-10"}`} />
                     </div>
-                    <p className={`text-red-700 text-[0.7rem] mt-1 ${!formErr.lastname && "hidden"}`}>Lastname must be atleast of 3 characters.</p>
+                    <p className={`w-full text-red-700 text-[0.7rem] mt-1 ${!formErr.lastname && "hidden"}`}>Lastname must be atleast of 3 characters.</p>
                 </div>
 
                 <div className="user-email-update-input-container w-full">
@@ -122,27 +141,32 @@ const EditProfile = () => {
                         <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, email: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, email: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20`} type="email" defaultValue={user.email} name='email' />
                         <BiPencil className={`${updateTrigger.email ? "hidden" : "absolute right-2 top-1/2 -translate-y-1/2 z-10"}`} />
                     </div>
-                    <p className={`text-red-700 text-[0.7rem] mt-1 ${!formErr.email && "hidden"}`}>Please enter a valid email address.</p>
+                    <div className="email-instructions w-full leading-tight">
+                        <p className={`w-full text-[#1a1a1a] text-[0.7rem] mt-1`}>Make sure to provide a valid email before updating.</p>
+                        <p className={`w-full text-[#1a1a1a] text-[0.7rem] mt-1`}>Note: Email change will only take effect after you verify the new address.</p>
+                        <p className={`w-full text-red-700 text-[0.7rem] mt-1 ${!formErr.email && "hidden"}`}>Please enter a valid email address.</p>
+                    </div>
                 </div>
 
-                <div className="user-password-update-input-container w-full">
+                <div className="user-new-password-update-input-container w-full">
                     <span className={`name-update-preview-title uppercase text-[#1a1a1a] font-medium text-[0.7rem]`}>change- password</span>
-                    <div className={`update-input-container w-full h-[3rem] text-[1.050rem] relative ${updateTrigger.password ? "" : "bg-zinc-200 rounded-[3px]"}`}>
+                    <div className={`update-input-container w-full h-[3rem] text-[1.050rem] relative ${updateTrigger.newPassword ? "" : "bg-zinc-200 rounded-[3px]"}`}>
                         <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, newPassword: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, newPassword: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20`} placeholder='New Password' type="text" name='newPassword' />
                         <BiPencil className={`${updateTrigger.newPassword ? "hidden" : "absolute right-2 top-1/2 -translate-y-1/2 z-10"}`} />
                     </div>
-                    <p className={`text-red-700 text-[0.7rem] mt-1 ${!formErr.newPassword && "hidden"}`}>Password must contain 8 characters including a number and a special character.</p>
+                    <p className={`w-full text-red-700 text-[0.7rem] mt-1 ${!formErr.newPassword && "hidden"}`}>Password must contain 8 characters including a number and a special character.</p>
                 </div>
 
-                <div className="password-input-container w-full">
+                <div className="user-password-input-container w-full">
                     <span className={`name-update-preview-title uppercase text-[#1a1a1a] font-medium text-[0.7rem]`}>your password</span>
                     <div className={`update-input-container w-full h-[3rem] text-[1.050rem] relative ${updateTrigger.password ? "" : "bg-zinc-200 rounded-[3px]"}`}>
                         <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, password: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, password: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20`} placeholder='Password' type="text" name='password' />
                         <BiPencil className={`${updateTrigger.password ? "hidden" : "absolute right-2 top-1/2 -translate-y-1/2 z-10"}`} />
                     </div>
-                    <p className={`text-[#1a1a1a] text-[0.7rem] mt-1 ${formErr.password && "hidden"}`}>Enter your account password to apply changes.</p>
-                    <p className={`text-red-700 text-[0.7rem] mt-1 ${!formErr.password && "hidden"}`}>Password must contain 8 characters including a number and a special character.</p>
+                    <p className={`w-full text-[#1a1a1a] text-[0.7rem] mt-1 ${formErr.password && "hidden"}`}>Enter your account password to apply changes.</p>
+                    <p className={`w-full text-red-700 text-[0.7rem] mt-1 ${!formErr.password && "hidden"}`}>Password must contain 8 characters including a number and a special character.</p>
                 </div>
+
                 <div className="w-full mt-3" id='user-data-update-btn-container'>
                     <FormSubmitBtn status={status} />
                     <span onClick={() => navigate(-1, { replace: true })} className='w-full h-[3rem] flex justify-center items-center mt-2 rounded-[3px] bg-zinc-200 text-[#1a1a1a] uppercase text-[0.7rem] font-semibold'>cancel</span>
