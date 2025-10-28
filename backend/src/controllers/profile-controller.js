@@ -5,7 +5,7 @@ import transporter from "../configs/nodemailer.js";
 
 const profileUpdater = async (req, res) => {
   try {
-    const { firstname, lastname, email, newPassword, password } = req.body;
+    const { firstname, lastname, email, newPassword } = req.body;
 
     const user = await userModel.findById(req.user);
 
@@ -21,7 +21,7 @@ const profileUpdater = async (req, res) => {
         user._id,
         email
       );
-      const verificationLink = `${process.env.FRONTEND_URL}/user/email/update/verify/token?token=${token}`;
+      const verificationLink = `${process.env.FRONTEND_URL}/profile/update/email/token?token=${token}`;
 
       const mailOptions = {
         from: `"Divara" <${process.env.SENDER_MAIL}>`,
@@ -30,7 +30,7 @@ const profileUpdater = async (req, res) => {
         html: `
         <div style="font-family:Arial,sans-serif;line-height:1.5">
           <h2>Email Verification</h2>
-          <p>Please verify your email address to change the email address.</p>
+          <p>Please verify your email to update the address.</p>
           <p>Click the link below to verify your email:</p>
           <a href="${verificationLink}" style="background:#4f46e5;color:white;padding:10px 20px;border-radius:6px;text-decoration:none">Verify Email</a>
           <p>This link will be valid for next 15 minutes.</p>
@@ -53,4 +53,8 @@ const profileUpdater = async (req, res) => {
   }
 };
 
-export { profileUpdater };
+const emailUpdater = async (req, res) => {
+
+}
+
+export { profileUpdater, emailUpdater };

@@ -144,7 +144,6 @@ const EditProfile = () => {
                         <BiPencil className={`${updateTrigger.email ? "hidden" : "absolute right-2 top-1/2 -translate-y-1/2 z-10"}`} />
                     </div>
                     <div className="email-instructions w-full leading-tight">
-                        <p className={`w-full text-[#1a1a1a] text-[0.7rem] mt-1`}>Make sure to provide a valid email before updating.</p>
                         <p className={`w-full text-[#1a1a1a] text-[0.7rem] mt-1`}>Note: Email change will only take effect after you verify the new address.</p>
                         <p className={`w-full text-red-700 text-[0.7rem] mt-1 ${!formErr.email && "hidden"}`}>Please enter a valid email address.</p>
                     </div>

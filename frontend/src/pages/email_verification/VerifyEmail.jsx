@@ -9,7 +9,7 @@ const VerifyEmail = () => {
   const token = searchParams.get("token");
   const dispatch = useDispatch();
 
-  const { status, message, error } = useSelector((state) => state.auth.emailVerify);
+  const { status } = useSelector((state) => state.auth.emailVerify);
   const user = useSelector((state) => state.auth.user);
   const userStatus = useSelector((state) => state.auth.status);
 

@@ -15,6 +15,20 @@ export const profileUpdater = createAsyncThunk(
   }
 );
 
+export const emailUpdater = createAsyncThunk(
+  "profile/emailUpdater",
+  async (token, { rejectWithValue }) => {
+    try {
+      const res = await axios.patch(`/api/profile/verify`, {token}, {
+        withCredentials: true,
+      });
+      return res?.data?.message;
+    } catch (err) {
+        return rejectWithValue(err?.response?.data?.message);
+    }
+  }
+);
+
 const profileSlice = createSlice({
   name: "profile",
   initialState: {
@@ -23,6 +37,11 @@ const profileSlice = createSlice({
       error: null,
       message: null,
     },
+    emailUpdate: {
+      status: "idle",
+      error: null,
+      message: null,
+    }
   },
 
   extraReducers: (builder) => {
@@ -41,6 +60,22 @@ const profileSlice = createSlice({
         state.update.status= "failed";
         state.update.message= null;
         state.update.error= action.payload;
+    })
+
+    .addCase(emailUpdater.pending, (state) => {
+        state.emailUpdate.status= "loading";
+        state.emailUpdate.message= null;
+        state.emailUpdate.error= null;
+    })
+    .addCase(emailUpdater.fulfilled, (state, action) => {
+        state.emailUpdate.status= "success";
+        state.emailUpdate.message= action.payload;
+        state.emailUpdate.error= null;
+    })
+    .addCase(emailUpdater.rejected, (state, action) => {
+        state.emailUpdate.status= "failed";
+        state.emailUpdate.message= null;
+        state.emailUpdate.error= action.payload;
     })
   }
 });
