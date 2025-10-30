@@ -7,6 +7,7 @@ import Account from '../pages/Account';
 import EmailVerification from '../pages/email_verification/EmailVerification';
 import VerifyEmail from '../pages/email_verification/VerifyEmail';
 import Profile from '../pages/Profile';
+import UpdatedEmailVerify from '../components/profile/edit/UpdatedEmailVerify';
 
 const PageRouter = () => {
   return (
@@ -25,10 +26,12 @@ const PageRouter = () => {
         <Route path='/profile/*' element={<Profile />} />
       </Route>
 
-        {/* Verification Page */}
-        <Route path='/user/verify' element={<EmailVerification />}/>
-        <Route path='/user/email/verify/token' element={<VerifyEmail />}/>
-        
+      {/* Verification Page */}
+      <Route path='/user/verify' element={<EmailVerification />} />
+      <Route path='/user/email/verify/token' element={<VerifyEmail />} />
+      <Route path='/user/email/update/token' element={<UpdatedEmailVerify />} />
+
+
     </Routes>
   )
 }

@@ -37,6 +37,12 @@ const isValidProfileUpdateReq = async (req, res, next) => {
             "New password must be at least 8 characters, include a number and special character!",
         });
       }
+      if(password === newPassword){
+        return res.status(422).json({
+          message:
+            "New password must be different from old one!",
+        });
+      }
     }
 
     const user = await userModel.findById(req.user);
