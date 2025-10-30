@@ -60,9 +60,9 @@ export const loginUser = createAsyncThunk(
 
 export const verificationLinkSender = createAsyncThunk(
   "auth/verificationLinkSender",
-  async (data, { rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`/api/auth/verify/send`, data, {
+      const res = await axios.get(`/api/auth/verify/link`, {
         withCredentials: true,
       });
       return res?.data;
@@ -76,7 +76,7 @@ export const emailVerifier = createAsyncThunk(
   "auth/emailVerifier",
   async (token, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`/api/auth/verify/${token}`, {
+      const res = await axios.patch(`/api/auth/verify/email`, {token}, {
         withCredentials: true,
       });
       return res?.data;

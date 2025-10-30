@@ -28,12 +28,9 @@ const tokenizer = {
       throw err;
     }
   },
-  createVerifyToken: (id) => {
-    return jwt.sign({ sub: id }, verifySecret, { expiresIn: "15m" });
-  },
 
-  createEmailUpdateToken: (id, email) => {
-    return jwt.sign({ sub: id, email }, verifySecret, { expiresIn: "15m" });
+  createEmailVerifyToken: (id, email, nonce) => {
+    return jwt.sign({ sub: id, email, nonce }, verifySecret, { expiresIn: "15m" });
   }
 };
 

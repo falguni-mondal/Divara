@@ -154,7 +154,7 @@ const isValidUser = async (req, res, next) => {
       req.user = accessTokenData.sub;
       return next();
     } catch (accessTokenErr) {
-      console.error(accessTokenErr.message);
+      console.error("User Validation Error (auth mid): ",accessTokenErr.message);
       return await refreshTokenSetup(req, res, next, refreshToken);
     }
   }

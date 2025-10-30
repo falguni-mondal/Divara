@@ -17,17 +17,31 @@ const userSchema = new mongoose.Schema(
       require: true,
       unique: true,
     },
-    googleId:{
+    pendingEmail: {
+      type: String,
+      default: null,
+      lowercase: true,
+      trim: true,
+    },
+    pendingEmailNonce: {
+      type: String,
+      default: null,
+    },
+    pendingEmailExpires: {
+      type: Date,
+      default: null,
+    },
+    googleId: {
       type: String,
       default: "",
     },
     isVerified: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    lastVerifyLink:{
+    lastVerifyLink: {
       type: Date,
-      default: null
+      default: null,
     },
     password: {
       type: String,

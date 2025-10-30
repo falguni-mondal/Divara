@@ -6,6 +6,7 @@ import sessionModel from "../models/session-model.js";
 import userModel from "../models/user-model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { randomUUID } from "crypto";
 
 const authChecker = async (req, res) => {
   const id = req.user;
@@ -41,7 +42,11 @@ const registerUser = async (req, res) => {
   try {
     const { email, password, firstname, lastname } = req.body;
 
-    const name = (firstname.charAt(0).toUpperCase() + firstname.slice(1)) + " " + (lastname.charAt(0).toUpperCase() + lastname.slice(1));
+    const name =
+      firstname.charAt(0).toUpperCase() +
+      firstname.slice(1) +
+      " " +
+      (lastname.charAt(0).toUpperCase() + lastname.slice(1));
 
     const user = await userModel.create({
       email,
@@ -198,8 +203,6 @@ const logoutUser = async (req, res) => {
 
 const verificationLinkSender = async (req, res) => {
   try {
-    const { userEmail, frontendBaseUrl } = req.body;
-
     const user = await userModel.findById(req.user);
     if (user.lastVerifyLink) {
       const lastSent = new Date(user.lastVerifyLink).getTime();
@@ -212,12 +215,19 @@ const verificationLinkSender = async (req, res) => {
         });
       }
     }
-    const token = tokenizer.createVerifyToken(req.user);
-    const verificationLink = `${frontendBaseUrl}/user/verify/token?token=${token}`;
+
+    const nonce = randomUUID();
+    const token = tokenizer.createEmailVerifyToken(user._id, user.email, nonce);
+
+    user.pendingEmail = user.email;
+    user.pendingEmailNonce = nonce;
+    user.pendingEmailExpires = Date.now() + 15 * 60 * 1000;
+
+    const verificationLink = `${process.env.FRONTEND_URL}/user/email/verify/token?token=${token}`;
 
     const mailOptions = {
       from: `"Divara" <${process.env.SENDER_MAIL}>`,
-      to: userEmail,
+      to: user.email,
       subject: "Verify your email address",
       html: `
         <div style="font-family:Arial,sans-serif;line-height:1.5">
@@ -233,8 +243,8 @@ const verificationLinkSender = async (req, res) => {
 
     if (result.response) {
       user.lastVerifyLink = new Date();
-      await user.save();
     }
+    await user.save();
 
     res.status(200).json({ message: "Verification link sent!" });
   } catch (err) {
@@ -245,34 +255,21 @@ const verificationLinkSender = async (req, res) => {
 
 const emailVerifier = async (req, res) => {
   try {
-    const userId = req.user;
-    const { token } = req.params;
-    const tokenSecret = process.env.VERIFY_TOKEN_SECRET;
+    const user = req.user;
+    const email = req.email;
 
-    if (!token)
-      return res.status(400).json({ message: "Invalid verify token!" });
+    user.email = email;
+    user.isVerified = true;
+    user.lastVerifyLink = undefined;
+    user.pendingEmail = null;
+    user.pendingEmailNonce = null;
+    user.pendingEmailExpires = null;
 
-    const data = jwt.verify(token, tokenSecret);
-
-    if (data.sub !== userId) {
-      return res.status(400).json({ message: "Invalid verify token!" });
-    } else {
-      const user = await userModel.findById(userId);
-
-      if (!user) {
-        return res.status(404).json({ message: "User not found!" });
-      } else if (user.isVerified) {
-        return res.status(200).json({ message: "Email already verified!" });
-      } else {
-        user.isVerified = true;
-        delete user.lastVerifyLink;
-        await user.save();
-
-        const mailOptions = {
-          from: `"Divara" <${process.env.SENDER_MAIL}>`,
-          to: user.email,
-          subject: "Welcome to Divara",
-          html: `
+    const mailOptions = {
+      from: `"Divara" <${process.env.SENDER_MAIL}>`,
+      to: email,
+      subject: "Welcome to Divara",
+      html: `
           <!DOCTYPE html>
           <html lang="en">
             <head>
@@ -327,23 +324,16 @@ const emailVerifier = async (req, res) => {
             </body>
           </html>
           `,
-        };
+    };
 
-        await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 
-        return res
-          .status(200)
-          .json({ message: "Email verification successfull!" });
-      }
-    }
+    await user.save();
+
+    return res.status(200).json({ message: "Email verification successfull!" });
   } catch (err) {
     console.error("Verification Error:", err.message);
-
-    if (err.name === "TokenExpiredError") {
-      return res.status(400).json({ message: "Verification link expired!" });
-    }
-
-    res.status(400).json({ message: "Invalid or expired verification token!" });
+    res.status(500).json({ message: "Internal server error!" });
   }
 };
 

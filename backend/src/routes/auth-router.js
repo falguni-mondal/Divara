@@ -3,6 +3,7 @@ import { authChecker, emailChecker, registerUser, loginUser, logoutUser, verific
 import isValidUser from "../middlewares/auth-middleware.js";
 import isValidRegisterCreds from "../middlewares/registration-creds-validator.js";
 import passport from "../configs/passport.js";
+import emailUpdateTokenValidator from "../middlewares/email-update-token-validator.js";
 
 const router = express.Router()
 
@@ -10,8 +11,8 @@ router.get("/check", isValidUser, authChecker);
 router.post("/check/email", emailChecker);
 router.post("/register", isValidRegisterCreds, registerUser);
 router.post("/login", loginUser);
-router.post("/verify/send", isValidUser, verificationLinkSender);
-router.get("/verify/:token", isValidUser, emailVerifier);
+router.get("/verify/link", isValidUser, verificationLinkSender);
+router.patch("/verify/email", emailUpdateTokenValidator, emailVerifier);
 router.get("/logout", logoutUser);
 router.get("/account/reset", isValidUser, accountReseter);
 

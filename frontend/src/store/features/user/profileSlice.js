@@ -19,7 +19,7 @@ export const emailUpdater = createAsyncThunk(
   "profile/emailUpdater",
   async (token, { rejectWithValue }) => {
     try {
-      const res = await axios.patch(`/api/profile/verify`, {token}, {
+      const res = await axios.patch(`/api/profile/email/verify`, {token}, {
         withCredentials: true,
       });
       return res?.data?.message;
