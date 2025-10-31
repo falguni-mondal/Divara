@@ -2,7 +2,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, resetEmailStatus } from "../../store/features/user/authSlice";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import dp_bg from "../../assets/bg/abstract_bg.webp";
 
 import { BiUser } from "react-icons/bi";
 import { MdOutlineShoppingCartCheckout } from "react-icons/md";
@@ -87,14 +86,14 @@ const BaseProfile = () => {
         <div className={`${!user.profileImage && "user-dp-container"} shrink-0 aspect-square w-[30%] rounded-full overflow-hidden flex justify-center items-center relative`}>
           <img
             className="user-dp-bg absolute h-full w-full object-cover"
-            src={user.profileImage || dp_bg}
+            src={user.profileImage || user.profileBackground}
             alt=""
           />
           <span className={`${user.profileImage && "hidden"} text-[2.5rem] mix-blend-difference text-[#efefef] font-semibold relative`}>
             {user.name[0]}
           </span>
         </div>
-        <h1 className="user-name text-[2rem] font-light w-[70%] text-ellipsis overflow-hidden tracking-tight">
+        <h1 className="user-name text-[2rem] font-light w-[70%] whitespace-nowrap text-ellipsis overflow-hidden tracking-tight">
           {user.name}
         </h1>
       </section>

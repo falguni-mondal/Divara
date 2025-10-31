@@ -1,5 +1,5 @@
 import transporter from "../configs/nodemailer.js";
-import { cookieOptions } from "../configs/reusable.js";
+import { cookieOptions, randomDP } from "../configs/reusable.js";
 import tokenizer from "../configs/tokenizer.js";
 import userDataTrimmer from "../configs/user-trimmer.js";
 import sessionModel from "../models/session-model.js";
@@ -54,6 +54,7 @@ const registerUser = async (req, res) => {
       firstname,
       lastname,
       name,
+      profileBackground: randomDP()
     });
 
     const accessToken = tokenizer.createAccessToken(user._id);

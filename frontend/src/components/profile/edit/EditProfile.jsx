@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import FormSubmitBtn from '../../../utils/buttons/FormSubmitBtn';
 import { profileUpdater } from '../../../store/features/user/profileSlice';
 import useEffectOnUpdate from '../../../hooks/useEffectOnUpdate';
-import dp_bg from "../../../assets/bg/abstract_bg.webp";
 import { MdOutlineCameraswitch } from "react-icons/md";
 import { BiPencil } from "react-icons/bi";
 
@@ -166,7 +165,7 @@ const EditProfile = () => {
                 <div onClick={fileSelector} className="user-dp h-full w-full flex justify-center items-center rounded-full overflow-hidden relative">
                     <img
                         className="user-dp-bg absolute h-full w-full object-cover"
-                        src={preview || user.profileImage || dp_bg}
+                        src={preview || user.profileImage || user.profileBackground}
                         alt={`${user.name}-display-picture`}
                     />
                     <span className={`${preview ? "hidden" : user.profileImage && "hidden"} text-[2.5rem] mix-blend-difference text-[#efefef] font-semibold relative`}>
@@ -183,7 +182,7 @@ const EditProfile = () => {
                 <div className="user-firstname-update-input-container w-full">
                     <span className={`name-update-preview-title uppercase text-[#1a1a1a] font-medium text-[0.7rem]`}>change- firstname</span>
                     <div className={`update-input-container w-full h-[3rem] text-[1.050rem] relative ${updateTrigger.firstname ? "" : "bg-zinc-200 rounded-[3px]"}`}>
-                        <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, firstname: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, firstname: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20 capitalize`} type="text" defaultValue={user.firstname} name='firstname' />
+                        <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, firstname: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, firstname: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20 capitalize`} type="text" defaultValue={user.firstname} name='firstname' placeholder='Firstname'/>
                         <BiPencil className={`${updateTrigger.firstname ? "hidden" : "absolute right-2 top-1/2 -translate-y-1/2 z-10"}`} />
                     </div>
                     <p className={`w-full text-red-700 text-[0.7rem] mt-1 ${!formErr.firstname && "hidden"}`}>Firstname must be atleast of 3 characters.</p>
@@ -192,7 +191,7 @@ const EditProfile = () => {
                 <div className="user-lastname-update-input-container w-full">
                     <span className={`name-update-preview-title uppercase text-[#1a1a1a] font-medium text-[0.7rem]`}>change- lastname</span>
                     <div className={`update-input-container w-full h-[3rem] text-[1.050rem] relative ${updateTrigger.lastname ? "" : "bg-zinc-200 rounded-[3px]"}`}>
-                        <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, lastname: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, lastname: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20 capitalize`} type="text" defaultValue={user.lastname} name='lastname' />
+                        <input onBlur={() => setUpdateTrigger(prev => ({ ...prev, lastname: false }))} onFocus={() => setUpdateTrigger(prev => ({ ...prev, lastname: true }))} className={`h-full outline-0 w-full border border-zinc-300 rounded-[3px] px-2 relative z-20 capitalize`} type="text" defaultValue={user.lastname} name='lastname' placeholder='Lastname'/>
                         <BiPencil className={`${updateTrigger.lastname ? "hidden" : "absolute right-2 top-1/2 -translate-y-1/2 z-10"}`} />
                     </div>
                     <p className={`w-full text-red-700 text-[0.7rem] mt-1 ${!formErr.lastname && "hidden"}`}>Lastname must be atleast of 3 characters.</p>

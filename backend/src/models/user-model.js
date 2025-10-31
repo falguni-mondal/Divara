@@ -10,6 +10,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: null
     },
+    profileBackground:{
+      type: String,
+      default: null,
+      require: true
+    },
     name: {
       type: String,
       require: true,

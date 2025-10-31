@@ -2,6 +2,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import userModel from "../models/user-model.js";
 import transporter from "./nodemailer.js";
+import { randomDP } from "./reusable.js";
 
 passport.use(
   new GoogleStrategy(
@@ -20,7 +21,16 @@ passport.use(
             email: profile.emails[0].value,
             googleId: profile.id,
             isVerified: true,
+            profileBackground: randomDP(),
           });
+
+          const profilePicture = profile.photos[0].value;
+
+          if(profilePicture){
+            user.profileImage = profilePicture
+          }
+
+          await user.save();
 
           const mailOptions = {
             from: `"Divara" <${process.env.SENDER_MAIL}>`,
