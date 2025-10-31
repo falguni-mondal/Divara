@@ -54,6 +54,10 @@ const profileUpdater = async (req, res) => {
     user.firstname = firstname.trim();
     user.lastname = lastname.trim();
 
+    const name = (firstname.charAt(0).toUpperCase() + firstname.slice(1)) + " " + (lastname.charAt(0).toUpperCase() + lastname.slice(1));
+
+    user.name = name;
+
     if (newPassword && newPassword.length > 0) {
       user.password = await bcrypt.hash(newPassword, 10);
     }
