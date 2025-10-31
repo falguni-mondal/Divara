@@ -84,13 +84,13 @@ const BaseProfile = () => {
   return (
     <section className="w-full" id="profile-page">
       <section className="flex items-center justify-between gap-4 h-[7.5rem] w-full" id="user-display-section">
-        <div className="user-dp-container shrink-0 aspect-square w-[30%] rounded-full overflow-hidden flex justify-center items-center relative">
+        <div className={`${!user.profileImage && "user-dp-container"} shrink-0 aspect-square w-[30%] rounded-full overflow-hidden flex justify-center items-center relative`}>
           <img
             className="user-dp-bg absolute h-full w-full object-cover"
-            src={dp_bg}
+            src={user.profileImage || dp_bg}
             alt=""
           />
-          <span className="text-[2.5rem] mix-blend-difference text-[#efefef] font-semibold relative">
+          <span className={`${user.profileImage && "hidden"} text-[2.5rem] mix-blend-difference text-[#efefef] font-semibold relative`}>
             {user.name[0]}
           </span>
         </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
@@ -35,28 +35,89 @@ const EditProfile = () => {
         lastname: false
     })
 
+    const [preview, setPreview] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
+
     const { status, message, error } = useSelector(state => state.profile.update);
+
+    const fileSelector = () => {
+        const input = document.createElement("input");
+
+        input.type = "file";
+        input.accept = "image/jpeg, image/jpg, image/png, image/webp";
+
+        input.onchange = handleFileSelect;
+
+        input.click();
+
+        input.remove();
+    };
+
+    const handleFileSelect = (e) => {
+        const file = e.target.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+        if (!allowedTypes.includes(file.type)) {
+            toast.error("Only JPG, JPEG, PNG, and WEBP are allowed!", toastOptions);
+            return;
+        }
+
+
+        if (file.size > 5 * 1024 * 1024) {
+            toast.error("Image must be less than 5MB!", toastOptions)
+            return;
+        }
+
+        setSelectedFile(file);
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setPreview(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
 
     const submitHandler = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const data = {
-            firstname: formData.get('firstname'),
-            lastname: formData.get('lastname'),
-            email: formData.get('email'),
-            newPassword: formData.get('newPassword'),
-            password: formData.get('password')
+        const data = new FormData();
+    
+        data.append('firstname', formData.get('firstname').trim());
+        data.append('lastname', formData.get('lastname').trim());
+        data.append('email', formData.get('email').trim());
+        data.append('password', formData.get('password'));
+
+        const newPassword = formData.get('newPassword');
+        if (newPassword && newPassword.trim().length > 0) {
+            data.append('newPassword', newPassword);
+        }
+        
+        if (selectedFile) {
+            data.append('profileImage', selectedFile);
         }
 
-        if (data.email === user.email && data.firstname === user.firstname && data.lastname === user.lastname && data.newPassword.length === 0){
-            toast.info("No changes!", toastOptions);
+        const firstname = formData.get('firstname').trim();
+        const lastname = formData.get('lastname').trim();
+        const email = formData.get('email').trim();
+        const hasPasswordChange = newPassword && newPassword.trim().length > 0;
+
+        if (
+            email === user.email && 
+            firstname === user.firstname && 
+            lastname === user.lastname && 
+            !hasPasswordChange && 
+            !selectedFile
+        ) {
+            toast.info("No changes detected!", toastOptions);
             return;
         }
 
-        let formErrors = formErrorFinder(data);
+        let formErrors = formErrorFinder({email, firstname, lastname});
 
-        if (data.newPassword.length > 0) {
-            const validPassword = passwordValidator(data.newPassword);
+        if (hasPasswordChange) {
+            const validPassword = passwordValidator(newPassword);
             if (Object.values(validPassword).includes(false)) {
                 formErrors = ({ ...formErrors, newPassword: true });
             }
@@ -65,7 +126,7 @@ const EditProfile = () => {
             formErrors = ({ ...formErrors, newPassword: false })
         }
 
-        const validPassword = passwordValidator(data.password);
+        const validPassword = passwordValidator(formData.get("password"));
         if (Object.values(validPassword).includes(false)) {
             formErrors = ({ ...formErrors, password: true });
         }
@@ -77,6 +138,14 @@ const EditProfile = () => {
             setFormErr({ ...formErrors });
             return;
         }
+
+        setFormErr({
+            email: false,
+            password: false,
+            newPassword: false,
+            firstname: false,
+            lastname: false
+        });
 
         dispatch(profileUpdater(data))
     };
@@ -93,26 +162,18 @@ const EditProfile = () => {
 
     return (
         <div className='w-full' id='edit-profile-page'>
-            <div className="user-dp-container shrink-0 aspect-square w-[30%] mx-auto relative">
-                {
-                    user.displayPicture ?
-                        <div className="user-dp">
-
-                        </div>
-                        :
-                        <div className="default-dp h-full w-full flex justify-center items-center rounded-full overflow-hidden relative">
-                            <img
-                                className="user-dp-bg absolute h-full w-full object-cover"
-                                src={dp_bg}
-                                alt=""
-                            />
-                            <span className="text-[2.5rem] mix-blend-difference text-[#efefef] font-semibold relative">
-                                {user.name[0]}
-                            </span>
-                        </div>
-
-                }
-                <span className='absolute bottom-0 right-0 w-[2rem] aspect-square rounded-full bg-[#1a1a1a] text-[#efefef] flex justify-center items-center'>
+            <div className={`${!preview && !user.profileImage && "user-dp-container"} shrink-0 aspect-square w-[30%] mx-auto relative rounded-full`}>
+                <div onClick={fileSelector} className="user-dp h-full w-full flex justify-center items-center rounded-full overflow-hidden relative">
+                    <img
+                        className="user-dp-bg absolute h-full w-full object-cover"
+                        src={preview || user.profileImage || dp_bg}
+                        alt={`${user.name}-display-picture`}
+                    />
+                    <span className={`${preview ? "hidden" : user.profileImage && "hidden"} text-[2.5rem] mix-blend-difference text-[#efefef] font-semibold relative`}>
+                        {user.name[0]}
+                    </span>
+                </div>
+                <span onClick={fileSelector} className='absolute bottom-0 right-0 w-[2rem] aspect-square rounded-full bg-[#1a1a1a] text-[#efefef] flex justify-center items-center'>
                     <MdOutlineCameraswitch />
                 </span>
             </div>
@@ -170,7 +231,13 @@ const EditProfile = () => {
 
                 <div className="w-full mt-3" id='user-data-update-btn-container'>
                     <FormSubmitBtn status={status} />
-                    <span onClick={() => navigate(-1, { replace: true })} className='w-full h-[3rem] flex justify-center items-center mt-2 rounded-[3px] bg-zinc-200 text-[#1a1a1a] uppercase text-[0.7rem] font-semibold'>cancel</span>
+                    <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className='w-full h-[3rem] flex justify-center items-center mt-2 rounded-[3px] bg-zinc-200 text-[#1a1a1a] uppercase text-[0.7rem] font-semibold'
+                    >
+                        cancel
+                    </button>
                 </div>
 
             </form>

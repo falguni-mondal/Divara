@@ -1,14 +1,55 @@
 import bcrypt from "bcryptjs";
+import sharp from "sharp";
 import userModel from "../models/user-model.js";
 import tokenizer from "../configs/tokenizer.js";
 import transporter from "../configs/nodemailer.js";
 import { randomUUID } from "crypto";
+import imagekit from "../configs/imagekit/imagekit.js";
 
 const profileUpdater = async (req, res) => {
   try {
     const { firstname, lastname, email, newPassword } = req.body;
 
     const user = await userModel.findById(req.user);
+
+    if (req.file) {
+      if (user.profileImageId) {
+        try {
+          await imagekit.deleteFile(user.profileImageId);
+        } catch (deleteErr) {
+          console.error("Failed to delete old image:", deleteErr.message);
+        }
+      }
+
+      //Processing the Image
+      const processedImageBuffer = await sharp(req.file.buffer)
+        .resize(500, 500, {
+          fit: "cover",
+          position: "center",
+          withoutEnlargement: true,
+        })
+        .withMetadata(false)
+        .webp({
+          quality: 80,
+          lossless: false, // true for lossless
+          nearLossless: false, // subtle compression
+          smartSubsample: true, // better quality
+        })
+        .toBuffer();
+
+
+      // Upload to ImageKit
+      const uploadResponse = await imagekit.upload({
+        file: processedImageBuffer,
+        fileName: `${user._id}_${Date.now()}.webp`,
+        folder: "/Divara/profile-images",
+        tags: ["profile", user._id],
+        useUniqueFileName: true,
+      });
+
+      user.profileImage = uploadResponse.url;
+      user.profileImageId = uploadResponse.fileId;
+    }
 
     user.firstname = firstname.trim();
     user.lastname = lastname.trim();

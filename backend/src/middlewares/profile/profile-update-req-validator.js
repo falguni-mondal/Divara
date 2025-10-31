@@ -72,7 +72,8 @@ const isValidProfileUpdateReq = async (req, res, next) => {
       firstname.trim() === user.firstname &&
       lastname.trim() === user.lastname &&
       email.toLowerCase() === user.email.toLowerCase() &&
-      (!newPassword || newPassword.length === 0);
+      (!newPassword || newPassword.length === 0) &&
+      (!req.file || req.file === "")
 
     if (noChanges) {
       return res.status(200).json({
