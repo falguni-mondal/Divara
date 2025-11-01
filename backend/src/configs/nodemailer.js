@@ -17,7 +17,7 @@ const oAuth2Client = new google.auth.OAuth2(
 
 oAuth2Client.setCredentials({ refresh_token: GOOGLE_REFRESH_TOKEN });
 
-const accessToken = await oAuth2Client.getAccessToken();
+const accessToken = async () => await oAuth2Client.getAccessToken();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
