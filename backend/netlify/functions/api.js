@@ -29,7 +29,7 @@ connectToDB();
 
 
 router.use(cors({
-    origin: process.env.NODE_ENV === "development" ? true : ["https://divarastore.netlify.app"],
+    origin: process.env.NODE_ENV === "development" ? true : `${process.env.FRONTEND_URL}`,
     credentials: true
 }))
 
