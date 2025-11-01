@@ -1,12 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { backendBaseApi } from "../../../configs/keys";
 
 export const profileUpdater = createAsyncThunk(
   "profile/profileUpdater",
   async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.put(`${backendBaseApi}/profile/update`, data, {
+      const res = await axios.put(`/api/profile/update`, data, {
         withCredentials: true,
       });
       return res?.data?.message;
@@ -20,7 +19,7 @@ export const emailUpdater = createAsyncThunk(
   "profile/emailUpdater",
   async (token, { rejectWithValue }) => {
     try {
-      const res = await axios.patch(`${backendBaseApi}/profile/email/verify`, {token}, {
+      const res = await axios.patch(`/api/profile/email/verify`, {token}, {
         withCredentials: true,
       });
       return res?.data?.message;
