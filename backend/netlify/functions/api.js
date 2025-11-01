@@ -47,5 +47,5 @@ router.use("/auth", authRouter);
 router.use("/profile", profileRouter);
 
 
-router.use("/api/", router);
+app.use("/api/", router);
 export const handler = serverless(app);
