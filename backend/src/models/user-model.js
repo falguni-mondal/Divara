@@ -4,16 +4,16 @@ const userSchema = new mongoose.Schema(
   {
     profileImage: {
       type: String,
-      default: null
+      default: null,
     },
     profileImageId: {
       type: String,
-      default: null
+      default: null,
     },
-    profileBackground:{
+    profileBackground: {
       type: String,
       default: null,
-      require: true
+      require: true,
     },
     name: {
       type: String,
@@ -59,17 +59,23 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
     },
-    passwordResetCode: {
-      type: Number,
-    },
-    passwordResetCodeExpires: {
-      type: Date,
-      default: null,
+    forgotPassword: {
+      code: {
+        type: String,
+      },
+      codeExpires: {
+        type: Date,
+        default: null,
+      },
+      allowed:{
+        type: Boolean,
+        default: false,
+      }
     },
     role: {
       type: String,
       default: "user",
-      enum: ['user', 'admin', 'super-admin']
+      enum: ["user", "admin", "super-admin"],
     },
     cart: {
       type: mongoose.Schema.Types.ObjectId,

@@ -1,6 +1,6 @@
 import userModel from "../../models/user-model.js";
 
-const codeSenderValidator = async (req, res, next) => {
+const existingEmailValidator = async (req, res, next) => {
     const email = req.body.email;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
 
@@ -10,13 +10,14 @@ const codeSenderValidator = async (req, res, next) => {
     if(!emailRegex.test(email)){
         return res.status(400).json({message: "Invalid email address!"});
     }
+
     const user = await userModel.findOne({email});
     if(!user){
         return res.status(400).json({message: "No account found!"});
     }
-
+    
     req.user = user;
     next();
 }
 
-export default codeSenderValidator;
+export default existingEmailValidator;

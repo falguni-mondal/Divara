@@ -102,9 +102,9 @@ export const codeSender = createAsyncThunk(
 
 export const codeVerifier = createAsyncThunk(
   "auth/codeVerifier",
-  async (code, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post(`/api/auth/verifyCode`, {code}, {
+      const res = await axios.post(`/api/auth/verifyCode`, data, {
         withCredentials: true,
       });
       return res?.data;
@@ -116,9 +116,9 @@ export const codeVerifier = createAsyncThunk(
 
 export const passwordReseter = createAsyncThunk(
   "auth/passwordReseter",
-  async (_, { rejectWithValue }) => {
+  async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.get(`/api/auth/resetPassword`, {
+      const res = await axios.patch(`/api/auth/resetPassword`, data, {
         withCredentials: true,
       });
       return res?.data;
@@ -198,6 +198,19 @@ const authSlice = createSlice({
       state.login.error = null;
       state.register.error = null;
     },
+    resetForgotPasswordState: (state) => {
+      state.codeSender.status = "idle";
+      state.codeSender.message = null;
+      state.codeSender.error = null;
+
+      state.codeVerifier.status = "idle";
+      state.codeVerifier.message = null;
+      state.codeVerifier.error = null;
+
+      state.passwordReseter.status = "idle";
+      state.passwordReseter.message = null;
+      state.passwordReseter.error = null;
+    }
   },
 
   extraReducers: (builder) => {
@@ -352,5 +365,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { resetEmailStatus } = authSlice.actions;
+export const { resetEmailStatus, resetForgotPasswordState } = authSlice.actions;
 export default authSlice.reducer;

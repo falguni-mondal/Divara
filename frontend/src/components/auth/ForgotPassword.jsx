@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import FormSubmitBtn from '../../utils/buttons/FormSubmitBtn';
-import { codeSender, codeVerifier, passwordReseter, resetEmailStatus } from '../../store/features/user/authSlice';
+import { codeSender, codeVerifier, passwordReseter, resetEmailStatus, resetForgotPasswordState } from '../../store/features/user/authSlice';
 import { RxEyeOpen } from "react-icons/rx";
 import { BsPencil } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import toastOptions from '../../configs/toast-options';
-import { Link } from 'react-router-dom';
-import { FiArrowUpRight } from "react-icons/fi";
+import { useNavigate } from 'react-router-dom';
 import passwordValidator from '../../configs/password-validator';
 
 const ForgotPassword = () => {
@@ -21,6 +20,7 @@ const ForgotPassword = () => {
   const reseterMessage = useSelector(state => state.auth.passwordReseter.message);
   const reseterError = useSelector(state => state.auth.passwordReseter.error);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const codeRef = useRef(null);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -30,25 +30,50 @@ const ForgotPassword = () => {
     specialChar: false
   })
 
+
   useEffect(() => {
     if (senderStatus !== "loading" || senderStatus !== "idle") {
       dispatch(codeSender(userMail));
     }
+    return () => {
+      dispatch(resetForgotPasswordState());
+    }
   }, [])
 
-  // PASSWORD CHECKER FUNCTION
-    const passwordChecker = (e) => {
-        setPassword(e.target.value);
-        setValidPassword(passwordValidator(e.target.value));
+  useEffect(() => {
+    if (senderMessage) {
+      toast.success(`${senderMessage.message}`, toastOptions);
     }
+    if (senderError) {
+      toast.error(`${senderError.message}`, toastOptions);
+    }
+
+  }, [senderMessage, senderError, dispatch])
+
+  useEffect(() => {
+    if (reseterMessage) {
+      toast.success(`${reseterMessage.message}`, toastOptions);
+      navigate("/account/signin", {replace: true});
+    }
+    if (reseterError) {
+      toast.error(`${reseterError.message}`, toastOptions);
+    }
+
+  }, [reseterMessage, reseterError, dispatch])
+
+  // PASSWORD CHECKER FUNCTION
+  const passwordChecker = (e) => {
+    setPassword(e.target.value);
+    setValidPassword(passwordValidator(e.target.value));
+  }
 
   const submitHandler = (e) => {
     e.preventDefault();
     if (status === "success" && message) {
-      dispatch(passwordReseter());
+      dispatch(passwordReseter({ email: userMail, password: password }));
       return;
     }
-    dispatch(codeVerifier(codeRef.current.value));
+    dispatch(codeVerifier({ email: userMail, code: codeRef.current.value }));
   }
 
 
@@ -68,17 +93,17 @@ const ForgotPassword = () => {
         {/* VERIFICATION CODE INPUT */}
         <div className='w-full' id="verification-code-input-container">
           <p className='text-[#1a1a1a] text-[0.7rem] leading-none mb-1'>Please enter the Verification Code that we just send to your email address :</p>
-          <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border ${status === "success" && message ? "border-zinc-700" : ""} px-2 py-1 rounded-[3px] relative`}>
+          <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border border-zinc-600 px-2 py-1 rounded-[3px] relative`}>
             <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='verification-code'>verification Code*</label>
             <input ref={codeRef} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type="text" id='verification-code' autoFocus />
           </div>
-          <div className={`resend-btn ${senderStatus === "loading" ? "text-zinc-700" : "text-[#1a1a1a]"} w-full text-right text-[0.8rem] font-semibold mt-1`}>
+          <div className={`resend-btn ${senderStatus === "loading" ? "text-zinc-600" : "text-[#1a1a1a]"} w-full text-right text-[0.8rem] font-semibold mt-1`}>
             <span className='underline' onClick={() => (senderStatus !== "loading" || senderStatus !== "idle") && dispatch(codeSender(userMail))}>Resend?</span>
           </div>
         </div>
 
         <div className={`password-input-wrapper w-full ${status === "success" && message ? "" : "hidden"}`}>
-          <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border pl-2 py-1 rounded-[3px] relative`}>
+          <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border border-zinc-600 pl-2 py-1 rounded-[3px] relative`}>
             <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='register-password'>New Password*</label>
             <input onChange={passwordChecker} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='register-password' />
             <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>

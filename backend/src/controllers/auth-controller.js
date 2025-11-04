@@ -344,7 +344,7 @@ const codeSender = async (req, res) => {
     const code = Math.floor(100000 + Math.random() * 900000);
 
     const user = req.user;
-    user.passwordResetCode = code;
+    user.forgotPassword.code = code;
 
     const mailOptions = {
       from: `"Divara" <${process.env.SENDER_MAIL}>`,
@@ -354,7 +354,7 @@ const codeSender = async (req, res) => {
         <div style="font-family:Arial,sans-serif;line-height:1.5">
           <h2>Reset Password</h2>
           <p>Use this code to reset your password:</p>
-          <p style="font-size: "2rem"">${code}</p>
+          <p style="font-size: 2rem">${code}</p>
           <p>This code will be valid for next 15 minutes.</p>
         </div>
       `,
@@ -362,14 +362,67 @@ const codeSender = async (req, res) => {
 
     const result = await transporter.sendMail(mailOptions);
     if (result.response) {
-      user.passwordResetCodeExpires = new Date(Date.now() + 15 * 60 * 1000);
+      user.forgotPassword.codeExpires = new Date(Date.now() + 15 * 60 * 1000);
     }
     await user.save();
 
     res.status(200).json({ message: "Reset code sent!" });
   } catch (err) {
-    console.error("error while sendng code for reseting password: ", err.message);
-    res.status(400).json({ message: "Internal server error!" });
+    console.error(
+      "error while sendng code for reseting password: ",
+      err.message
+    );
+    res.status(500).json({ message: "Internal server error!" });
+  }
+};
+
+const codeVerifier = async (req, res) => {
+  try {
+    const code = req.body.code;
+    const user = req.user;
+    if (!code) {
+      return res.status(400).json({ message: "Code required!" });
+    }
+    if (!user?.forgotPassword?.code || !user?.forgotPassword?.codeExpires) {
+      return res.status(400).json({ message: "No reset code set!" });
+    }
+    if (user.forgotPassword.code !== code) {
+      console.log(user.forgotPassword.code);
+      console.log(code);
+      return res.status(400).json({ message: "Code mismatch!" });
+    }
+    if (user.forgotPassword.codeExpires < new Date()) {
+      return res.status(400).json({ message: "Code Expired!" });
+    }
+
+    user.forgotPassword.allowed = true;
+
+    await user.save();
+    res.status(200).json({ message: "Update your password!" });
+  } catch (err) {
+    console.error("code verifier error: ", err.message);
+    res.status(500).json({ message: "Internal server error!" });
+  }
+};
+
+const passwordReseter = async (req, res) => {
+  try {
+    const user = req.user;
+    const newPassword = req.body.password;
+
+    user.password = await bcrypt.hash(newPassword, 10);
+
+    user.forgotPassword = {
+      code: null,
+      codeExpires: null,
+      allowed: false,
+    };
+
+    await user.save();
+    res.status(200).json({ message: "Password successfully updated!" });
+  } catch (err) {
+    console.error("password reseting error: ", err.message);
+    res.status(500).json({ message: "Internal server error!" });
   }
 };
 
@@ -412,6 +465,8 @@ export {
   verificationLinkSender,
   emailVerifier,
   codeSender,
+  codeVerifier,
+  passwordReseter,
   logoutUser,
   accountReseter,
   googleCallback,

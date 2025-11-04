@@ -1,6 +1,6 @@
 import rateLimit from "express-rate-limit";
 
-const passwordResetCodeLimiter = rateLimit({
+const codeSendingLimiter = rateLimit({
   windowMs: 60 * 1000,
   max: 1,
   standardHeaders: true,
@@ -14,4 +14,4 @@ const passwordResetCodeLimiter = rateLimit({
   }
 });
 
-export default passwordResetCodeLimiter;
+export default codeSendingLimiter;
