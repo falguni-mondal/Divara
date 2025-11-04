@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import tokenizer from "../configs/tokenizer.js";
-import sessionModel from "../models/session-model.js";
+import tokenizer from "../../configs/tokenizer.js";
+import sessionModel from "../../models/session-model.js";
 import { randomUUID } from "crypto";
-import { cookieOptions } from "../configs/reusable.js";
+import { cookieOptions } from "../../configs/reusable.js";
 const accessSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
 

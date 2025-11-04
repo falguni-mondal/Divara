@@ -86,6 +86,48 @@ export const emailVerifier = createAsyncThunk(
   }
 );
 
+export const codeSender = createAsyncThunk(
+  "auth/codeSender",
+  async (email, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`/api/auth/sendCode`, {email}, {
+        withCredentials: true,
+      });
+      return res?.data;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
+export const codeVerifier = createAsyncThunk(
+  "auth/codeVerifier",
+  async (code, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`/api/auth/verifyCode`, {code}, {
+        withCredentials: true,
+      });
+      return res?.data;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
+export const passwordReseter = createAsyncThunk(
+  "auth/passwordReseter",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`/api/auth/resetPassword`, {
+        withCredentials: true,
+      });
+      return res?.data;
+    } catch (err) {
+      return rejectWithValue(err?.response?.data);
+    }
+  }
+);
+
 export const logoutUser = createAsyncThunk(
   "auth/logoutUser",
   async (_, { rejectWithValue }) => {
@@ -130,6 +172,21 @@ const authSlice = createSlice({
       status: "idle",
       error: null,
     },
+    codeSender: {
+      status: "idle",
+      message: null,
+      error: null
+    },
+    codeVerifier: {
+      status: "idle",
+      message: null,
+      error: null
+    },
+    passwordReseter: {
+      status: "idle",
+      message: null,
+      error: null
+    }
   },
 
   reducers: {
@@ -158,6 +215,7 @@ const authSlice = createSlice({
         state.status = "failed";
         state.error = action.payload;
       })
+
       .addCase(checkMail.pending, (state) => {
         state.checkEmail.status = "loading";
       })
@@ -170,6 +228,7 @@ const authSlice = createSlice({
         state.checkEmail.status = "failed";
         state.checkEmail.error = action.payload;
       })
+
       .addCase(registerUser.pending, (state) => {
         state.register.status = "loading";
       })
@@ -183,6 +242,7 @@ const authSlice = createSlice({
         state.register.status = "failed";
         state.register.error = action.payload;
       })
+
       .addCase(loginUser.pending, (state) => {
         state.login.status = "loading";
       })
@@ -196,34 +256,94 @@ const authSlice = createSlice({
         state.login.status = "failed";
         state.login.error = action.payload;
       })
+
       .addCase(verificationLinkSender.pending, (state) => {
         state.verifyLink.status = "loading";
+        state.verifyLink.message = null;
+        state.verifyLink.error = null;
       })
       .addCase(verificationLinkSender.fulfilled, (state, action) => {
         state.verifyLink.status = "success";
         state.verifyLink.message = action.payload;
+        state.verifyLink.error = null;
       })
       .addCase(verificationLinkSender.rejected, (state, action) => {
         state.verifyLink.status = "failed";
         state.verifyLink.error = action.payload;
+        state.verifyLink.message = null;
       })
+
       .addCase(emailVerifier.pending, (state) => {
         state.emailVerify.status = "loading";
+        state.emailVerify.message = null;
+        state.emailVerify.error = null;
       })
       .addCase(emailVerifier.fulfilled, (state, action) => {
         state.emailVerify.status = "success";
         state.emailVerify.message = action.payload;
+        state.emailVerify.error = null;
       })
       .addCase(emailVerifier.rejected, (state, action) => {
         state.emailVerify.status = "failed";
         state.emailVerify.error = action.payload;
+        state.emailVerify.message = null;
       })
+
+      .addCase(codeSender.pending, (state) => {
+        state.codeSender.status = "loading";
+        state.codeSender.message = null;
+        state.codeSender.error = null;
+      })
+      .addCase(codeSender.fulfilled, (state, action) => {
+        state.codeSender.status = "success";
+        state.codeSender.message = action.payload;
+        state.codeSender.error = null;
+      })
+      .addCase(codeSender.rejected, (state, action) => {
+        state.codeSender.status = "failed";
+        state.codeSender.error = action.payload;
+        state.codeSender.message = null;
+      })
+
+      .addCase(codeVerifier.pending, (state) => {
+        state.codeVerifier.status = "loading";
+        state.codeVerifier.message = null;
+        state.codeVerifier.error = null;
+      })
+      .addCase(codeVerifier.fulfilled, (state, action) => {
+        state.codeVerifier.status = "success";
+        state.codeVerifier.message = action.payload;
+        state.codeVerifier.error = null;
+      })
+      .addCase(codeVerifier.rejected, (state, action) => {
+        state.codeVerifier.status = "failed";
+        state.codeVerifier.error = action.payload;
+        state.codeVerifier.message = null;
+      })
+
+      .addCase(passwordReseter.pending, (state) => {
+        state.passwordReseter.status = "loading";
+        state.passwordReseter.message = null;
+        state.passwordReseter.error = null;
+      })
+      .addCase(passwordReseter.fulfilled, (state, action) => {
+        state.passwordReseter.status = "success";
+        state.passwordReseter.message = action.payload;
+        state.passwordReseter.error = null;
+      })
+      .addCase(passwordReseter.rejected, (state, action) => {
+        state.passwordReseter.status = "failed";
+        state.passwordReseter.error = action.payload;
+        state.passwordReseter.message = null;
+      })
+
       .addCase(logoutUser.pending, (state) => {
         state.status = "loading";
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.status = "failed";
         state.user = null;
+        state.error = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.status = "failed";

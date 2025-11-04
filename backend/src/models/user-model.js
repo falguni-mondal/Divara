@@ -59,9 +59,17 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
     },
+    passwordResetCode: {
+      type: Number,
+    },
+    passwordResetCodeExpires: {
+      type: Date,
+      default: null,
+    },
     role: {
       type: String,
       default: "user",
+      enum: ['user', 'admin', 'super-admin']
     },
     cart: {
       type: mongoose.Schema.Types.ObjectId,

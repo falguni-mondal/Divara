@@ -54,7 +54,7 @@ const registerUser = async (req, res) => {
       firstname,
       lastname,
       name,
-      profileBackground: randomDP()
+      profileBackground: randomDP(),
     });
 
     const accessToken = tokenizer.createAccessToken(user._id);
@@ -338,6 +338,41 @@ const emailVerifier = async (req, res) => {
   }
 };
 
+const codeSender = async (req, res) => {
+  try {
+    const email = req.body.email;
+    const code = Math.floor(100000 + Math.random() * 900000);
+
+    const user = req.user;
+    user.passwordResetCode = code;
+
+    const mailOptions = {
+      from: `"Divara" <${process.env.SENDER_MAIL}>`,
+      to: email,
+      subject: "Reset Your Password",
+      html: `
+        <div style="font-family:Arial,sans-serif;line-height:1.5">
+          <h2>Reset Password</h2>
+          <p>Use this code to reset your password:</p>
+          <p style="font-size: "2rem"">${code}</p>
+          <p>This code will be valid for next 15 minutes.</p>
+        </div>
+      `,
+    };
+
+    const result = await transporter.sendMail(mailOptions);
+    if (result.response) {
+      user.passwordResetCodeExpires = new Date(Date.now() + 15 * 60 * 1000);
+    }
+    await user.save();
+
+    res.status(200).json({ message: "Reset code sent!" });
+  } catch (err) {
+    console.error("error while sendng code for reseting password: ", err.message);
+    res.status(400).json({ message: "Internal server error!" });
+  }
+};
+
 const accountReseter = async (req, res) => {
   try {
     const refreshSecret = process.env.REFRESH_TOKEN_SECRET;
@@ -376,6 +411,7 @@ export {
   loginUser,
   verificationLinkSender,
   emailVerifier,
+  codeSender,
   logoutUser,
   accountReseter,
   googleCallback,

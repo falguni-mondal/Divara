@@ -86,7 +86,7 @@ const Signup = () => {
                 </div>
 
                 {/* PASSWORD INPUT */}
-                <div className="signup-password-wrapper w-full">
+                <div className="password-input-wrapper w-full">
                     <div className={`auth-form-input-container w-full h-[3rem] flex flex-col justify-center border ${formErr.password ? "border-red-600" : "border-zinc-400"} pl-2 py-1 rounded-[3px] relative`}>
                         <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='register-password'>Create Password*</label>
                         <input onChange={passwordChecker} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='register-password' autoFocus name='password' />
@@ -131,7 +131,7 @@ const Signup = () => {
                 </div>
 
                 {/* SUBMIT BUTTON */}
-                <div className="form-btn-container w-full mt-5">
+                <div className="form-btn-container w-full">
                     <FormSubmitBtn status={status} />
                 </div>
             </form>

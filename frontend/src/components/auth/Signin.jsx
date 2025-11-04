@@ -6,6 +6,9 @@ import { RxEyeOpen } from "react-icons/rx";
 import { BsPencil } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import toastOptions from '../../configs/toast-options';
+import { Link } from 'react-router-dom';
+import { FiArrowUpRight } from "react-icons/fi";
+
 
 const Signin = () => {
   const { userMail } = useSelector((state) => state.auth.checkEmail);
@@ -42,15 +45,22 @@ const Signin = () => {
         </div>
 
         {/* PASSWORD INPUT */}
-        <div className="auth-form-input-container w-full h-[3rem] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px] relative">
-          <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='login-password'>Password*</label>
-          <input ref={passwordRef} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='login-password' autoFocus />
-          <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>
+        <div id="signin-password-input-wrapper">
+          <div className="auth-form-input-container w-full h-[3rem] flex flex-col justify-center border border-zinc-400 px-2 py-1 rounded-[3px] relative">
+            <label className='text-[2.8vw] text-zinc-500 relative' htmlFor='login-password'>Password*</label>
+            <input ref={passwordRef} className='w-full outline-0 border-0 text-[4.5vw] pr-[8vw]' type={`${showPassword ? "text" : "password"}`} id='login-password' autoFocus />
+            <span onClick={() => setShowPassword(prev => !prev)} className={`password-show-btn absolute top-1/2 right-0 pr-2 pl-3 -translate-y-1/2 ${showPassword ? "text-zinc-500 " : "text-black"} text-[4.5vw]`}><RxEyeOpen /></span>
+          </div>
+
+          <div className='w-full text-right text-[0.8rem] font-semibold mt-1 flex items-center justify-end hover:underline transition-all duration-300' id="forgot-password-btn-container">
+            <Link to="/account/forgot password">Forgot Password</Link>
+            <FiArrowUpRight className='text-[0.9rem]'/>
+          </div>
         </div>
 
         {/* SUBMIT BUTTON */}
-        <div className="form-btn-container w-full mt-5">
-          <FormSubmitBtn status={status}/>
+        <div className="form-btn-container w-full">
+          <FormSubmitBtn status={status} />
         </div>
       </form>
     </section>
