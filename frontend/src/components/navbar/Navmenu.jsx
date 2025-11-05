@@ -18,12 +18,12 @@ const Navmenu = ({ showNav, navMenuController }) => {
     {
       title: "Orders",
       icon: BsBoxSeam,
-      path: "/orders"
+      path: "/profile/orders"
     },
     {
       title: "Bag",
       icon: BsHandbag,
-      path: "/bag"
+      path: "/profile/bag"
     },
     {
       title: user ? "Profile" : "Sign In",
