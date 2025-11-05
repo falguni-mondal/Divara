@@ -2,7 +2,7 @@ import React from 'react'
 
 const Admin = () => {
   return (
-    <div>
+    <div className='w-full flex' id='admin-panel'>
       Admin Panel
     </div>
   )
