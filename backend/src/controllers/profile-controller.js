@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
 import sharp from "sharp";
-import userModel from "../models/user-model.js";
 import tokenizer from "../configs/tokenizer.js";
 import transporter from "../configs/nodemailer.js";
 import { randomUUID } from "crypto";
@@ -8,9 +7,9 @@ import imagekit from "../configs/imagekit/imagekit.js";
 
 const profileUpdater = async (req, res) => {
   try {
-    const { firstname, lastname, email, newPassword } = req.body;
+    const { firstname, lastname, email, newPassword, address } = req.body;
 
-    const user = await userModel.findById(req.user);
+    const user = req.user
 
     if (req.file) {
       if (user.profileImageId) {
@@ -53,6 +52,7 @@ const profileUpdater = async (req, res) => {
 
     user.firstname = firstname.trim();
     user.lastname = lastname.trim();
+    user.address = address;
 
     const name = (firstname.charAt(0).toUpperCase() + firstname.slice(1)) + " " + (lastname.charAt(0).toUpperCase() + lastname.slice(1));
 

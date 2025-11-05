@@ -77,6 +77,9 @@ const userSchema = new mongoose.Schema(
       default: "user",
       enum: ["user", "admin", "super-admin"],
     },
+    address:{
+      type: String,
+    },
     cart: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "cart",

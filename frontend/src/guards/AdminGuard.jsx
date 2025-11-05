@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { Navigate, Outlet } from 'react-router-dom';
 import LoadingScreen from '../utils/loading/LoadingScreen';
 
-const AuthGuard = () => {
+const AdminGuard = () => {
     const { user, status } = useSelector(state => state.auth);
 
 
@@ -18,11 +18,11 @@ const AuthGuard = () => {
         return <Navigate to="/user/verify" replace />
     }
 
-    if(user.role !== "user"){
+    if(user.role === "user"){
         return <Navigate to="/404 page not found" replace />
     }
 
     return <Outlet />
 }
 
-export default AuthGuard
+export default AdminGuard

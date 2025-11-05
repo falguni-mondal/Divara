@@ -8,6 +8,8 @@ import EmailVerification from '../pages/email_verification/EmailVerification';
 import VerifyEmail from '../pages/email_verification/VerifyEmail';
 import Profile from '../pages/Profile';
 import UpdatedEmailVerify from '../components/profile/edit/UpdatedEmailVerify';
+import AdminGuard from '../guards/AdminGuard';
+import Admin from '../pages/Admin';
 
 const PageRouter = () => {
   return (
@@ -24,6 +26,12 @@ const PageRouter = () => {
       <Route element={<AuthGuard />}>
         {/* Profile Page */}
         <Route path='/profile/*' element={<Profile />} />
+      </Route>
+
+      {/* ADMIN ROUTES */}
+      <Route element={<AdminGuard />}>
+        {/* Admin Page */}
+        <Route path='/admin/*' element={<Admin />} />
       </Route>
 
       {/* Verification Page */}

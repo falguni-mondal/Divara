@@ -7,8 +7,8 @@ import { BiUser } from "react-icons/bi";
 import { MdOutlineShoppingCartCheckout } from "react-icons/md";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { HiOutlineHeart } from "react-icons/hi";
-import { TbBellCog } from "react-icons/tb";
-import { HiOutlineLocationMarker } from "react-icons/hi";
+// import { TbBellCog } from "react-icons/tb";
+// import { HiOutlineLocationMarker } from "react-icons/hi";
 import { TbPhone } from "react-icons/tb";
 import { TbLogout } from "react-icons/tb";
 import { PiWarningBold } from "react-icons/pi";
@@ -38,16 +38,6 @@ const BaseProfile = () => {
       title: "wishlist",
       path: "/profile/wishlist",
       icon: HiOutlineHeart,
-    },
-    {
-      title: "notification settings",
-      path: "/profile/notification",
-      icon: TbBellCog,
-    },
-    {
-      title: "addresses",
-      path: "/profile/addresses",
-      icon: HiOutlineLocationMarker,
     },
   ];
 

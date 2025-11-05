@@ -44,8 +44,11 @@ const EmailVerification = () => {
     if (!user) {
         return <Navigate to="/account" replace />
     }
-    if (user && user?.isVerified) {
+    if (user && user.isVerified && user.role === "user") {
         return <Navigate to="/profile" replace />
+    }
+    if (user && user.isVerified && (user.role === "admin" || user.role === "super-admin")) {
+        return <Navigate to="/admin" replace />
     }
 
     

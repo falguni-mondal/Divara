@@ -43,8 +43,8 @@ const VerifyEmail = () => {
     return(
       <div className="w-[100vw] h-[100dvh] flex flex-col justify-center items-center">
         <video className="w-[9rem] aspect-square" src={success} muted autoPlay />
-        <Link to="/" className="flex items-center gap-0.5 px-7 h-[3rem] noir-black rounded-[3px] text-[0.8rem] font-semibold">
-          <span>Home</span>
+        <Link to="/account" className="flex items-center gap-0.5 px-7 h-[3rem] noir-black rounded-[3px] text-[0.8rem] font-semibold">
+          <span>Continue</span>
           <FiArrowUpRight  className="font-[1.1rem]"/>
         </Link>
       </div>
