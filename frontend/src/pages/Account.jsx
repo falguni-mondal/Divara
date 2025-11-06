@@ -34,7 +34,7 @@ const Account = () => {
   }, [hasUser, status])
 
   return (
-    <div className='w-full py-[15vw] px-[10vw]' id='account-page'>
+    <div className='w-full pt-[80px] px-[10vw]' id='account-page'>
       <div className='w-full' id="account-page-main-container">
         <h1 className="account-page-heading text-[8.5vw] uppercase font-[300] leading-none text-center">
           My Divara Account

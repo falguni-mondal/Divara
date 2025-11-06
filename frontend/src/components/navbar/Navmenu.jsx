@@ -1,10 +1,7 @@
 import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 
-
-import { HiOutlineUser } from "react-icons/hi2";
-import { BsBoxSeam } from "react-icons/bs";
-import { BsHandbag } from "react-icons/bs";
+import { Icon } from "@iconify/react";
 import { useSelector } from 'react-redux';
 
 
@@ -17,18 +14,18 @@ const Navmenu = ({ showNav, navMenuController }) => {
   const accountNavItems = [
     {
       title: "Orders",
-      icon: BsBoxSeam,
+      icon: "iconamoon:box-light",
       path: "/profile/orders"
     },
     {
       title: "Bag",
-      icon: BsHandbag,
+      icon: "iconamoon:shopping-bag-light",
       path: "/profile/bag"
     },
     {
-      title: user ? "Profile" : "Sign In",
-      icon: HiOutlineUser,
-      path: user ? "/profile" : "/account"
+      title: user ? user.role === "user" ? "Profile" : "Admin" : "Sign In",
+      icon: "iconamoon:profile-light",
+      path: user ? user.role === "user" ? "/profile" : "/admin" : "/account"
     },
   ]
 
@@ -50,9 +47,9 @@ const Navmenu = ({ showNav, navMenuController }) => {
       </div>
       <nav className='account-nav w-full flex justify-between'>
         {
-          accountNavItems.map(({ title, icon: Icon, path }) => (
+          accountNavItems.map(({ title, icon, path }) => (
             <NavLink key={`${title}-mobile-nav-key`} className='flex flex-col items-center text-[1.2rem] font-semibold' onClick={navMenuController} to={path}>
-              <Icon className='text-[1.4rem]' />
+              <Icon icon={icon} className='text-[1.7rem]'/>
               <span className='underline'>{title}</span>
             </NavLink>
           ))
