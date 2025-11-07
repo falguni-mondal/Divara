@@ -25,7 +25,7 @@ const AdminNavs = () => {
     {
       title: "dashboard",
       icon: "iconamoon:category",
-      path: "/admin",
+      path: "/admin/dashboard",
     },
     {
       title: "bags",
@@ -44,7 +44,7 @@ const AdminNavs = () => {
         {
           navs.map(({title, icon, path}) => (
             <NavLink key={`${title}-admin-nav-key`} to={path}>
-              <Icon icon={location.pathname === path? `${icon}-duotone` : `${icon}-light`} className={`${location.pathname === path ? "text-[#5f5dc7]" : "text-black"}`}/>
+              <Icon icon={location.pathname.includes(`${path}`) ? `${icon}-duotone` : `${icon}-light`} className={`${location.pathname.includes(`${path}`) ? "text-[#5f5dc7]" : "text-black"}`}/>
             </NavLink>
           ))
         }

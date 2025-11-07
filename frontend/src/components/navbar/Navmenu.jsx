@@ -40,7 +40,7 @@ const Navmenu = ({ showNav, navMenuController }) => {
         </div>
         <nav className='flex flex-col gap-5 text-[2.7rem] font-medium leading-none'>
           <NavLink onClick={navMenuController} className={`${location.pathname === "/" && "text-[#808080]"}`} to="/">Home</NavLink>
-          <NavLink onClick={navMenuController} className={`${location.pathname === "/collection" && "text-[#808080]"}`} to="/collections">Collection</NavLink>
+          <NavLink onClick={navMenuController} className={`${location.pathname === "/collection" && "text-[#808080]"}`} to="/collection">Collection</NavLink>
           <NavLink onClick={navMenuController} className={`${location.pathname === "/about" && "text-[#808080]"}`} to="/about">About</NavLink>
           <NavLink onClick={navMenuController} className={`${location.pathname === "/contact" && "text-[#808080]"}`} to="/contact">Contact Us</NavLink>
         </nav>

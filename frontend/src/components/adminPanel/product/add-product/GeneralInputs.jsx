@@ -35,7 +35,6 @@ const GeneralInputs = () => {
                         xl
                     </span>
                 </div>
-                <p className='product-instruction text-xs text-zinc-500 mt-3'>Select a Size To Reveal More Inputs</p>
             </div>
         </div>
     )
