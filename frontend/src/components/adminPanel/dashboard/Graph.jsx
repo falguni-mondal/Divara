@@ -1,54 +1,30 @@
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { AreaChart, Area, XAxis, CartesianGrid, Tooltip, } from 'recharts';
 
 const Graph = () => {
     const data = [
         {
-            name: 'Jan',
-            uv: 1256,
+            month: 'Jun',
+            users: 2390,
         },
         {
-            name: 'Feb',
-            uv: 865,
+            month: 'Jul',
+            users: 2967,
         },
         {
-            name: 'Mar',
-            uv: 1023,
+            month: 'Aug',
+            users: 865,
         },
         {
-            name: 'Apr',
-            uv: 1839,
+            month: 'Sep',
+            users: 1023,
         },
         {
-            name: 'May',
-            uv: 1645,
+            month: 'Oct',
+            users: 1839,
         },
         {
-            name: 'Jun',
-            uv: 2390,
-        },
-        {
-            name: 'Jul',
-            uv: 2967,
-        },
-        {
-            name: 'Aug',
-            uv: 865,
-        },
-        {
-            name: 'Sep',
-            uv: 1023,
-        },
-        {
-            name: 'Oct',
-            uv: 1839,
-        },
-        {
-            name: 'Nov',
-            uv: 1645,
-        },
-        {
-            name: 'Dec',
-            uv: 2390,
+            month: 'Nov',
+            users: 1645,
         },
     ];
 
@@ -58,16 +34,16 @@ const Graph = () => {
             responsive
             data={data}
             margin={{
-                top: 0,
+                top: 10,
                 right: 0,
                 left: 0,
                 bottom: 0,
             }}
         >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" className='text-xs'/>
+            <CartesianGrid  strokeDasharray="3 3" stroke="#1a1a1a" />
+            <XAxis dataKey="month" className='text-xs' stroke="#1a1a1a" tick={{ fill: '#1a1a1a' }} tickLine={{ stroke: '#000000' }} axisLine={{ stroke: '#000000' }}/>
             <Tooltip />
-            <Area type="monotone" dataKey="uv" stroke="#660B05" fill="#8C1007" />
+            <Area type="natural" dataKey="users" stroke="#8884d8" fill="#8884d8" fillOpacity={0.65}/>
         </AreaChart>
     );
 }

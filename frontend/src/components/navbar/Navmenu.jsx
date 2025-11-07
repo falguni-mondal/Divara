@@ -14,7 +14,7 @@ const Navmenu = ({ showNav, navMenuController }) => {
   const accountNavItems = [
     {
       title: "Orders",
-      icon: "iconamoon:box-light",
+      icon: "iconamoon:delivery-light",
       path: "/profile/orders"
     },
     {

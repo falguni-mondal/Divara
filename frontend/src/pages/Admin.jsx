@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { logoutUser, resetEmailStatus } from '../store/features/user/authSlice';
 import Dashboard from '../components/adminPanel/dashboard/Dashboard';
+import AdminNavs from '../components/adminPanel/AdminNavs';
 
 const Admin = () => {
   const dispatch = useDispatch();
@@ -10,9 +11,9 @@ const Admin = () => {
     dispatch(resetEmailStatus());
   }, [])
   return (
-    <div className='w-full pt-[60px] px-5' id='admin-panel'>
+    <div className='w-full pt-[80px] px-3' id='admin-panel'>
+      <AdminNavs />
       <Dashboard />
-      <button onClick={() => dispatch(logoutUser())} className='text-red-700 underline'>Sign Out</button>
     </div>
   )
 }
