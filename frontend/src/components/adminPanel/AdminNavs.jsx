@@ -8,11 +8,6 @@ const AdminNavs = () => {
   const dispatch = useDispatch();
   const navs = [
     {
-      title: "dashboard",
-      icon: "iconamoon:category",
-      path: "/admin",
-    },
-    {
       title: "users",
       icon: "iconamoon:profile",
       path: "/admin/users",
@@ -28,6 +23,11 @@ const AdminNavs = () => {
       path: "/admin/orders",
     },
     {
+      title: "dashboard",
+      icon: "iconamoon:category",
+      path: "/admin",
+    },
+    {
       title: "bags",
       icon: "iconamoon:shopping-bag",
       path: "/admin/bags",
@@ -40,16 +40,16 @@ const AdminNavs = () => {
   ]
   return (
     <div className='w-full h-[50px] rounded-[10px 0px 0px 0px] bg-[#f8f8f8] fixed bottom-0 left-1/2 -translate-x-1/2 z-[999]' id='admin-navbar'>
-      <nav className='w-full h-full flex items-center justify-between px-3'>
+      <nav className='w-full h-full flex items-center justify-between px-3 text-[1.3rem]'>
         {
           navs.map(({title, icon, path}) => (
-            <NavLink to={path}>
-              <Icon icon={location.pathname === path? `${icon}-duotone` : `${icon}-light`} className={`text-[1.5rem] ${location.pathname === path ? "text-[#5f5dc7]" : "text-[#1a1a1a]"}`}/>
+            <NavLink key={`${title}-admin-nav-key`} to={path}>
+              <Icon icon={location.pathname === path? `${icon}-duotone` : `${icon}-light`} className={`${location.pathname === path ? "text-[#5f5dc7]" : "text-black"}`}/>
             </NavLink>
           ))
         }
         <span onClick={() => dispatch(logoutUser())}>
-          <Icon icon="iconamoon:exit-light" className={`text-[1.5rem] text-red-700`}/>
+          <Icon icon="iconamoon:exit-light" className={`text-red-700`}/>
         </span>
       </nav>
     </div>

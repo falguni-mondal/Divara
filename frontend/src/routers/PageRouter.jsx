@@ -9,7 +9,7 @@ import VerifyEmail from '../pages/email_verification/VerifyEmail';
 import Profile from '../pages/Profile';
 import UpdatedEmailVerify from '../components/profile/edit/UpdatedEmailVerify';
 import AdminGuard from '../guards/AdminGuard';
-import Admin from '../pages/Admin';
+import Admin from '../pages/admin/Admin';
 
 const PageRouter = () => {
   return (

@@ -11,20 +11,20 @@ const StatsCards = () => {
             iconColor: "text-[#846eff]"
         },
         {
+            title: "total orders",
+            count: "13,248",
+            icon: "iconamoon:delivery-fill",
+            bg: "bg-[#fffbeb]",
+            iconBg: "bg-[#fff4c2]",
+            iconColor: "text-[#c7a612]"
+        },
+        {
             title: "items in bag",
             count: "61,972",
             icon: "iconamoon:shopping-bag-fill",
             bg: "bg-[#faf5ec]",
             iconBg: "bg-[#f3eccd]",
             iconColor: "text-[#74630f]"
-        },
-        {
-            title: "items in wishlist",
-            count: "13,248",
-            icon: "iconamoon:heart-fill",
-            bg: "bg-[#fffbeb]",
-            iconBg: "bg-[#fff4c2]",
-            iconColor: "text-[#c7a612]"
         },
         {
             title: "total sales",
@@ -52,7 +52,7 @@ const StatsCards = () => {
             } */}
             {
                 data.map(({ title, count, icon, bg, iconBg, iconColor }) => (
-                    <div className={`dashboard-stat-card flex items-start justify-between rounded-lg ${bg} gap-3 p-4 h-[100px]`}>
+                    <div key={`${title}-stats-key`} className={`dashboard-stat-card flex items-start justify-between rounded-lg ${bg} gap-3 p-4 h-[100px]`}>
                         <div className="stat-card-dets h-full flex flex-col justify-between">
                             <span className='text-2xl font-semibold'>{count}</span>
                             <span className='text-sm font-medium capitalize'>{title}</span>
