@@ -1,6 +1,30 @@
-import React from 'react'
+const GeneralInputs = ({ selectedSize, setSelectedSize, formData }) => {
 
-const GeneralInputs = () => {
+    // if size is filled completely
+    const isSizeFilled = (sizeValue) => {
+        const sizeData = formData.size.find(s => s.value === sizeValue);
+        if (!sizeData) return false;
+
+        return (
+            sizeData.originalPrice !== "" &&
+            sizeData.originalPrice !== 0 &&
+            sizeData.originalPrice > 0 &&
+            sizeData.discount !== "" &&
+            sizeData.discount >= 0 &&
+            sizeData.stock !== "" &&
+            sizeData.stock !== 0 &&
+            sizeData.stock >= 0
+        );
+    };
+
+    // the background color class for each size
+    const getSizeBg = (size) => {
+        if (selectedSize === size) {
+            return isSizeFilled(size) ? 'bg-[#846eff] text-[#fefefe]' : 'bg-[#dbd4ff]';
+        }
+        return isSizeFilled(size) ? 'bg-[#846eff] text-[#fefefe]' : 'bg-zinc-200';
+    };
+
     return (
         <div className='general-info-input-container w-full'>
             <div className="product-inp-container w-full">
@@ -19,21 +43,13 @@ const GeneralInputs = () => {
                     <p className='product-inp-sub-label text-xs text-zinc-500'>Pick Available Size</p>
                 </div>
                 <div className="product-size-selector-container w-full h-[3rem] flex justify-between">
-                    <span className="product-size-xs h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center uppercase">
-                        xs
-                    </span>
-                    <span className="product-size-s h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center uppercase">
-                        s
-                    </span>
-                    <span className="product-size-m h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center uppercase">
-                        m
-                    </span>
-                    <span className="product-size-l h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center uppercase">
-                        l
-                    </span>
-                    <span className="product-size-xl h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center uppercase">
-                        xl
-                    </span>
+                    {
+                        ["xs", "s", "m", "l", "xl"].map(s => (
+                            <span onClick={() => setSelectedSize(s)} key={`${s}size-key`} className={`product-size-${s} h-full aspect-square rounded-[3px] flex items-center justify-center uppercase ${getSizeBg(s)}`}>
+                                {s}
+                            </span>
+                        ))
+                    }
                 </div>
             </div>
         </div>
