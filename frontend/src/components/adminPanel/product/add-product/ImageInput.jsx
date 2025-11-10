@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react'
 import { useState } from 'react'
 
-const ImageInput = ({ formData, setFormData }) => {
+const ImageInput = ({ images, setImages }) => {
   const [imgPreview, setImgPreview] = useState([null, null, null, null, null]);
 
   const imageSelector = (index) => {
@@ -18,9 +18,9 @@ const ImageInput = ({ formData, setFormData }) => {
         newPreviews[index] = previewUrl
         setImgPreview(newPreviews)
         
-        const newImages = [...formData.images]
+        const newImages = [...images]
         newImages[index] = file
-        setFormData({ ...formData, images: newImages })
+        setImages([...newImages])
       }
     }
     

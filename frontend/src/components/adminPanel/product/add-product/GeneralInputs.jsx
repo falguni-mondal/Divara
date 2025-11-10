@@ -1,28 +1,19 @@
-const GeneralInputs = ({ selectedSize, setSelectedSize, formData }) => {
+const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, setGeneralInfo }) => {
 
     // if size is filled completely
     const isSizeFilled = (sizeValue) => {
-        const sizeData = formData.size.find(s => s.value === sizeValue);
+        const sizeData = sizes.find(s => s.value === sizeValue);
         if (!sizeData) return false;
 
-        return (
-            sizeData.originalPrice !== "" &&
-            sizeData.originalPrice !== 0 &&
-            sizeData.originalPrice > 0 &&
-            sizeData.discount !== "" &&
-            sizeData.discount >= 0 &&
-            sizeData.stock !== "" &&
-            sizeData.stock !== 0 &&
-            sizeData.stock >= 0
-        );
+        return sizeData.available;
     };
 
     // the background color class for each size
     const getSizeBg = (size) => {
         if (selectedSize === size) {
-            return isSizeFilled(size) ? 'bg-[#846eff] text-[#fefefe]' : 'bg-[#dbd4ff]';
+            return isSizeFilled(size) ? 'bg-[#9a88ff] text-[#fefefe]' : 'bg-[#dbd4ff]';
         }
-        return isSizeFilled(size) ? 'bg-[#846eff] text-[#fefefe]' : 'bg-zinc-200';
+        return isSizeFilled(size) ? 'bg-[#9a88ff] text-[#fefefe]' : 'bg-zinc-200';
     };
 
     return (

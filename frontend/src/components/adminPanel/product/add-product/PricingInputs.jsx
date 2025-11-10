@@ -1,26 +1,25 @@
-import { useEffect, useState } from "react";
+const PricingInputs = ({ sizes, setSizes, selectedSize }) => {
 
-const PricingInputs = ({ formData, setFormData, selectedSize }) => {
+    const currentSizeData = sizes.find(s => s.value === selectedSize) || {};
 
-    const currentSizeData = formData.size.find(s => s.value === selectedSize) || {};
+    const sizeDataUpdater = (name, value) => {
+        setSizes(prev => prev.map(sizeObj => {
+            if (sizeObj.value === selectedSize) {
+                const updatedSize = {
+                    ...sizeObj,
+                    [name]: value === "" ? 0 : Math.round(Number(value)) 
+                };
 
-    const sizeDataUpdater = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            size: prev.size.map(sizeObj => {
-                if (sizeObj.value === selectedSize) {
-                    return (
-                        {
-                            ...sizeObj,
-                            [name]: value === "" ? 0 : Math.round(value),
-                            available: value !== "" && value !== 0,
-                        }
-                    )
-                }
-                return sizeObj
-            })
-        }))
+                updatedSize.available = (
+                    updatedSize.originalPrice > 0 &&
+                    updatedSize.discount >= 0 &&
+                    updatedSize.stock > 0
+                );
+
+                return updatedSize;
+            }
+            return sizeObj;
+        }));
     }
 
     return (
@@ -29,19 +28,19 @@ const PricingInputs = ({ formData, setFormData, selectedSize }) => {
                 <label className='product-inp-label text-sm font-semibold mb-2' htmlFor={`${selectedSize}-price-input`}>Base Price</label>
                 <div className="input-container relative">
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 pl-3">₹</span>
-                    <input onChange={sizeDataUpdater} className='product-inp w-full bg-zinc-200 p-3 pl-6 rounded-[3px] outline-0 border-0' type="number" id={`${selectedSize}-price-input`} name='originalPrice' defaultValue={currentSizeData?.originalPrice} />
+                    <input onChange={(e)=>sizeDataUpdater("originalPrice", e.target.value)} className='product-inp w-full bg-zinc-200 p-3 pl-6 rounded-[3px] outline-0 border-0' type="number" id={`${selectedSize}-price-input`} defaultValue={currentSizeData?.originalPrice} />
                 </div>
             </div>
             <div className="product-inp-container w-full">
                 <label className='product-inp-label text-sm font-semibold mb-2' htmlFor={`${selectedSize}-discount-input`}>Discount</label>
                 <div className="input-container relative">
                     <span className="absolute left-0 top-1/2 -translate-y-1/2 pl-3">%</span>
-                    <input onChange={sizeDataUpdater} className='product-inp w-full bg-zinc-200 p-3 pl-7 rounded-[3px] outline-0 border-0' type="number" id={`${selectedSize}-discount-input`} name='discount' defaultValue={currentSizeData?.discount} />
+                    <input onChange={(e)=>sizeDataUpdater("discount", e.target.value)} className='product-inp w-full bg-zinc-200 p-3 pl-7 rounded-[3px] outline-0 border-0' type="number" id={`${selectedSize}-discount-input`} defaultValue={currentSizeData?.discount} />
                 </div>
             </div>
             <div className="product-inp-container w-full">
-                <label className='product-inp-label text-sm font-semibold mb-2' htmlFor={`${selectedSize}-stock-input`}>Stock</label>
-                <input onChange={sizeDataUpdater} className='product-inp w-full bg-zinc-200 p-3 rounded-[3px] outline-0 border-0' type="number" id={`${selectedSize}-stock-input`} name='stock' defaultValue={currentSizeData?.stock} />
+                <label className='product-inp-label text-sm font-semibold mb-2 block' htmlFor={`${selectedSize}-stock-input`}>Stock</label>
+                <input onChange={(e)=>sizeDataUpdater("stock", e.target.value)} className='product-inp w-full bg-zinc-200 p-3 rounded-[3px] outline-0 border-0' type="number" id={`${selectedSize}-stock-input`} defaultValue={currentSizeData?.stock} />
             </div>
         </div>
     )
