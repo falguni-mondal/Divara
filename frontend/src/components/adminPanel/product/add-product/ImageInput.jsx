@@ -39,7 +39,7 @@ const ImageInput = ({ images, setImages }) => {
       </div>
 
       <div className="secondary-product-img-input w-full h-[75px] flex justify-between mt-4">
-        <div onClick={() => imageSelector(1)} className="secondary-prod-img-1 h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center text-zinc-400 text-2xl">
+        <div onClick={() => imageSelector(1)} className="secondary-prod-img-1 h-full aspect-square rounded-[3px] overflow-hidden bg-zinc-200 flex items-center justify-center text-zinc-400 text-2xl">
           {
           imgPreview[1] ?
           <img className='w-full h-full object-cover hover:scale-110 transition-all duration-500' src={imgPreview[1]} alt="" />
@@ -47,7 +47,7 @@ const ImageInput = ({ images, setImages }) => {
           <Icon icon="material-symbols:add-photo-alternate" />
         }
         </div>
-        <div onClick={() => imageSelector(2)} className="secondary-prod-img-2 h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center text-zinc-400 text-2xl">
+        <div onClick={() => imageSelector(2)} className="secondary-prod-img-2 h-full aspect-square rounded-[3px] overflow-hidden bg-zinc-200 flex items-center justify-center text-zinc-400 text-2xl">
           {
           imgPreview[2] ?
           <img className='w-full h-full object-cover hover:scale-110 transition-all duration-500' src={imgPreview[2]} alt="" />
@@ -55,7 +55,7 @@ const ImageInput = ({ images, setImages }) => {
           <Icon icon="material-symbols:add-photo-alternate" />
         }
         </div>
-        <div onClick={() => imageSelector(3)} className="secondary-prod-img-3 h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center text-zinc-400 text-2xl">
+        <div onClick={() => imageSelector(3)} className="secondary-prod-img-3 h-full aspect-square rounded-[3px] overflow-hidden bg-zinc-200 flex items-center justify-center text-zinc-400 text-2xl">
           {
           imgPreview[3] ?
           <img className='w-full h-full object-cover hover:scale-110 transition-all duration-500' src={imgPreview[3]} alt="" />
@@ -63,7 +63,7 @@ const ImageInput = ({ images, setImages }) => {
           <Icon icon="material-symbols:add-photo-alternate" />
         }
         </div>
-        <div onClick={() => imageSelector(4)} className="secondary-prod-img-4 h-full aspect-square rounded-[3px] bg-zinc-200 flex items-center justify-center text-zinc-400 text-2xl">
+        <div onClick={() => imageSelector(4)} className="secondary-prod-img-4 h-full aspect-square rounded-[3px] overflow-hidden bg-zinc-200 flex items-center justify-center text-zinc-400 text-2xl">
           {
           imgPreview[4] ?
           <img className='w-full h-full object-cover hover:scale-110 transition-all duration-500' src={imgPreview[4]} alt="" />

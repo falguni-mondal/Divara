@@ -1,23 +1,24 @@
 import { Icon } from '@iconify/react'
-import { useEffect, useRef, useState } from 'react';
+// import { useEffect, useRef, useState } from 'react';
 
 const OtherInputs = ({ otherInfo, setOtherInfo }) => {
-    const [showOption, setShowOption] = useState(false);
-    const optionRef = useRef(null);
+    
+    // const [showOption, setShowOption] = useState(false);
+    // const statusRef = useRef(null);
 
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (optionRef.current && !optionRef.current.contains(e.target)) {
-                setShowOption(false);
-            }
-        };
+    // useEffect(() => {
+    //     const handleClickOutside = (e) => {
+    //         if (statusRef.current && !statusRef.current.contains(e.target)) {
+    //             setShowOption(false);
+    //         }
+    //     };
 
-        document.addEventListener("click", handleClickOutside);
+    //     document.addEventListener("click", handleClickOutside);
 
-        return () => {
-            document.removeEventListener("click", handleClickOutside);
-        };
-    }, [])
+    //     return () => {
+    //         document.removeEventListener("click", handleClickOutside);
+    //     };
+    // }, [])
 
     return (
         <div className='other-info-input-container w-full grid grid-cols-2 gap-4'>
@@ -40,14 +41,14 @@ const OtherInputs = ({ otherInfo, setOtherInfo }) => {
                     <input className='product-inp w-full bg-zinc-200 p-3 pl-6 rounded-[3px] outline-0 border-0' type="number" id="product-shipping-price-inp" name='shippingCost' />
                 </div>
             </div>
-            <div className="product-inp-container w-full">
-                <label className='product-inp-label text-sm font-semibold mb-2' htmlFor="product-shipping-price-inp">Status</label>
+            {/* <div className="product-inp-container w-full">
+                <label className='product-inp-label text-sm font-semibold mb-2'>Status</label>
                 <div className="input-container relative">
-                    <div ref={optionRef} onClick={() => setShowOption(prev => !prev)} className="product-status-preview capitalize w-full py-3 bg-zinc-200 rounded-[3px] pl-3 relative">
+                    <div ref={statusRef} onClick={() => setShowOption(prev => !prev)} className="product-status-preview capitalize w-full py-3 bg-zinc-200 rounded-[3px] pl-3 relative">
                         {otherInfo.status}
                         <Icon className="absolute top-1/2 right-3 -translate-y-1/2 -rotate-90" icon="material-symbols:arrow-back-ios-rounded" />
                     </div>
-                    <ul className={`product-status-option-container absolute w-full left-0 top-[110%] bg-zinc-200 rounded-[3px] overflow-hidden ${!showOption && "hidden"}`}>
+                    <ul className={`product-status-option-container absolute w-full left-0 top-[110%] bg-[#e0e0e0be] backdrop-blur-md rounded-[3px] overflow-hidden ${!showOption && "hidden"} z-[99]`}>
                         {
                             ["draft", "active", "inactive"].map(opt => (
                                 <li key={`${opt}-status-key`} onClick={() => setOtherInfo(prev => ({...prev, status: opt}))} className='product-status-option py-2 px-3 hover:bg-[#1a1a1a] hover:text-zinc-200 transition-all duration-300 capitalize'>
@@ -59,7 +60,7 @@ const OtherInputs = ({ otherInfo, setOtherInfo }) => {
                         }
                     </ul>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }
