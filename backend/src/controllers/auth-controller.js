@@ -58,7 +58,7 @@ const registerUser = async (req, res) => {
     });
 
     const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = await tokenizer.createRefreshToken(user._id, req);
+    const refreshToken = await tokenizer.createRefreshToken(user._id, req, user.role);
 
     res
       .status(201)
@@ -107,8 +107,8 @@ const loginUser = async (req, res) => {
       { user: user._id },
       { revoked: true, expiry_at: new Date() }
     );
-    const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = await tokenizer.createRefreshToken(user._id, req);
+    const accessToken = tokenizer.createAccessToken(user._id, user.role);
+    const refreshToken = await tokenizer.createRefreshToken(user._id, req, user.role);
 
     res
       .status(200)
@@ -142,8 +142,8 @@ const googleCallback = async (req, res) => {
       { revoked: true, expiry_at: new Date() }
     );
 
-    const accessToken = tokenizer.createAccessToken(user._id);
-    const refreshToken = await tokenizer.createRefreshToken(user._id, req);
+    const accessToken = tokenizer.createAccessToken(user._id, user.role);
+    const refreshToken = await tokenizer.createRefreshToken(user._id, req, user.role);
 
     res
       .status(200)

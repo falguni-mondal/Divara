@@ -12,6 +12,11 @@ const sessionSchema = new mongoose.Schema(
       required: true,
       ref: "user",
     },
+    role: {
+      type: String,
+      required: true,
+      default: "user"
+    },
     expiry_at: {
       type: Date,
       required: true,

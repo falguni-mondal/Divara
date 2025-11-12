@@ -7,7 +7,7 @@ const ImageInput = ({ images, setImages }) => {
   const imageSelector = (index) => {
     const input = document.createElement('input')
     input.type = 'file'
-    input.accept = 'image/*'
+    input.accept = 'image/jpeg, image/png, image/webp, image/avif'
     
     input.onchange = (e) => {
       const file = e.target.files[0]

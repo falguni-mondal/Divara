@@ -136,6 +136,12 @@ const AddProduct = () => {
             },
             other: []
         });
+
+        const formData = convertToFormData(data);
+        console.log('FormData Contents:');
+        for (let [key, value] of formData.entries()) {
+            console.log(key, ':', value);
+        }
     }
 
     const validateProduct = (data) => {
@@ -158,6 +164,16 @@ const AddProduct = () => {
             errors.images.push('Please upload at least one image!');
         } else if (data.images.length > 5) {
             errors.images.push('Maximum 5 images allowed!');
+        } else {
+            data.images.forEach((image, index) => {
+                if (image.size > 5 * 1024 * 1024) {
+                    errors.images.push(`Image ${index + 1} exceeds 5MB!`);
+                }
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif'];
+                if (!allowedTypes.includes(image.mimetype)) {
+                    errors.images.push(`Image ${index + 1} must be JPEG, PNG, WebP, or AVIF!`);
+                }
+            });
         }
 
         // Product Name
@@ -192,26 +208,32 @@ const AddProduct = () => {
             const availableSizes = data.sizes.filter(size => size.available);
 
             if (availableSizes.length === 0) {
-                errors.size.push('At least one size must be available with complete pricing!');
+                errors.size.push('At least one size must be included with complete pricing!');
             }
 
             // Validate each available size
             data.sizes.forEach(size => {
-                if (!size.originalPrice || size.originalPrice <= 0) {
-                    errors.sizes[size.value].push(`Original price must be greater than 0!`);
-                }
+                if (size.available) {
+                    if (!size.originalPrice || size.originalPrice <= 0) {
+                        errors.sizes[size.value].push(`Original price must be greater than 0!`);
+                    }
 
-                if (size.discount === "" || size.discount < 0 || size.discount > 100) {
-                    errors.sizes[size.value].push(`Discount must be between 0 and 100!`);
-                }
+                    if (size.discount === "" || size.discount < 0 || size.discount > 100) {
+                        errors.sizes[size.value].push(`Discount must be between 0 and 100!`);
+                    }
 
-                if (!size.stock || size.stock <= 0) {
-                    errors.sizes[size.value].push(`Stock must be greater than 0!`);
-                }
+                    if (!size.stock || size.stock <= 0) {
+                        errors.sizes[size.value].push(`Stock must be greater than 0!`);
+                    }
 
-                const finalPrice = size.originalPrice - (size.originalPrice * size.discount / 100);
-                if (finalPrice <= 0) {
-                    errors.sizes[size.value].push(`The Price must be More than 0 after applying the Discount!`);
+                    const finalPrice = size.originalPrice - (size.originalPrice * size.discount / 100);
+                    if (finalPrice <= 0) {
+                        errors.sizes[size.value].push(`The Price must be More than 0 after applying the Discount!`);
+                    }
+
+                    if (!size.originalPrice || size.originalPrice <= 0 || size.discount === "" || size.discount < 0 || size.discount > 100 || !size.stock || size.stock <= 0 || finalPrice <= 0) {
+                        errors.size.push(`Complete the pricing of Size: ${size.value.toUpperCase()}`);
+                    }
                 }
             });
         }
@@ -222,6 +244,35 @@ const AddProduct = () => {
         }
 
         return errors;
+    }
+
+    const convertToFormData = (data) => {
+        const formData = new FormData();
+
+        formData.append('name', data.name || '');
+        formData.append('description', data.description || '');
+        formData.append('category', data.category || '');
+        formData.append('shippingCost', data.shippingCost || 0);
+        formData.append('status', data.status || 'draft');
+        formData.append('isFeatured', data.featured || false);
+        formData.append('isNewArrival', data.newArrival || false);
+
+        if (data.images && data.images.length > 0) {
+            data.images.forEach((image, index) => {
+                if (image instanceof File) {
+                    formData.append('images', image);
+                } else {
+                    // If images are URLs/base64 strings
+                    formData.append(`imageUrls[${index}]`, image);
+                }
+            });
+        }
+
+        if (data.sizes && data.sizes.length > 0) {
+            formData.append('sizes', JSON.stringify(data.sizes));
+        }
+
+        return formData;
     }
 
     return (
@@ -310,8 +361,8 @@ const AddProduct = () => {
                     </section>
 
                     <div className="form-btn-container mt-10 font-semibold">
-                        <button className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#dbd4ff] py-3" type="submit" onClick={() => setOtherInfo(prev => ({ ...prev, status: "draft" }))}><Icon icon="hugeicons:license-draft" /> <span>Add Draft</span></button>
-                        <button className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#1a1a1a] text-[#f8f8f8] py-3 mt-2" type="submit"><Icon icon="hugeicons:license" /> <span>Add Product</span></button>
+                        <button key="save-draft-btn" className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#dbd4ff] py-3" type="submit" onClick={() => setOtherInfo(prev => ({ ...prev, status: "draft" }))}><Icon icon="hugeicons:license-draft" /> <span>Add Draft</span></button>
+                        <button key="add-product-btn" className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#1a1a1a] text-[#f8f8f8] py-3 mt-2" type="submit"><Icon icon="hugeicons:license" /> <span>Add Product</span></button>
                     </div>
                 </form>
             </div>

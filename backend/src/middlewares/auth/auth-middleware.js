@@ -60,9 +60,38 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
       });
     }
 
-
     //matching DEVICE IP ADDRESS
     if (req.ip !== refreshSession.ip_address) {
+      console.warn({
+        event: "suspicious_token_use",
+        device_id: reqDeviceId,
+        expectedIp: refreshSession.ip_address,
+        gotIp: req.ip,
+        userAgent: req.headers["user-agent"],
+        userId: refreshSession.user,
+        timestamp: new Date().toISOString(),
+      });
+      await sessionModel.updateMany(
+        { user: refreshSession.user },
+        { revoked: true, expiry_at: new Date() }
+      );
+
+      res
+        .clearCookie("accessToken", {
+          ...cookieOptions,
+        })
+        .clearCookie("refreshToken", {
+          ...cookieOptions,
+        })
+        .clearCookie("device_id");
+
+      return res.status(401).json({
+        message: "Session Expired!",
+      });
+    }
+
+    //matching USER ROLE
+    if (refreshTokenData.role !== refreshSession.role) {
       console.warn({
         event: "suspicious_token_use",
         device_id: reqDeviceId,
@@ -98,6 +127,7 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
     //ROTATING New Refresh Session in DB
     const newSession = await sessionModel.create({
       user: refreshSession.user,
+      role: refreshSession.role,
       expiry_at: refreshSession.expiry_at,
       device_id: req.cookies.device_id || randomUUID(),
       ip_address: req.ip,
@@ -105,7 +135,11 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
     });
 
     const newRefreshToken = jwt.sign(
-      { sub: newSession.user, jti: newSession._id.toString() },
+      {
+        sub: newSession.user,
+        jti: newSession._id.toString(),
+        role: refreshSession.role,
+      },
       refreshSecret,
       {
         expiresIn: Math.floor(
@@ -114,7 +148,10 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
       }
     );
 
-    const newAccessToken = tokenizer.createAccessToken(newSession.user);
+    const newAccessToken = tokenizer.createAccessToken(
+      newSession.user,
+      newSession.role
+    );
 
     // Setting up fresh Cookies
     res
@@ -131,7 +168,7 @@ const refreshTokenSetup = async (req, res, next, refreshToken) => {
         maxAge: 365 * 24 * 60 * 60 * 1000, // 365 days in milliseconds
       });
 
-      // Setting up user for further usage
+    // Setting up user for further usage
     req.user = newSession?.user.toString();
     return next();
   } catch (refreshTokenErr) {
@@ -154,7 +191,10 @@ const isValidUser = async (req, res, next) => {
       req.user = accessTokenData.sub;
       return next();
     } catch (accessTokenErr) {
-      console.error("User Validation Error (auth mid): ",accessTokenErr.message);
+      console.error(
+        "User Validation Error (auth mid): ",
+        accessTokenErr.message
+      );
       return await refreshTokenSetup(req, res, next, refreshToken);
     }
   }
