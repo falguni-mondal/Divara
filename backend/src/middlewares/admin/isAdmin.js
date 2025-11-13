@@ -12,7 +12,7 @@ const isAdmin = async (req, res, next) => {
     next();
   } catch (err) {
     console.error("isAdmin mid: ", err.message);
-    return res.status(400).json({ message: "Internal Server Error!" });
+    return res.status(500).json({ message: "Internal Server Error!" });
   }
 };
 

@@ -82,17 +82,20 @@ const validateSizes = (sizes, errors) => {
     const hasOriginalPrice =
       size.originalPrice !== undefined &&
       size.originalPrice !== null &&
-      size.originalPrice !== "";
+      size.originalPrice !== "" &&
+      size.originalPrice !== 0;
 
     const hasStock =
       size.stock !== undefined &&
       size.stock !== null &&
-      size.stock !== "";
-      
+      size.stock !== "" &&
+      size.stock !== 0;
+
     const hasDiscount =
       size.discount !== undefined &&
       size.discount !== null &&
-      size.discount !== "";
+      size.discount !== "" &&
+      size.discount !== 0;
 
     const anyFieldFilled = hasOriginalPrice || hasStock || hasDiscount;
 

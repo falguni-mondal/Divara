@@ -7,6 +7,8 @@ import AdminPageHeading from "../../../components/adminPanel/reusables/AdminPage
 import PricingInputs from "../../../components/adminPanel/product/add-product/PricingInputs";
 import OtherInputs from "../../../components/adminPanel/product/add-product/OtherInputs";
 import { Icon } from "@iconify/react";
+import axios from "axios";
+import { backendBaseApi } from "../../../configs/keys";
 
 
 const AddProduct = () => {
@@ -97,12 +99,12 @@ const AddProduct = () => {
         };
     }, [selectedSize]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         const formdata = new FormData(e.target);
         let data = Object.fromEntries(formdata);
         data = { ...data, images: [...images], sizes: [...sizes], ...otherInfo, ...generalInfo }
-        console.log(data);
+        // console.log(data);
 
         const validationErrors = validateProduct(data);
 
@@ -120,6 +122,7 @@ const AddProduct = () => {
 
         if (hasAnyErrors) {
             setErrors(validationErrors);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             return;
         }
 
@@ -138,9 +141,19 @@ const AddProduct = () => {
         });
 
         const formData = convertToFormData(data);
-        console.log('FormData Contents:');
-        for (let [key, value] of formData.entries()) {
-            console.log(key, ':', value);
+
+        try {
+            const res = await axios.post(`/api/admin/product/add`, formData, { withCredentials: true });
+            console.log(res.data);
+        } catch (err) {
+            if (err.message === "Validation failed") {
+                setErrors(err.errors);
+            }
+            else if (err.response) {
+                console.error("Server responded with:", err.response.status, err.response.data);
+            } else {
+                console.error("Error:", err.message);
+            }
         }
     }
 
@@ -169,8 +182,8 @@ const AddProduct = () => {
                 if (image.size > 5 * 1024 * 1024) {
                     errors.images.push(`Image ${index + 1} exceeds 5MB!`);
                 }
-                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/avif'];
-                if (!allowedTypes.includes(image.mimetype)) {
+                const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/avif'];
+                if (!allowedTypes.includes(image.type)) {
                     errors.images.push(`Image ${index + 1} must be JPEG, PNG, WebP, or AVIF!`);
                 }
             });
@@ -308,7 +321,7 @@ const AddProduct = () => {
                         <h2 className="page-section-heading capitalize font-semibold mb-4 text-lg leading-none">general information</h2>
                         <GeneralInputs selectedSize={selectedSize} setSelectedSize={setSelectedSize} generalInfo={generalInfo} setGeneralInfo={setGeneralInfo} sizes={sizes} />
                         {
-                            errors.general.length > 0 &&
+                            (errors.general.length > 0 || errors.size.length > 0) &&
                             <div className="product-general-inp-err-container w-full mt-4 bg-white rounded-lg p-3">
                                 <ul className="w-full m-0 p-0 text-red-700 text-xs flex flex-col gap-2">
                                     {

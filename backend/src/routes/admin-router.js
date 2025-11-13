@@ -3,6 +3,8 @@ import isValidUser from "../middlewares/auth/auth-middleware.js";
 import isUserVerified from "../middlewares/user-verify-checker.js";
 import isValidProduct from "../middlewares/admin/product/add-product-validator.js";
 import { addProduct } from "../controllers/admin-controller.js";
+import upload from "../configs/multer/multer.js";
+
 const router = express.Router();
 
 
