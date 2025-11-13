@@ -30,9 +30,9 @@ const profileUpdater = async (req, res) => {
         .withMetadata(false)
         .webp({
           quality: 80,
-          lossless: false, // true for lossless
-          nearLossless: false, // subtle compression
-          smartSubsample: true, // better quality
+          lossless: false,
+          nearLossless: false,
+          smartSubsample: true,
         })
         .toBuffer();
 
