@@ -144,7 +144,7 @@ const AddProduct = () => {
         const formData = convertToFormData(data);
 
         try {
-            const res = await axios.post(`/api/admin/product/add`, formData, { withCredentials: true });
+            const res = await axios.post(`${backendBaseApi}/admin/product/add`, formData, { withCredentials: true });
             console.log(res.data);
         } catch (err) {
             if (err.message === "Validation failed") {
