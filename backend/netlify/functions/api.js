@@ -1,8 +1,8 @@
 import express from "express";
+import "dotenv/config";
 import serverless from "serverless-http";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import "dotenv/config";
 
 import connectToDB from "../server/configs/db/mongoose-config.js";
 
