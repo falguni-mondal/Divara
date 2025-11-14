@@ -1,51 +1,66 @@
-import express, {Router} from "express";
+import express from "express";
 import serverless from "serverless-http";
-import parser from "cookie-parser";
-import "dotenv/config";
+import cookieParser from "cookie-parser";
 import cors from "cors";
-import connectToDB from "../../src/configs/db/mongoose-config.js";
+import "dotenv/config";
+
+import connectToDB from "../server/configs/db/mongoose-config.js";
 
 // CUSTOM MIDDLEWARES
-import globalLimiter from "../../src/middlewares/global/global-limiter.js";
-import setNoCache from "../../src/middlewares/global/set-no-cache.js";
+import globalLimiter from "../server/middlewares/global/global-limiter.js";
+import setNoCache from "../server/middlewares/global/set-no-cache.js";
 
-import passport from "../../src/configs/passport.js";
+// PASSPORT
+import passport from "../server/configs/passport.js";
 
-// ROUTE IMPORTS.......................................................
-import authRouter from "../../src/routes/auth-router.js";
-import profileRouter from "../../src/routes/profile-router.js";
-
+// ROUTES
+import authRouter from "../server/routes/auth-router.js";
+import profileRouter from "../server/routes/profile-router.js";
 
 const app = express();
-const router = Router();
 
-router.set("trust proxy", true);
-router.use(express.json());
-router.use(express.urlencoded({extended: true}));
-router.use(parser());
+// IMPORTANT FIX FOR SERVERLESS
+let isConnected = false;
+async function ensureDB() {
+  if (!isConnected) {
+    await connectToDB();
+    isConnected = true;
+  }
+}
 
-// DB CONNECTING.............................................
-connectToDB();
+// EXPRESS CONFIG
+app.set("trust proxy", true);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
+// CONNECT DB FOR EVERY COLD START
+app.use(async (req, res, next) => {
+  await ensureDB();
+  next();
+});
 
-router.use(cors({
-    origin: process.env.NODE_ENV === "development" ? true : `${process.env.FRONTEND_URL}`,
-    credentials: true
-}))
-
-
+// CORS
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV === "development"
+        ? true
+        : process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 
 // CUSTOM MIDDLEWARES
-router.use(globalLimiter);
-router.use(setNoCache);
+app.use(globalLimiter); // must be stateless
+app.use(setNoCache);
 
-// PASSPORT INITIALIZING
-router.use(passport.initialize());
+// PASSPORT
+app.use(passport.initialize());
 
-// ROUTE INITIALIZATIONS.............................................
-router.use("/auth", authRouter);
-router.use("/profile", profileRouter);
+// ROUTES
+app.use("/auth", authRouter);
+app.use("/profile", profileRouter);
 
-
-app.use("/api/", router);
+// NETLIFY FUNCTION HANDLER
 export const handler = serverless(app);
