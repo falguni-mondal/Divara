@@ -8,12 +8,13 @@ import PricingInputs from "../../../components/adminPanel/product/add-product/Pr
 import OtherInputs from "../../../components/adminPanel/product/add-product/OtherInputs";
 import { Icon } from "@iconify/react";
 import axios from "axios";
-import { backendBaseApi } from "../../../configs/keys";
 
 
 const AddProduct = () => {
     const [generalInfo, setGeneralInfo] = useState({
         category: "",
+        colour: null,
+        material: "",
     })
     const [images, setImages] = useState([]);
     const [sizes, setSizes] = useState([
@@ -209,7 +210,14 @@ const AddProduct = () => {
 
         // Category
         if (!data.category || data.category === '') {
-            errors.general.push('Please select a category!');
+            errors.general.push('Please select a Category!');
+        }
+
+        //Colour
+        if (!data.colour) {
+            errors.general.push('Please select a Colour!');
+        } else if (!data.colour.name || !data.colour.shade) {
+            errors.general.push('Invalid colour selection!');
         }
 
 
@@ -265,6 +273,7 @@ const AddProduct = () => {
         formData.append('name', data.name || '');
         formData.append('description', data.description || '');
         formData.append('category', data.category || '');
+        formData.append('material', data.material || '');
         formData.append('shippingCost', data.shippingCost || 0);
         formData.append('status', data.status || 'draft');
         formData.append('isFeatured', data.featured || false);
@@ -279,6 +288,13 @@ const AddProduct = () => {
                     formData.append(`imageUrls[${index}]`, image);
                 }
             });
+        }
+
+        if (data.colour) {
+            formData.append('colour', JSON.stringify({
+                name: data.colour.name,
+                shade: data.colour.shade
+            }));
         }
 
         if (data.sizes && data.sizes.length > 0) {

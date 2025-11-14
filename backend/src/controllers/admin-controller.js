@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import imagekit from "../configs/imagekit/imagekit.js";
 import { processImageInWorker } from "../utils/imageWorker.js";
+import productModel from "../models/product-model.js";
 
 
 const addProduct = async (req, res) => {
@@ -9,6 +10,8 @@ const addProduct = async (req, res) => {
       name,
       description,
       category,
+      material,
+      colour,
       sizes,
       isFeatured,
       isNewArrival,
@@ -40,9 +43,25 @@ const addProduct = async (req, res) => {
 
       imageResults.push(variants);
     }
-    res.status(200).json({
-        images: imageResults
+
+    const product = await productModel.create({
+      images: imageResults,
+      name,
+      description,
+      category,
+      material,
+      colour,
+      sizes,
+      isFeatured,
+      isNewArrival,
+      shippingCost,
+      status
     })
+
+    product._id = productId;
+    await product.save();
+
+    res.status(200).json(product);
   } catch (err) {
     console.error("Add product: ", err);
     res.status(500).json({ message: "Internal server error!" });

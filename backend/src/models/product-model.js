@@ -94,7 +94,7 @@ const productSchema = new mongoose.Schema(
     name: {
       type: String,
       required: [true, "Product name is required"],
-      trim: true,  // ✅ Auto-trim whitespace
+      trim: true,
       minlength: [10, "Product name must be at least 10 characters"],
       maxlength: [50, "Product name must not exceed 50 characters"],
     },
@@ -102,7 +102,7 @@ const productSchema = new mongoose.Schema(
     description: {
       type: String,
       required: [true, "Product description is required"],
-      trim: true,  // ✅ Auto-trim
+      trim: true,
       minlength: [20, "Description must be at least 20 characters"],
       maxlength: [300, "Description must not exceed 300 characters"],
     },
@@ -123,6 +123,23 @@ const productSchema = new mongoose.Schema(
         ],
         message: "{VALUE} is not a valid category",
       },
+    },
+
+    material: {
+      type: String,
+      default: ""
+    },
+
+    colour:{
+      type: {
+        name: {
+          type: String
+        },
+        shade: {
+          type: String
+        }
+      },
+      required: [true, "A colour must be selected!"]
     },
 
     images: {
@@ -172,6 +189,11 @@ const productSchema = new mongoose.Schema(
     totalStock: {
       type: Number,
       default: 0,
+    },
+
+    sales: {
+      type: Number,
+      default: 0
     },
 
     slug: {

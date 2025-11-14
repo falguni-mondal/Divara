@@ -6,7 +6,7 @@ import { parentPort, workerData } from "worker_threads";
     const { imageBuffer } = workerData;
 
     // define all target widths
-    const sizes = { thumb: 150, sm: 300, md: 600, lg: 1200 };
+    const sizes = { thumb: 500, sm: 1000, md: 1400, lg: 1800};
 
     const results = {};
 
@@ -18,7 +18,7 @@ import { parentPort, workerData } from "worker_threads";
         })
         .withMetadata(false)
         .webp({
-          quality: 80,
+          quality: 85,
           lossless: false,
           nearLossless: false,
           smartSubsample: true

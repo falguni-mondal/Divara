@@ -23,7 +23,10 @@ const validateImages = (images, errors) => {
   }
 };
 
-const validateGeneralInfo = ({ name, description, category }, errors) => {
+const validateGeneralInfo = (
+  { name, description, category, material, colour },
+  errors
+) => {
   if (!name || name.trim() === "") {
     errors.general.push("Product name is required!");
   } else if (name.length < 10) {
@@ -52,6 +55,43 @@ const validateGeneralInfo = ({ name, description, category }, errors) => {
   ];
   if (!category || !allowedCategories.includes(category.toLowerCase())) {
     errors.general.push("Invalid category!");
+  }
+
+  const allowedMaterials = [
+    "cotton",
+    "wool",
+    "silk",
+    "linenn/natural",
+    "nylon",
+    "viscose",
+    "leather",
+  ];
+  if (!material || !allowedMaterials.includes(material.toLowerCase())) {
+    errors.general.push("Invalid material!");
+  }
+
+  if (!colour || colour.trim() === "") {
+    errors.general.push("Product colour is required!");
+  } else {
+    try {
+      const parsedColour = JSON.parse(colour);
+
+      if (!parsedColour.name || !parsedColour.shade) {
+        errors.general.push("Colour must have both name and shade!");
+      } else if (
+        typeof parsedColour.name !== "string" ||
+        parsedColour.name.trim() === ""
+      ) {
+        errors.general.push("Colour name must be a valid string!");
+      } else if (
+        typeof parsedColour.shade !== "string" ||
+        !parsedColour.shade.match(/^#[0-9A-Fa-f]{6}$/)
+      ) {
+        errors.general.push("Colour shade must be a valid hex color!");
+      }
+    } catch (error) {
+      errors.general.push("Invalid colour format!");
+    }
   }
 };
 
@@ -217,6 +257,8 @@ const isValidProduct = (req, res, next) => {
     name,
     description,
     category,
+    material,
+    colour,
     sizes,
     isFeatured,
     isNewArrival,
@@ -235,7 +277,10 @@ const isValidProduct = (req, res, next) => {
 
   validateImages(images, errors);
 
-  validateGeneralInfo({ name, description, category }, errors);
+  validateGeneralInfo(
+    { name, description, category, material, colour },
+    errors
+  );
 
   const parsedSizes = validateSizes(sizes, errors);
   if (parsedSizes) {
