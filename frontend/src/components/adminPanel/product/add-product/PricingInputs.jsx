@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 
-const PricingInputs = ({ sizes, setSizes, selectedSize, errors }) => {
+const PricingInputs = ({ sizes, setSizes, selectedSize, errors, register }) => {
 
     const currentSizeData = sizes.find(s => s.value === selectedSize) || {};
 

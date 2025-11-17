@@ -45,6 +45,7 @@ const addProduct = async (req, res) => {
     }
 
     const product = await productModel.create({
+      _id : productId,
       images: imageResults,
       name,
       description,
@@ -57,9 +58,6 @@ const addProduct = async (req, res) => {
       shippingCost,
       status
     })
-
-    product._id = productId;
-    await product.save();
 
     res.status(200).json(product);
   } catch (err) {

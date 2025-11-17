@@ -24,7 +24,7 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
         },
         {
             name: "grey",
-            shade: "#7e7e7e"
+            shade: "#5e5e5e"
         },
         {
             name: "white",
@@ -121,7 +121,7 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
                         {generalInfo.category || "select category"}
                         <Icon className="absolute top-1/2 right-3 -translate-y-1/2 -rotate-90" icon="material-symbols:arrow-back-ios-rounded" />
                     </div>
-                    <ul className={`product-category-option-container absolute w-full left-0 top-[110%] bg-[#e0e0e0be] backdrop-blur-md rounded-[3px] overflow-hidden max-h-[130px] overflow-y-scroll m-0 p-0 ${!categoryOptions && "hidden"} z-[99]`}>
+                    <ul className={`product-category-option-container absolute w-full left-0 top-[110%] shadow-[0px_2px_1px_0px_rgba(0,_0,_0,_0.1)] border-[1.5] border-white bg-[#e0e0e0be] backdrop-blur-md rounded-[3px] overflow-hidden max-h-[160px] overflow-y-scroll m-0 p-0 ${!categoryOptions && "hidden"} z-[99]`}>
                         {
                             ["dresses", "knitwear", "outerwear", "t-shirts", "shirts & tops", "denim wears", "jackets & coats", "leather clothing"].map(opt => (
                                 <li key={`${opt}-category-key`} onClick={() => setGeneralInfo(prev => ({ ...prev, category: opt }))} className='product-category-option py-2 px-3 hover:bg-[#1a1a1a] hover:text-zinc-200 transition-all duration-300 capitalize'>
@@ -149,7 +149,7 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
                         }
                         <Icon className="absolute top-1/2 right-3 -translate-y-1/2 -rotate-90" icon="material-symbols:arrow-back-ios-rounded" />
                     </div>
-                    <ul className={`product-colour-option-container absolute w-full left-0 top-[110%] bg-[#e0e0e0be] backdrop-blur-md rounded-[3px] overflow-hidden max-h-[130px] overflow-y-scroll m-0 p-0 ${!colourOptions && "hidden"} z-[99]`}>
+                    <ul className={`product-colour-option-container absolute w-full left-0 top-[110%] shadow-[0px_2px_1px_0px_rgba(0,_0,_0,_0.1)] border-[1.5] border-white bg-[#e0e0e0be] backdrop-blur-md rounded-[3px] overflow-hidden max-h-[160px] overflow-y-scroll m-0 p-0 ${!colourOptions && "hidden"} z-[99]`}>
                         {
                             colours.map(opt => (
                                 <li key={`${opt.name}-colour-key`} onClick={() => setGeneralInfo(prev => ({ ...prev, colour: opt }))} className='product-colour-option py-2 px-3 hover:bg-[#1a1a1a] hover:text-zinc-200 transition-all duration-300 capitalize flex items-center gap-2'>
@@ -169,7 +169,7 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
                         {generalInfo.material || "select material"}
                         <Icon className="absolute top-1/2 right-3 -translate-y-1/2 -rotate-90" icon="material-symbols:arrow-back-ios-rounded" />
                     </div>
-                    <ul className={`product-material-option-container absolute w-full left-0 top-[110%] bg-[#e0e0e0be] backdrop-blur-md rounded-[3px] overflow-hidden max-h-[130px] overflow-y-scroll m-0 p-0 ${!materialOptions && "hidden"} z-[99]`}>
+                    <ul className={`product-material-option-container absolute w-full left-0 top-[110%] shadow-[0px_2px_1px_0px_rgba(0,_0,_0,_0.1)] bg-[#e0e0e0be] backdrop-blur-md rounded-[3px] overflow-hidden max-h-[160px] overflow-y-scroll m-0 p-0 ${!materialOptions && "hidden"} z-[99]`}>
                         {
                             ["cotton", "wool", "silk", "linenn/natural", "nylon", "viscose", "leather"].map(opt => (
                                 <li key={`${opt}-material-key`} onClick={() => setGeneralInfo(prev => ({ ...prev, material: opt }))} className='product-material-option py-2 px-3 hover:bg-[#1a1a1a] hover:text-zinc-200 transition-all duration-300 capitalize'>

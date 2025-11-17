@@ -1,8 +1,6 @@
 import { Icon } from '@iconify/react'
-import { useState } from 'react'
 
-const ImageInput = ({ images, setImages }) => {
-  const [imgPreview, setImgPreview] = useState([null, null, null, null, null]);
+const ImageInput = ({ images, setImages, imgPreview, setImgPreview }) => {
 
   const imageSelector = (index) => {
     const input = document.createElement('input')

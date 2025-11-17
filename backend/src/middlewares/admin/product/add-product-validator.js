@@ -24,7 +24,7 @@ const validateImages = (images, errors) => {
 };
 
 const validateGeneralInfo = (
-  { name, description, category, material, colour },
+  { name, description, category, material, colour }, req, 
   errors
 ) => {
   if (!name || name.trim() === "") {
@@ -83,14 +83,18 @@ const validateGeneralInfo = (
         parsedColour.name.trim() === ""
       ) {
         errors.general.push("Colour name must be a valid string!");
-      } else if (
+      }
+      else if (
         typeof parsedColour.shade !== "string" ||
         !parsedColour.shade.match(/^#[0-9A-Fa-f]{6}$/)
-      ) {
+      ){
         errors.general.push("Colour shade must be a valid hex color!");
+      } else {
+        req.body.colour = parsedColour;
       }
     } catch (error) {
       errors.general.push("Invalid colour format!");
+      console.error(error);
     }
   }
 };
@@ -278,7 +282,7 @@ const isValidProduct = (req, res, next) => {
   validateImages(images, errors);
 
   validateGeneralInfo(
-    { name, description, category, material, colour },
+    { name, description, category, material, colour }, req, 
     errors
   );
 

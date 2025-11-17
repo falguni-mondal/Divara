@@ -7,16 +7,25 @@ import AdminPageHeading from "../../../components/adminPanel/reusables/AdminPage
 import PricingInputs from "../../../components/adminPanel/product/add-product/PricingInputs";
 import OtherInputs from "../../../components/adminPanel/product/add-product/OtherInputs";
 import { Icon } from "@iconify/react";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { productAdder } from "../../../store/features/product/productSlice";
+import MiniLoading from "../../../utils/loading/MiniLoading";
+import { toast } from 'react-toastify';
+import toastOptions from "../../../configs/toast-options";
+import useEffectOnUpdate from "../../../hooks/useEffectOnUpdate";
 
 
 const AddProduct = () => {
+    const dispatch = useDispatch();
+    const { status, message, error } = useSelector(state => state.product.add);
+
     const [generalInfo, setGeneralInfo] = useState({
         category: "",
         colour: null,
         material: "",
     })
     const [images, setImages] = useState([]);
+    const [imgPreview, setImgPreview] = useState([null, null, null, null, null]);
     const [sizes, setSizes] = useState([
         {
             value: "xs",
@@ -143,20 +152,62 @@ const AddProduct = () => {
 
         const formData = convertToFormData(data);
 
-        try {
-            const res = await axios.post(`${backendBaseApi}/admin/product/add`, formData, { withCredentials: true });
-            console.log(res.data);
-        } catch (err) {
-            if (err.message === "Validation failed") {
-                setErrors(err.errors);
+        dispatch(productAdder(formData));
+    }
+
+    const resetForm = () => {
+        setGeneralInfo({
+            category: "",
+            colour: null,
+            material: "",
+        });
+
+        setImages([]);
+        setImgPreview([null, null, null, null, null]);
+
+        setSizes([
+            { value: "xs", available: false, price: "", originalPrice: 0, discount: 0, stock: 0 },
+            { value: "s", available: false, price: "", originalPrice: 0, discount: 0, stock: 0 },
+            { value: "m", available: false, price: "", originalPrice: 0, discount: 0, stock: 0 },
+            { value: "l", available: false, price: "", originalPrice: 0, discount: 0, stock: 0 },
+            { value: "xl", available: false, price: "", originalPrice: 0, discount: 0, stock: 0 },
+        ]);
+
+        setOtherInfo({
+            featured: false,
+            newArrival: false,
+            status: "published"
+        });
+
+        setSelectedSize("xs");
+
+        // Clearing actual HTML form fields
+        document.getElementById("add-product-form").reset();
+    }
+
+
+    useEffectOnUpdate(() => {
+        if (error) {
+            if (error.message === "Validation failed") {
+                toast.error("Validation Failed!", toastOptions);
+                setErrors(error.errors);
             }
-            else if (err.response) {
-                console.error("Server responded with:", err.response.status, err.response.data);
+            else if (error.response) {
+                toast.error(`${error.response.data}`, toastOptions);
             } else {
-                console.error("Error:", err.message);
+                console.error("Error:", error);
+                toast.error("Something went wrong!", toastOptions);
             }
         }
-    }
+    }, [error])
+
+    useEffectOnUpdate(() => {
+        if (message) {
+            toast.success("Product added successfully!", toastOptions);
+            resetForm();
+        }
+    }, [message])
+
 
     const validateProduct = (data) => {
         const errors = {
@@ -314,7 +365,7 @@ const AddProduct = () => {
                     <section className="image-upload-section bg-zinc-100 p-4 rounded-lg">
                         <h2 className="page-section-heading capitalize font-semibold mb-4 text-lg leading-none">upload product image</h2>
                         <div className="image-upload-container">
-                            <ImageInput images={images} setImages={setImages} />
+                            <ImageInput images={images} setImages={setImages} imgPreview={imgPreview} setImgPreview={setImgPreview} />
                         </div>
                         {
                             errors.images.length > 0 &&
@@ -390,8 +441,16 @@ const AddProduct = () => {
                     </section>
 
                     <div className="form-btn-container mt-10 font-semibold">
-                        <button key="save-draft-btn" className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#dbd4ff] py-3" type="submit" onClick={() => setOtherInfo(prev => ({ ...prev, status: "draft" }))}><Icon icon="hugeicons:license-draft" /> <span>Add Draft</span></button>
-                        <button key="add-product-btn" className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#1a1a1a] text-[#f8f8f8] py-3 mt-2" type="submit"><Icon icon="hugeicons:license" /> <span>Add Product</span></button>
+                        <button key="save-draft-btn" className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#dbd4ff] py-3 relative overflow-hidden" type="submit" disabled={status === "loading"} onClick={() => setOtherInfo(prev => ({ ...prev, status: "draft" }))}>
+                            <Icon icon="hugeicons:license-draft" />
+                            <span>Add Draft</span>
+                            <div className={`loading-bg absolute top-0 left-0 h-full w-full flex justify-center items-center bg-[#22222286] ${status !== "loading" && "hidden"}`}><MiniLoading /></div>
+                        </button>
+                        <button key="add-product-btn" className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#1a1a1a] text-[#f8f8f8] py-3 mt-2 relative overflow-hidden" type="submit" disabled={status === "loading"}>
+                            <Icon icon="hugeicons:license" />
+                            <span>Add Product</span>
+                            <div className={`loading-bg absolute top-0 left-0 h-full w-full flex justify-center items-center bg-[#22222286] ${status !== "loading" && "hidden"}`}><MiniLoading /></div>
+                        </button>
                     </div>
                 </form>
             </div>

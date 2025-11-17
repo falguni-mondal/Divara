@@ -3,7 +3,7 @@ import miniLoading from "../../assets/gif/mini_loading.gif"
 
 const MiniLoading = () => {
   return (
-    <img className='h-[60%]' src={miniLoading} alt="" />
+    <img className='h-[30px]' src={miniLoading} alt="" />
   )
 }
 
