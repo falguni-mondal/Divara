@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import imagekit from "../configs/imagekit/imagekit.js";
+import pLimit from "p-limit";
+import { uploadWithRetry } from "../configs/imagekit/imagekit.js";
 import { processImageInWorker } from "../utils/imageWorker.js";
 import productModel from "../models/product-model.js";
-
 
 const addProduct = async (req, res) => {
   try {
@@ -20,32 +20,39 @@ const addProduct = async (req, res) => {
     } = req.body;
 
     const productId = new mongoose.Types.ObjectId();
-    const imageResults = [];
+    
+    // ✅ Limit concurrent ImageKit uploads to 3
+    const uploadLimit = pLimit(3);
 
-    for (let i = 0; i < req.files.length; i++) {
-      const file = req.files[i];
-      const resized = await processImageInWorker(file.buffer);
-      // resized = { thumb: Buffer, sm: Buffer, md: Buffer, lg: Buffer }
+    // Process all images
+    const imageResults = await Promise.all(
+      req.files.map(async (file, index) => {
+        // Process image in worker thread
+        const resized = await processImageInWorker(file.buffer);
+        // resized = { thumb: Buffer, sm: Buffer, md: Buffer, lg: Buffer }
+        
+        // Upload all variants with concurrency control
+        const variantEntries = Object.entries(resized);
+        const uploadPromises = variantEntries.map(([variant, imageBuffer]) =>
+          uploadLimit(() => 
+            uploadWithRetry({
+              file: imageBuffer, // Now it's a Buffer (not base64)
+              fileName: `${variant}-${name.replace(/\s+/g, '-')}-${Date.now()}.webp`,
+              folder: `/Divara/products/${productId}/${index}`,
+            }).then(uploadResp => [variant, {
+              url: uploadResp.url,
+              imageId: uploadResp.fileId
+            }])
+          )
+        );
 
-      const variants = {};
-      for (const [variant, base64Image] of Object.entries(resized)) {
-        const uploadResp = await imagekit.upload({
-          file: base64Image,
-          fileName: `${variant}-${name.replace(/\s+/g, '-')}.webp`,
-          folder: `/Divara/products/${productId}/${i}`,
-        });
-
-        variants[variant] = {
-          url: uploadResp.url,
-          imageId: uploadResp.fileId
-        };
-      }
-
-      imageResults.push(variants);
-    }
+        const uploadedVariants = await Promise.all(uploadPromises);
+        return Object.fromEntries(uploadedVariants);
+      })
+    );
 
     const product = await productModel.create({
-      _id : productId,
+      _id: productId,
       images: imageResults,
       name,
       description,
@@ -57,12 +64,20 @@ const addProduct = async (req, res) => {
       isNewArrival,
       shippingCost,
       status
-    })
+    });
 
     res.status(200).json(product);
   } catch (err) {
-    console.error("Add product: ", err);
-    res.status(500).json({ message: "Internal server error!" });
+    console.error("Add product error:", err);
+    
+    // Better error response
+    const statusCode = err.response?.status || 500;
+    const errorMessage = err.message || "Internal server error";
+    
+    res.status(statusCode).json({ 
+      message: "Failed to add product",
+      error: errorMessage 
+    });
   }
 };
 

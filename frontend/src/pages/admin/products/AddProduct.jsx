@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import GeneralInputs from "../../../components/adminPanel/product/add-product/GeneralInputs";
@@ -8,11 +8,10 @@ import PricingInputs from "../../../components/adminPanel/product/add-product/Pr
 import OtherInputs from "../../../components/adminPanel/product/add-product/OtherInputs";
 import { Icon } from "@iconify/react";
 import { useDispatch, useSelector } from "react-redux";
-import { productAdder } from "../../../store/features/product/productSlice";
+import { productAdder, resetAddProductState } from "../../../store/features/product/productSlice";
 import MiniLoading from "../../../utils/loading/MiniLoading";
 import { toast } from 'react-toastify';
 import toastOptions from "../../../configs/toast-options";
-import useEffectOnUpdate from "../../../hooks/useEffectOnUpdate";
 
 
 const AddProduct = () => {
@@ -186,7 +185,7 @@ const AddProduct = () => {
     }
 
 
-    useEffectOnUpdate(() => {
+    useEffect(() => {
         if (error) {
             if (error.message === "Validation failed") {
                 toast.error("Validation Failed!", toastOptions);
@@ -198,13 +197,15 @@ const AddProduct = () => {
                 console.error("Error:", error);
                 toast.error("Something went wrong!", toastOptions);
             }
+            dispatch(resetAddProductState());
         }
     }, [error])
 
-    useEffectOnUpdate(() => {
+    useEffect(() => {
         if (message) {
             toast.success("Product added successfully!", toastOptions);
             resetForm();
+            dispatch(resetAddProductState());
         }
     }, [message])
 
@@ -444,12 +445,12 @@ const AddProduct = () => {
                         <button key="save-draft-btn" className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#dbd4ff] py-3 relative overflow-hidden" type="submit" disabled={status === "loading"} onClick={() => setOtherInfo(prev => ({ ...prev, status: "draft" }))}>
                             <Icon icon="hugeicons:license-draft" />
                             <span>Add Draft</span>
-                            <div className={`loading-bg absolute top-0 left-0 h-full w-full flex justify-center items-center bg-[#22222286] ${status !== "loading" && "hidden"}`}><MiniLoading /></div>
+                            <div className={`loading-bg absolute top-0 left-0 h-full w-full flex justify-center items-center bg-[#000000dc] ${status !== "loading" && "hidden"}`}><MiniLoading /></div>
                         </button>
                         <button key="add-product-btn" className="product-draft-btn w-full flex gap-1 justify-center items-center rounded-[3px] bg-[#1a1a1a] text-[#f8f8f8] py-3 mt-2 relative overflow-hidden" type="submit" disabled={status === "loading"}>
                             <Icon icon="hugeicons:license" />
                             <span>Add Product</span>
-                            <div className={`loading-bg absolute top-0 left-0 h-full w-full flex justify-center items-center bg-[#22222286] ${status !== "loading" && "hidden"}`}><MiniLoading /></div>
+                            <div className={`loading-bg absolute top-0 left-0 h-full w-full flex justify-center items-center bg-[#000000dc] ${status !== "loading" && "hidden"}`}><MiniLoading /></div>
                         </button>
                     </div>
                 </form>

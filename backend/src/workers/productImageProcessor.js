@@ -5,12 +5,9 @@ import { parentPort, workerData } from "worker_threads";
   try {
     const { imageBuffer } = workerData;
 
-    // define all target widths
-    const sizes = { thumb: 500, sm: 1000, md: 1400, lg: 1800};
+    const sizes = { thumb: 500, sm: 1000, md: 1400, lg: 1800 };
 
-    const results = {};
-
-    for (const [key, width] of Object.entries(sizes)) {
+    const processPromises = Object.entries(sizes).map(async ([key, width]) => {
       const buffer = await sharp(imageBuffer)
         .resize({
           width: width,
@@ -18,15 +15,17 @@ import { parentPort, workerData } from "worker_threads";
         })
         .withMetadata(false)
         .webp({
-          quality: 85,
-          lossless: false,
-          nearLossless: false,
+          quality: 80,
+          effort: 4,
           smartSubsample: true
         })
         .toBuffer();
 
-      results[key] = buffer.toString('base64');
-    }
+      return [key, buffer.toString('base64')];
+    });
+
+    const processedVariants = await Promise.all(processPromises);
+    const results = Object.fromEntries(processedVariants);
 
     parentPort.postMessage({ success: true, results });
   } catch (error) {

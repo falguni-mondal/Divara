@@ -32,15 +32,19 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
         },
         {
             name: "red",
-            shade: "#ff2e2e"
+            shade: "#f64f4f"
         },
         {
             name: "green",
-            shade: "#22cc19"
+            shade: "#17cd55"
+        },
+        {
+            name: "peach",
+            shade: "#ffc6ae"
         },
         {
             name: "pink",
-            shade: "#ff35ad"
+            shade: "#ff58a9"
         },
         {
             name: "neutral",
@@ -64,7 +68,7 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
         },
         {
             name: "purple",
-            shade: "#8c25e4"
+            shade: "#7c25e4"
         },
     ]
 
@@ -97,7 +101,7 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
 
     const getSizeBg = (size) => {
         if (selectedSize === size) {
-            return isSizeFilled(size) ? 'bg-[#9a88ff] text-[#fefefe]' : 'bg-[#dbd4ff]';
+            return isSizeFilled(size) ? 'bg-[#9a88ff] text-[#fefefe]' : 'bg-[#dbd4ff] text-[#1a1a1a] border-[#9a88ff] border-2';
         }
         return isSizeFilled(size) ? 'bg-[#9a88ff] text-[#fefefe]' : 'bg-zinc-200';
     };

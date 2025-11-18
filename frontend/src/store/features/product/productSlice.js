@@ -26,6 +26,14 @@ const productSlice = createSlice({
     }
   },
 
+  reducers: {
+    resetAddProductState: (state) => {
+      state.add.status = "idle";
+      state.add.message = null;
+      state.add.error = null;
+    }
+  },
+
   extraReducers: (builder) => {
     builder
     .addCase(productAdder.pending, (state) => {
@@ -46,4 +54,5 @@ const productSlice = createSlice({
   }
 });
 
+export const { resetAddProductState } = productSlice.actions;
 export default productSlice.reducer;
