@@ -31,8 +31,12 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
             shade: "#ffffff"
         },
         {
+            name: "maroon",
+            shade: "#991527"
+        },
+        {
             name: "red",
-            shade: "#f64f4f"
+            shade: "#f63a3a"
         },
         {
             name: "green",
@@ -101,7 +105,7 @@ const GeneralInputs = ({ selectedSize, setSelectedSize, sizes, generalInfo, setG
 
     const getSizeBg = (size) => {
         if (selectedSize === size) {
-            return isSizeFilled(size) ? 'bg-[#9a88ff] text-[#fefefe]' : 'bg-[#dbd4ff] text-[#1a1a1a] border-[#9a88ff] border-2';
+            return isSizeFilled(size) ? 'bg-[#dbd4ff] text-[#1a1a1a] border-[#9a88ff] border-2' : 'bg-[#dbd4ff] text-[#1a1a1a] border-[#9a88ff] border-2';
         }
         return isSizeFilled(size) ? 'bg-[#9a88ff] text-[#fefefe]' : 'bg-zinc-200';
     };

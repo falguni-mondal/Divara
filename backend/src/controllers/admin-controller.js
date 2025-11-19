@@ -66,14 +66,12 @@ const addProduct = async (req, res) => {
       status
     });
 
-    res.status(200).json(product);
+    res.status(200).json({message: "Product added successfully!", product});
   } catch (err) {
     console.error("Add product error:", err);
-    
-    // Better error response
     const statusCode = err.response?.status || 500;
     const errorMessage = err.message || "Internal server error";
-    
+  
     res.status(statusCode).json({ 
       message: "Failed to add product",
       error: errorMessage 
